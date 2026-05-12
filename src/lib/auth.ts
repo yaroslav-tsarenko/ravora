@@ -1,9 +1,10 @@
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { verifyToken, createToken } from "@/lib/token";
 
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-production";
+export { verifyToken };
+
 const SESSION_COOKIE = "session_token";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
@@ -15,20 +16,8 @@ export async function verifyPassword(password: string, hash: string) {
   return bcrypt.compare(password, hash);
 }
 
-export function createToken(userId: string) {
-  return jwt.sign({ sub: userId }, JWT_SECRET, { expiresIn: SESSION_MAX_AGE });
-}
-
-export function verifyToken(token: string): { sub: string } | null {
-  try {
-    return jwt.verify(token, JWT_SECRET) as { sub: string };
-  } catch {
-    return null;
-  }
-}
-
 export async function setSessionCookie(userId: string) {
-  const token = createToken(userId);
+  const token = createToken(userId, SESSION_MAX_AGE);
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,

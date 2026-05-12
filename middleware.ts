@@ -1,7 +1,7 @@
 import createMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
 import { routing } from "@/i18n/routing";
-import { verifyToken } from "@/lib/auth";
+import { verifyToken } from "@/lib/token";
 
 const intlMiddleware = createMiddleware(routing);
 
