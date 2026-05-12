@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/routing";
 import {
   ShoppingCart, Search, Menu, X, User, Shield,
@@ -23,11 +24,13 @@ const SHOP_MENU_ITEMS = [
 
 export function Header() {
   const t = useTranslations("nav");
+  const router = useRouter();
   const { itemCount } = useCart();
   const { user, role } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const megaRef = useRef<HTMLDivElement>(null);
   const megaTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -55,17 +58,19 @@ export function Header() {
     megaTimeout.current = setTimeout(() => setMegaOpen(false), 150);
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/en/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return (
     <>
-      <div className={styles.announcement}>
-        <Sparkles size={14} />
-        Free shipping on orders over €50 — <Link href="/catalog?onSale=true">Shop deals</Link>
-      </div>
-
       <header className={`${styles.header} ${scrolled ? styles.headerScrolled : ""}`}>
         <div className={styles.container}>
           <Link href="/" className={styles.logo}>
-            <span className={styles.logoGradient}>Store</span>
+            <span className={styles.logoText}>Store</span>
           </Link>
 
           <nav className={styles.nav}>
@@ -130,8 +135,22 @@ export function Header() {
             </Link>
           </nav>
 
+          <form className={styles.searchBar} onSubmit={handleSearch}>
+            <Search size={16} className={styles.searchIcon} />
+            <input
+              type="text"
+              className={styles.searchInput}
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button type="submit" className={styles.searchBtn}>
+              Search
+            </button>
+          </form>
+
           <div className={styles.actions}>
-            <Link href="/search" className={styles.iconButton} aria-label={t("search")}>
+            <Link href="/search" className={`${styles.iconButton} ${styles.mobileSearchBtn}`} aria-label={t("search")}>
               <Search size={20} />
             </Link>
 
@@ -151,7 +170,7 @@ export function Header() {
               )}
             </Link>
 
-            {user && role === "ADMIN" && (
+            {user && (role === "ADMIN" || role === "SUPER_ADMIN") && (
               <a href="/admin" className={styles.iconButton} aria-label="Admin">
                 <Shield size={20} />
               </a>
@@ -222,7 +241,7 @@ export function Header() {
                   <Link href="/contact" className={styles.drawerNavLink} onClick={() => setMobileOpen(false)}>
                     {t("contact")} <ChevronRight size={18} />
                   </Link>
-                  {user && role === "ADMIN" && (
+                  {user && (role === "ADMIN" || role === "SUPER_ADMIN") && (
                     <a href="/admin" className={styles.drawerNavLink} onClick={() => setMobileOpen(false)}>
                       Admin Panel <ChevronRight size={18} />
                     </a>

@@ -1,51 +1,69 @@
 import { prisma } from "@/lib/prisma";
-import { HeroBanner } from "@/components/home/HeroBanner/HeroBanner";
-import { PromoBar } from "@/components/home/PromoBar/PromoBar";
-import { FeaturedProducts } from "@/components/home/FeaturedProducts/FeaturedProducts";
-import { CategoryShowcase } from "@/components/home/CategoryShowcase/CategoryShowcase";
-import { NewArrivals } from "@/components/home/NewArrivals/NewArrivals";
-import { PromoBanner } from "@/components/home/PromoBanner/PromoBanner";
-import { WhyShopWithUs } from "@/components/home/WhyShopWithUs/WhyShopWithUs";
-import { Newsletter } from "@/components/home/Newsletter/Newsletter";
 import { JsonLd } from "@/components/shared/SEO/JsonLd";
+import { MarketplaceHome } from "@/components/home/MarketplaceHome/MarketplaceHome";
 
 export const dynamic = "force-dynamic";
 
+function serialize<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data));
+}
+
 async function getHomeData() {
   try {
-    const [featuredProducts, categories, newArrivals] = await Promise.all([
-      prisma.product.findMany({
-        where: { status: "ACTIVE", isFeatured: true },
-        include: {
-          images: { orderBy: { sortOrder: "asc" }, take: 1 },
-          categories: { include: { category: { select: { name: true } } } },
-        },
-        take: 8,
-      }),
-      prisma.category.findMany({
-        where: { isActive: true, parentId: null },
-        orderBy: { sortOrder: "asc" },
-        include: { _count: { select: { products: true } } },
-        take: 8,
-      }),
-      prisma.product.findMany({
-        where: { status: "ACTIVE" },
-        orderBy: { createdAt: "desc" },
-        include: {
-          images: { orderBy: { sortOrder: "asc" }, take: 1 },
-          categories: { include: { category: { select: { name: true } } } },
-        },
-        take: 8,
-      }),
-    ]);
-    return { featuredProducts, categories, newArrivals };
+    const productInclude = {
+      images: { orderBy: { sortOrder: "asc" as const }, take: 1 },
+      categories: {
+        include: { category: { select: { name: true, slug: true } } },
+      },
+    };
+
+    const [featured, newest, onSale, popular, allProducts, categories] =
+      await Promise.all([
+        prisma.product.findMany({
+          where: { status: "ACTIVE", isFeatured: true },
+          include: productInclude,
+          take: 10,
+        }),
+        prisma.product.findMany({
+          where: { status: "ACTIVE" },
+          orderBy: { createdAt: "desc" },
+          include: productInclude,
+          take: 10,
+        }),
+        prisma.product.findMany({
+          where: {
+            status: "ACTIVE",
+            comparePrice: { not: null },
+          },
+          include: productInclude,
+          take: 10,
+        }),
+        prisma.product.findMany({
+          where: { status: "ACTIVE" },
+          orderBy: { createdAt: "asc" },
+          include: productInclude,
+          take: 10,
+        }),
+        prisma.product.findMany({
+          where: { status: "ACTIVE" },
+          include: productInclude,
+          take: 20,
+        }),
+        prisma.category.findMany({
+          where: { isActive: true, parentId: null },
+          orderBy: { sortOrder: "asc" },
+          include: { _count: { select: { products: true } } },
+        }),
+      ]);
+
+    return serialize({ featured, newest, onSale, popular, allProducts, categories });
   } catch {
-    return { featuredProducts: [], categories: [], newArrivals: [] };
+    return { featured: [], newest: [], onSale: [], popular: [], allProducts: [], categories: [] };
   }
 }
 
 export default async function HomePage() {
-  const { featuredProducts, categories, newArrivals } = await getHomeData();
+  const data = await getHomeData();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   return (
@@ -59,18 +77,8 @@ export default async function HomePage() {
           description: "Quality products delivered worldwide",
         }}
       />
-      <HeroBanner />
-      <PromoBar />
-      {featuredProducts.length > 0 && (
-        <FeaturedProducts products={featuredProducts as unknown as Parameters<typeof FeaturedProducts>[0]["products"]} />
-      )}
-      {categories.length > 0 && <CategoryShowcase categories={categories} />}
-      <PromoBanner />
-      {newArrivals.length > 0 && (
-        <NewArrivals products={newArrivals as unknown as Parameters<typeof NewArrivals>[0]["products"]} />
-      )}
-      <WhyShopWithUs />
-      <Newsletter />
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      <MarketplaceHome data={data as any} />
     </>
   );
 }

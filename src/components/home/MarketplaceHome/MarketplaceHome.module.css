@@ -1,0 +1,48 @@
+.marketplace {
+  background: #F5F5F5;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 1rem 3rem;
+}
+
+.mainLayout {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.sidebarDesktop {
+  display: block;
+  position: sticky;
+  top: 80px;
+}
+
+.mobileCategories {
+  display: none;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .sidebarDesktop {
+    display: none;
+  }
+
+  .mobileCategories {
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0.75rem 0.5rem 2rem;
+  }
+}
