@@ -28,7 +28,7 @@ export default function LoginPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
       toast.success("Logged in successfully!");
-      if (data.user?.role === "ADMIN") {
+      if (data.user?.role === "ADMIN" || data.user?.role === "SUPER_ADMIN") {
         window.location.href = "/admin";
       } else {
         window.location.href = "/en/account";
