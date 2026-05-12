@@ -1,0 +1,78 @@
+"use client";
+
+import { Shield, Zap, Heart, RefreshCw, Award, Headphones } from "lucide-react";
+import { motion } from "framer-motion";
+import styles from "./WhyShopWithUs.module.css";
+
+const reasons = [
+  {
+    icon: <Shield size={24} />,
+    title: "Secure Shopping",
+    desc: "Your data is protected with enterprise-grade encryption and secure payments.",
+    gradient: "linear-gradient(135deg, #6C5CE7 0%, #a855f7 100%)",
+  },
+  {
+    icon: <Zap size={24} />,
+    title: "Fast Delivery",
+    desc: "Free shipping on orders over €50 with express options available.",
+    gradient: "linear-gradient(135deg, #00CECE 0%, #6C5CE7 100%)",
+  },
+  {
+    icon: <Heart size={24} />,
+    title: "Curated Selection",
+    desc: "Every product is hand-picked for quality and value by our team.",
+    gradient: "linear-gradient(135deg, #FF6B6B 0%, #FFB800 100%)",
+  },
+  {
+    icon: <RefreshCw size={24} />,
+    title: "Easy Returns",
+    desc: "Changed your mind? Return within 30 days — no questions asked.",
+    gradient: "linear-gradient(135deg, #22c55e 0%, #00CECE 100%)",
+  },
+  {
+    icon: <Award size={24} />,
+    title: "Best Prices",
+    desc: "We guarantee competitive pricing. Found it cheaper? We'll match it.",
+    gradient: "linear-gradient(135deg, #FFB800 0%, #FF6B6B 100%)",
+  },
+  {
+    icon: <Headphones size={24} />,
+    title: "24/7 Support",
+    desc: "Our team is available around the clock to help with anything.",
+    gradient: "linear-gradient(135deg, #a855f7 0%, #ec4899 100%)",
+  },
+];
+
+export function WhyShopWithUs() {
+  return (
+    <section className={`section-padding ${styles.section}`}>
+      <div className="section-container">
+        <div className={styles.header}>
+          <h2 className="section-title">Why shop with us</h2>
+          <p className="section-subtitle" style={{ margin: "0.5rem auto 0" }}>
+            We go above and beyond to deliver the best shopping experience
+          </p>
+        </div>
+
+        <div className={styles.grid}>
+          {reasons.map((reason, i) => (
+            <motion.div
+              key={reason.title}
+              className={styles.card}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08, duration: 0.5 }}
+            >
+              <div className={styles.iconWrap} style={{ background: reason.gradient }}>
+                {reason.icon}
+              </div>
+              <h3 className={styles.cardTitle}>{reason.title}</h3>
+              <p className={styles.cardDesc}>{reason.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
