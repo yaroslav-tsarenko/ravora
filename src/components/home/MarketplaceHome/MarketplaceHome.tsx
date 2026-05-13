@@ -24,31 +24,95 @@ interface Product {
   brand?: string | null;
 }
 
+interface BannerData {
+  id: string;
+  type: string;
+  title: string;
+  subtitle?: string | null;
+  description?: string | null;
+  imageUrl?: string | null;
+  linkUrl?: string | null;
+  ctaLabel?: string | null;
+  bgColor: string;
+  textColor: string;
+  badgeText?: string | null;
+  oldPrice?: string | null;
+  newPrice?: string | null;
+  discountText?: string | null;
+}
+
+interface SectionData {
+  id: string;
+  title: string;
+  subtitle?: string | null;
+  slug: string;
+  filterType: string;
+  categorySlug?: string | null;
+  maxProducts: number;
+  viewAllUrl?: string | null;
+  viewAllLabel: string;
+  bgStyle: string;
+  columns: number;
+}
+
+interface TabData {
+  id: string;
+  label: string;
+  icon?: string | null;
+  linkUrl: string;
+  color: string;
+}
+
+interface UtilityLinkData {
+  id: string;
+  label: string;
+  linkUrl: string;
+  icon?: string | null;
+  position: string;
+}
+
+interface PromoStripData {
+  id: string;
+  icon: string;
+  title: string;
+  subtitle?: string | null;
+  linkUrl?: string | null;
+}
+
+interface BrandData {
+  id: string;
+  name: string;
+  logoUrl?: string | null;
+  linkUrl?: string | null;
+}
+
 interface Props {
   data: {
-    featured: Product[];
-    newest: Product[];
-    onSale: Product[];
-    popular: Product[];
-    allProducts: Product[];
+    heroSlides: BannerData[];
+    dealCards: BannerData[];
+    promoSmall: BannerData[];
+    promoWide: BannerData[];
+    brands: BrandData[];
+    sections: SectionData[];
+    tabs: TabData[];
+    utilityLinks: UtilityLinkData[];
+    promoStripItems: PromoStripData[];
+    sectionProducts: Record<string, Product[]>;
     categories: { id: string; name: string; slug: string; _count: { products: number } }[];
   };
 }
 
 export function MarketplaceHome({ data }: Props) {
-  const { featured, newest, onSale, popular, allProducts } = data;
-
-  const electronicsProducts = allProducts.filter((p) =>
-    p.categories?.some((c) => c.category.slug === "electronics")
-  );
-  const homeProducts = allProducts.filter((p) =>
-    p.categories?.some((c) => c.category.slug === "home-garden")
-  );
+  const {
+    heroSlides, dealCards, promoSmall, promoWide,
+    brands, sections, tabs, utilityLinks, promoStripItems,
+    sectionProducts,
+  } = data;
 
   return (
     <div className={styles.marketplace}>
-      <TopBar />
-      <PromoStrip />
+      <TopBar links={utilityLinks} />
+      <PromoStrip items={promoStripItems} />
 
       <div className={styles.container}>
         <div className={styles.mainLayout}>
@@ -61,72 +125,25 @@ export function MarketplaceHome({ data }: Props) {
               <CategorySidebar />
             </div>
 
-            <HorizontalTabs />
-            <HeroCarousel />
-            <PromoBannerGrid />
-            <BrandStrip />
+            {tabs.length > 0 && <HorizontalTabs tabs={tabs} />}
+            <HeroCarousel slides={heroSlides} deals={dealCards} />
+            <PromoBannerGrid smallBanners={promoSmall} wideBanners={promoWide} />
+            {brands.length > 0 && <BrandStrip brands={brands} />}
 
-            {onSale.length > 0 && (
-              <ProductSection
-                title="Best Deals"
-                products={onSale.slice(0, 5)}
-                viewAllHref="/catalog"
-                tabs={["All", "Electronics", "Home", "Sports"]}
-              />
-            )}
-
-            {featured.length > 0 && (
-              <ProductSection
-                title="Popular Products"
-                products={featured.slice(0, 5)}
-                viewAllHref="/catalog"
-                bg="gray"
-              />
-            )}
-
-            {newest.length > 0 && (
-              <ProductSection
-                title="New Arrivals"
-                products={newest.slice(0, 5)}
-                viewAllHref="/catalog"
-                tabs={["Just In", "This Week", "This Month"]}
-              />
-            )}
-
-            {electronicsProducts.length > 0 && (
-              <ProductSection
-                title="Electronics Deals"
-                products={electronicsProducts.slice(0, 5)}
-                viewAllHref="/catalog/electronics"
-                bg="gray"
-              />
-            )}
-
-            {popular.length > 0 && (
-              <ProductSection
-                title="Recommended For You"
-                products={popular.slice(0, 5)}
-                viewAllHref="/catalog"
-              />
-            )}
-
-            {homeProducts.length > 0 && (
-              <ProductSection
-                title="Home Essentials"
-                products={homeProducts.slice(0, 5)}
-                viewAllHref="/catalog/home-garden"
-                bg="gray"
-              />
-            )}
-
-            {allProducts.length > 0 && (
-              <ProductSection
-                title="All Products"
-                products={allProducts.slice(0, 10)}
-                viewAllHref="/catalog"
-                columns={5}
-              />
-            )}
+            {sections.map((section) => {
+              const products = sectionProducts[section.slug] || [];
+              if (!products.length) return null;
+              return (
+                <ProductSection
+                  key={section.id}
+                  title={section.title}
+                  products={products}
+                  viewAllHref={section.viewAllUrl || "/catalog"}
+                  bg={section.bgStyle as "white" | "gray"}
+                  columns={section.columns}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

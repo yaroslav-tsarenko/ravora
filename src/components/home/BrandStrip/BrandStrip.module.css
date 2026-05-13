@@ -81,3 +81,9 @@
   color: #555;
   white-space: nowrap;
 }
+
+.brandLogo {
+  max-height: 24px;
+  max-width: 80px;
+  object-fit: contain;
+}

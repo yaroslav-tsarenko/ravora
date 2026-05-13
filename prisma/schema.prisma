@@ -244,10 +244,91 @@ model OrderItem {
 // ── Content ──────────────────────────────────────
 
 model Banner {
+  id           String     @id @default(cuid())
+  type         BannerType @default(HERO)
+  title        String
+  subtitle     String?
+  description  String?
+  imageUrl     String?
+  linkUrl      String?
+  ctaLabel     String?
+  bgColor      String     @default("#1A1A2E")
+  textColor    String     @default("#ffffff")
+  badgeText    String?
+  oldPrice     String?
+  newPrice     String?
+  discountText String?
+  isActive     Boolean    @default(true)
+  sortOrder    Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+enum BannerType {
+  HERO
+  PROMO_SMALL
+  PROMO_WIDE
+  DEAL_CARD
+}
+
+model Brand {
   id        String   @id @default(cuid())
+  name      String
+  logoUrl   String?
+  linkUrl   String?
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HomepageSection {
+  id             String  @id @default(cuid())
+  title          String
+  subtitle       String?
+  slug           String  @unique
+  filterType     String  @default("featured")
+  categorySlug   String?
+  maxProducts    Int     @default(5)
+  viewAllUrl     String?
+  viewAllLabel   String  @default("View all")
+  bgStyle        String  @default("white")
+  columns        Int     @default(5)
+  isActive       Boolean @default(true)
+  sortOrder      Int     @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model HomepageTab {
+  id        String   @id @default(cuid())
+  label     String
+  icon      String?
+  linkUrl   String
+  color     String   @default("#333333")
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UtilityLink {
+  id        String   @id @default(cuid())
+  label     String
+  linkUrl   String
+  icon      String?
+  position  String   @default("left")
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PromoStripItem {
+  id        String   @id @default(cuid())
+  icon      String
   title     String
   subtitle  String?
-  imageUrl  String
   linkUrl   String?
   isActive  Boolean  @default(true)
   sortOrder Int      @default(0)

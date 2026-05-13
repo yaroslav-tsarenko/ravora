@@ -2,38 +2,51 @@
 
 import { useState } from "react";
 import { Link } from "@/i18n/routing";
-import { Flame, Apple, Wind, Gift, Smartphone, Gamepad2, Lightbulb, Sparkles, Tag } from "lucide-react";
+import {
+  Flame, Apple, Wind, Gift, Smartphone, Gamepad2,
+  Lightbulb, Sparkles, Tag, Package, Star, Zap,
+} from "lucide-react";
 import styles from "./HorizontalTabs.module.css";
 
-const tabs = [
-  { label: "Offers", icon: Flame, href: "/catalog", color: "#E53935" },
-  { label: "Apple Store", icon: Apple, href: "/catalog/electronics", color: "#333" },
-  { label: "Dyson Store", icon: Wind, href: "/catalog/home-garden", color: "#6C5CE7" },
-  { label: "Get Bonus", icon: Gift, href: "/catalog", color: "#FF9800" },
-  { label: "Mobile App", icon: Smartphone, href: "/catalog/electronics", color: "#2196F3" },
-  { label: "Gaming World", icon: Gamepad2, href: "/catalog/electronics", color: "#4CAF50" },
-  { label: "Tips", icon: Lightbulb, href: "/faq", color: "#FF9800" },
-  { label: "New Arrivals", icon: Sparkles, href: "/catalog", color: "#9C27B0" },
-  { label: "Outlet", icon: Tag, href: "/catalog", color: "#E53935" },
-];
+const ICON_MAP: Record<string, React.ElementType> = {
+  Flame, Apple, Wind, Gift, Smartphone, Gamepad2,
+  Lightbulb, Sparkles, Tag, Package, Star, Zap,
+};
 
-export function HorizontalTabs() {
+interface TabData {
+  id: string;
+  label: string;
+  icon?: string | null;
+  linkUrl: string;
+  color: string;
+}
+
+interface Props {
+  tabs: TabData[];
+}
+
+export function HorizontalTabs({ tabs }: Props) {
   const [active, setActive] = useState(0);
+
+  if (!tabs.length) return null;
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.tabs}>
-        {tabs.map((tab, i) => (
-          <Link
-            key={tab.label}
-            href={tab.href}
-            className={`${styles.tab} ${i === active ? styles.active : ""}`}
-            onClick={() => setActive(i)}
-          >
-            <tab.icon size={15} style={{ color: tab.color }} />
-            <span>{tab.label}</span>
-          </Link>
-        ))}
+        {tabs.map((tab, i) => {
+          const Icon = tab.icon ? ICON_MAP[tab.icon] : Tag;
+          return (
+            <Link
+              key={tab.id}
+              href={tab.linkUrl}
+              className={`${styles.tab} ${i === active ? styles.active : ""}`}
+              onClick={() => setActive(i)}
+            >
+              <Icon size={15} style={{ color: tab.color }} />
+              <span>{tab.label}</span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import {
   LayoutDashboard, Package, ShoppingCart, Users, FolderTree,
   Upload, BarChart3, Rss, FileText, Settings, Star, Image,
-  LogOut, Store,
+  LogOut, Store, Home,
 } from "lucide-react";
 import { useAuth } from "@/providers/AuthProvider";
 
@@ -25,6 +25,7 @@ const navItems = [
   { href: "/admin/analytics", icon: BarChart3, label: "Analytics" },
   { href: "/admin/feeds", icon: Rss, label: "Feeds" },
   { section: "Content" },
+  { href: "/admin/homepage", icon: Home, label: "Homepage" },
   { href: "/admin/content/banners", icon: Image, label: "Banners" },
   { href: "/admin/content/pages", icon: FileText, label: "Pages" },
   { section: "System" },

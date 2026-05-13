@@ -4,18 +4,25 @@ import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./BrandStrip.module.css";
 
-const brands = [
-  "Apple", "Samsung", "Sony", "LG", "Xiaomi",
-  "Lenovo", "ASUS", "Dyson", "Bosch", "Philips",
-  "JBL", "LEGO", "Nike", "Electrolux", "Canon",
-];
+interface BrandData {
+  id: string;
+  name: string;
+  logoUrl?: string | null;
+  linkUrl?: string | null;
+}
 
-export function BrandStrip() {
+interface Props {
+  brands: BrandData[];
+}
+
+export function BrandStrip({ brands }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (dir: number) => {
     scrollRef.current?.scrollBy({ left: dir * 240, behavior: "smooth" });
   };
+
+  if (!brands.length) return null;
 
   return (
     <div className={styles.wrapper}>
@@ -32,9 +39,13 @@ export function BrandStrip() {
       </div>
       <div className={styles.track} ref={scrollRef}>
         {brands.map((brand) => (
-          <div key={brand} className={styles.brand}>
-            <span className={styles.brandName}>{brand}</span>
-          </div>
+          <a key={brand.id} href={brand.linkUrl || "#"} className={styles.brand}>
+            {brand.logoUrl ? (
+              <img src={brand.logoUrl} alt={brand.name} className={styles.brandLogo} />
+            ) : (
+              <span className={styles.brandName}>{brand.name}</span>
+            )}
+          </a>
         ))}
       </div>
     </div>

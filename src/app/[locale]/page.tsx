@@ -17,48 +17,94 @@ async function getHomeData() {
       },
     };
 
-    const [featured, newest, onSale, popular, allProducts, categories] =
-      await Promise.all([
-        prisma.product.findMany({
-          where: { status: "ACTIVE", isFeatured: true },
-          include: productInclude,
-          take: 10,
-        }),
-        prisma.product.findMany({
-          where: { status: "ACTIVE" },
-          orderBy: { createdAt: "desc" },
-          include: productInclude,
-          take: 10,
-        }),
-        prisma.product.findMany({
-          where: {
-            status: "ACTIVE",
-            comparePrice: { not: null },
-          },
-          include: productInclude,
-          take: 10,
-        }),
-        prisma.product.findMany({
-          where: { status: "ACTIVE" },
-          orderBy: { createdAt: "asc" },
-          include: productInclude,
-          take: 10,
-        }),
-        prisma.product.findMany({
-          where: { status: "ACTIVE" },
-          include: productInclude,
-          take: 20,
-        }),
-        prisma.category.findMany({
-          where: { isActive: true, parentId: null },
-          orderBy: { sortOrder: "asc" },
-          include: { _count: { select: { products: true } } },
-        }),
-      ]);
+    const [
+      heroSlides,
+      dealCards,
+      promoSmall,
+      promoWide,
+      brands,
+      sections,
+      tabs,
+      utilityLinks,
+      promoStripItems,
+      allActiveProducts,
+      categories,
+    ] = await Promise.all([
+      prisma.banner.findMany({ where: { isActive: true, type: "HERO" }, orderBy: { sortOrder: "asc" } }),
+      prisma.banner.findMany({ where: { isActive: true, type: "DEAL_CARD" }, orderBy: { sortOrder: "asc" } }),
+      prisma.banner.findMany({ where: { isActive: true, type: "PROMO_SMALL" }, orderBy: { sortOrder: "asc" } }),
+      prisma.banner.findMany({ where: { isActive: true, type: "PROMO_WIDE" }, orderBy: { sortOrder: "asc" } }),
+      prisma.brand.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
+      prisma.homepageSection.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
+      prisma.homepageTab.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
+      prisma.utilityLink.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
+      prisma.promoStripItem.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
+      prisma.product.findMany({
+        where: { status: "ACTIVE" },
+        include: productInclude,
+        take: 50,
+      }),
+      prisma.category.findMany({
+        where: { isActive: true, parentId: null },
+        orderBy: { sortOrder: "asc" },
+        include: { _count: { select: { products: true } } },
+      }),
+    ]);
 
-    return serialize({ featured, newest, onSale, popular, allProducts, categories });
-  } catch {
-    return { featured: [], newest: [], onSale: [], popular: [], allProducts: [], categories: [] };
+    const sectionProducts: Record<string, typeof allActiveProducts> = {};
+    for (const section of sections) {
+      let products = allActiveProducts;
+      switch (section.filterType) {
+        case "featured":
+          products = allActiveProducts.filter((p) => p.isFeatured);
+          break;
+        case "newest":
+          products = [...allActiveProducts].sort(
+            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          break;
+        case "onSale":
+          products = allActiveProducts.filter((p) => p.comparePrice !== null);
+          break;
+        case "category":
+          if (section.categorySlug) {
+            products = allActiveProducts.filter((p) =>
+              p.categories.some((c) => c.category.slug === section.categorySlug)
+            );
+          }
+          break;
+        case "popular":
+          products = [...allActiveProducts].sort(
+            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+          break;
+        case "all":
+        default:
+          break;
+      }
+      sectionProducts[section.slug] = products.slice(0, section.maxProducts);
+    }
+
+    return serialize({
+      heroSlides,
+      dealCards,
+      promoSmall,
+      promoWide,
+      brands,
+      sections,
+      tabs,
+      utilityLinks,
+      promoStripItems,
+      sectionProducts,
+      categories,
+    });
+  } catch (e) {
+    console.error("Homepage data fetch error:", e);
+    return {
+      heroSlides: [], dealCards: [], promoSmall: [], promoWide: [],
+      brands: [], sections: [], tabs: [], utilityLinks: [],
+      promoStripItems: [], sectionProducts: {}, categories: [],
+    };
   }
 }
 
