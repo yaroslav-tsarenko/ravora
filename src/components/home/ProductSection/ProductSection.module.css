@@ -16,11 +16,23 @@
   flex-wrap: wrap;
 }
 
+.titleGroup {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
 .title {
   font-size: 1.125rem;
   font-weight: 800;
   margin: 0;
   color: #1A1A2E;
+  white-space: nowrap;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  color: #999;
   white-space: nowrap;
 }
 

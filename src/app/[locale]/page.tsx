@@ -1,6 +1,15 @@
 import { prisma } from "@/lib/prisma";
 import { JsonLd } from "@/components/shared/SEO/JsonLd";
 import { MarketplaceHome } from "@/components/home/MarketplaceHome/MarketplaceHome";
+import {
+  getFeaturedProducts,
+  getSaleProducts,
+  getNewProducts,
+  getPopularProducts,
+  getHomepageCategorySections,
+  getBrandSections,
+  TOP_BRANDS,
+} from "@/lib/homepage-products";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +37,7 @@ async function getHomeData() {
       utilityLinks,
       promoStripItems,
       allActiveProducts,
-      categories,
+      categoriesWithChildren,
     ] = await Promise.all([
       prisma.banner.findMany({ where: { isActive: true, type: "HERO" }, orderBy: { sortOrder: "asc" } }),
       prisma.banner.findMany({ where: { isActive: true, type: "DEAL_CARD" }, orderBy: { sortOrder: "asc" } }),
@@ -42,12 +51,20 @@ async function getHomeData() {
       prisma.product.findMany({
         where: { status: "ACTIVE" },
         include: productInclude,
+        orderBy: { createdAt: "desc" },
         take: 500,
       }),
       prisma.category.findMany({
         where: { isActive: true, parentId: null },
         orderBy: { sortOrder: "asc" },
-        include: { _count: { select: { products: true } } },
+        include: {
+          children: {
+            where: { isActive: true },
+            orderBy: { sortOrder: "asc" },
+            select: { id: true, name: true, slug: true },
+          },
+          _count: { select: { products: true } },
+        },
       }),
     ]);
 
@@ -85,6 +102,45 @@ async function getHomeData() {
       sectionProducts[section.slug] = products.slice(0, section.maxProducts);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const products = allActiveProducts as any[];
+
+    const featuredProducts = getFeaturedProducts(products, 10);
+    const saleProducts = getSaleProducts(products, 15);
+    const newProducts = getNewProducts(products, 10);
+    const popularProducts = getPopularProducts(products, 10);
+
+    const categorySections = getHomepageCategorySections(
+      products,
+      categoriesWithChildren.map((c) => ({
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+        children: c.children,
+        _count: c._count,
+      })),
+      10,
+    );
+
+    const brandSections = getBrandSections(products, TOP_BRANDS, 8);
+
+    const categoryShowcase = categoriesWithChildren.map((c) => {
+      const directCount = c._count.products;
+      const childSlugs = c.children.map((ch) => ch.slug);
+      const childProductCount = childSlugs.length > 0
+        ? products.filter((p: { categories?: { category: { slug: string } }[] }) =>
+            p.categories?.some((pc) => childSlugs.includes(pc.category.slug))
+          ).length
+        : 0;
+      return {
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+        imageUrl: null as string | null,
+        productCount: directCount + childProductCount,
+      };
+    }).filter((c) => c.productCount > 0);
+
     return serialize({
       heroSlides,
       dealCards,
@@ -96,7 +152,14 @@ async function getHomeData() {
       utilityLinks,
       promoStripItems,
       sectionProducts,
-      categories,
+      categories: categoriesWithChildren,
+      featuredProducts,
+      saleProducts,
+      newProducts,
+      popularProducts,
+      categorySections,
+      brandSections,
+      categoryShowcase,
     });
   } catch (e) {
     console.error("Homepage data fetch error:", e);
@@ -104,6 +167,9 @@ async function getHomeData() {
       heroSlides: [], dealCards: [], promoSmall: [], promoWide: [],
       brands: [], sections: [], tabs: [], utilityLinks: [],
       promoStripItems: [], sectionProducts: {}, categories: [],
+      featuredProducts: [], saleProducts: [], newProducts: [],
+      popularProducts: [], categorySections: [], brandSections: [],
+      categoryShowcase: [],
     };
   }
 }

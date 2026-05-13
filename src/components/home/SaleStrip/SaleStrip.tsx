@@ -1,0 +1,83 @@
+"use client";
+
+import { useRef } from "react";
+import Image from "next/image";
+import { Link } from "@/i18n/routing";
+import { Flame, ChevronLeft, ChevronRight } from "lucide-react";
+import { formatPrice } from "@/lib/utils/format-price";
+import { getProductImage, getProductImageFallback } from "@/lib/utils/product-image";
+import { getDiscountPercent, type HomepageProduct } from "@/lib/homepage-products";
+import styles from "./SaleStrip.module.css";
+
+interface Props {
+  products: HomepageProduct[];
+}
+
+export function SaleStrip({ products }: Props) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (dir: number) => {
+    scrollRef.current?.scrollBy({ left: dir * 340, behavior: "smooth" });
+  };
+
+  if (!products.length) return null;
+
+  return (
+    <section className={styles.section}>
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
+          <Flame size={18} className={styles.fireIcon} />
+          <h2 className={styles.title}>Hot Deals</h2>
+          <span className={styles.badge}>Sale</span>
+        </div>
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+          <Link href="/catalog?sort=price-asc&onSale=true" className={styles.viewAll}>
+            View all <ChevronRight size={14} />
+          </Link>
+          <div className={styles.arrows}>
+            <button className={styles.arrow} onClick={() => scroll(-1)} aria-label="Scroll left">
+              <ChevronLeft size={16} />
+            </button>
+            <button className={styles.arrow} onClick={() => scroll(1)} aria-label="Scroll right">
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className={styles.scrollWrap}>
+        <div className={styles.track} ref={scrollRef}>
+          {products.map((p) => {
+            const discount = getDiscountPercent(p);
+            const imgUrl = getProductImage(p.images?.[0]?.url, p.name);
+            return (
+              <Link key={p.id} href={`/product/${p.slug}`} className={styles.card}>
+                {discount > 0 && (
+                  <span className={styles.discountBadge}>-{discount}%</span>
+                )}
+                <div className={styles.imageWrap}>
+                  <Image
+                    src={imgUrl}
+                    alt={p.name}
+                    width={120}
+                    height={100}
+                    className={styles.image}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = getProductImageFallback("120x100");
+                    }}
+                  />
+                </div>
+                <h4 className={styles.cardName}>{p.name}</h4>
+                <div className={styles.prices}>
+                  <span className={styles.newPrice}>{formatPrice(Number(p.price))}</span>
+                  {p.comparePrice && (
+                    <span className={styles.oldPrice}>{formatPrice(Number(p.comparePrice))}</span>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -1,70 +1,83 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import Image from "next/image";
 import { Link } from "@/i18n/routing";
-import { ArrowRight } from "lucide-react";
-import { AnimatedSection } from "@/components/shared/AnimatedSection/AnimatedSection";
+import {
+  Monitor, Shirt, Home, Dumbbell, Smartphone, Laptop, Headphones,
+  Camera, Watch, ShoppingBag, Footprints, Sofa, Wrench, Bike, Package,
+} from "lucide-react";
 import styles from "./CategoryShowcase.module.css";
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  electronics: Monitor,
+  clothing: Shirt,
+  "home-garden": Home,
+  sports: Dumbbell,
+  smartphones: Smartphone,
+  "laptops-computers": Laptop,
+  "audio-headphones": Headphones,
+  "cameras-photography": Camera,
+  "wearable-tech": Watch,
+  "bags-accessories": ShoppingBag,
+  "shoes-footwear": Footprints,
+  furniture: Sofa,
+  "garden-outdoor": Wrench,
+  cycling: Bike,
+};
+
+const COLOR_MAP: Record<string, string> = {
+  electronics: "#EDE9FE",
+  clothing: "#FCE7F3",
+  "home-garden": "#DCFCE7",
+  sports: "#FEF3C7",
+  smartphones: "#DBEAFE",
+  "laptops-computers": "#E0E7FF",
+  "audio-headphones": "#F3E8FF",
+  "cameras-photography": "#FEE2E2",
+  "wearable-tech": "#CFFAFE",
+  "bags-accessories": "#FFF7ED",
+  "shoes-footwear": "#FCE7F3",
+  furniture: "#ECFDF5",
+  "garden-outdoor": "#F0FDF4",
+  cycling: "#FEF9C3",
+};
 
 interface CategoryItem {
   id: string;
   name: string;
   slug: string;
   imageUrl?: string | null;
-  _count?: { products: number };
+  productCount: number;
 }
 
-interface CategoryShowcaseProps {
+interface Props {
   categories: CategoryItem[];
 }
 
-export function CategoryShowcase({ categories }: CategoryShowcaseProps) {
-  const t = useTranslations("home");
-
+export function CategoryShowcase({ categories }: Props) {
   if (categories.length === 0) return null;
 
   return (
-    <AnimatedSection>
-      <section className="section-padding">
-        <div className={styles.section}>
-          <div className={styles.header}>
-            <h2 className="section-title">{t("categories")}</h2>
-            <p className="section-subtitle" style={{ margin: "0.5rem auto 0" }}>Find exactly what you need</p>
-          </div>
-          <div className={styles.grid}>
-            {categories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/catalog/${category.slug}`}
-                className={styles.card}
-              >
-                {category.imageUrl && (
-                  <Image
-                    src={category.imageUrl}
-                    alt={category.name}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    style={{ objectFit: "cover" }}
-                  />
-                )}
-                <div className={styles.cardOverlay} />
-                <div className={styles.cardContent}>
-                  <h3 className={styles.cardName}>{category.name}</h3>
-                  {category._count && (
-                    <span className={styles.cardCount}>
-                      {category._count.products} products
-                    </span>
-                  )}
-                </div>
-                <div className={styles.cardArrow}>
-                  <ArrowRight size={14} />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-    </AnimatedSection>
+    <section className={styles.section}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>Shop by Category</h2>
+      </div>
+      <div className={styles.grid}>
+        {categories.map((cat) => {
+          const Icon = ICON_MAP[cat.slug] || Package;
+          const bg = COLOR_MAP[cat.slug] || "#F3F4F6";
+          return (
+            <Link key={cat.id} href={`/catalog/${cat.slug}`} className={styles.card}>
+              <div className={styles.iconWrap} style={{ background: bg }}>
+                <Icon size={22} />
+              </div>
+              <div className={styles.info}>
+                <h3 className={styles.cardName}>{cat.name}</h3>
+                <span className={styles.cardCount}>{cat.productCount} products</span>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
   );
 }

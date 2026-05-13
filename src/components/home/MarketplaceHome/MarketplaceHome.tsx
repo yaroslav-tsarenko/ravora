@@ -8,21 +8,10 @@ import { HeroCarousel } from "../HeroCarousel/HeroCarousel";
 import { PromoBannerGrid } from "../PromoBannerGrid/PromoBannerGrid";
 import { BrandStrip } from "../BrandStrip/BrandStrip";
 import { ProductSection } from "../ProductSection/ProductSection";
+import { CategoryShowcase } from "../CategoryShowcase/CategoryShowcase";
+import { SaleStrip } from "../SaleStrip/SaleStrip";
 import styles from "./MarketplaceHome.module.css";
-
-interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  price: number | string;
-  comparePrice?: number | string | null;
-  images: { url: string; alt?: string | null }[];
-  categories?: { category: { name: string; slug: string } }[];
-  quantity?: number;
-  status?: string;
-  isFeatured?: boolean;
-  brand?: string | null;
-}
+import type { HomepageProduct, CategorySection, BrandSection } from "@/lib/homepage-products";
 
 interface BannerData {
   id: string;
@@ -86,6 +75,14 @@ interface BrandData {
   linkUrl?: string | null;
 }
 
+interface CategoryShowcaseItem {
+  id: string;
+  name: string;
+  slug: string;
+  imageUrl?: string | null;
+  productCount: number;
+}
+
 interface Props {
   data: {
     heroSlides: BannerData[];
@@ -97,8 +94,15 @@ interface Props {
     tabs: TabData[];
     utilityLinks: UtilityLinkData[];
     promoStripItems: PromoStripData[];
-    sectionProducts: Record<string, Product[]>;
+    sectionProducts: Record<string, HomepageProduct[]>;
     categories: { id: string; name: string; slug: string; _count: { products: number } }[];
+    featuredProducts: HomepageProduct[];
+    saleProducts: HomepageProduct[];
+    newProducts: HomepageProduct[];
+    popularProducts: HomepageProduct[];
+    categorySections: CategorySection[];
+    brandSections: BrandSection[];
+    categoryShowcase: CategoryShowcaseItem[];
   };
 }
 
@@ -106,7 +110,8 @@ export function MarketplaceHome({ data }: Props) {
   const {
     heroSlides, dealCards, promoSmall, promoWide,
     brands, sections, tabs, utilityLinks, promoStripItems,
-    sectionProducts,
+    sectionProducts, featuredProducts, saleProducts, newProducts,
+    popularProducts, categorySections, brandSections, categoryShowcase,
   } = data;
 
   return (
@@ -128,8 +133,44 @@ export function MarketplaceHome({ data }: Props) {
             {tabs.length > 0 && <HorizontalTabs tabs={tabs} />}
             <HeroCarousel slides={heroSlides} deals={dealCards} />
             <PromoBannerGrid smallBanners={promoSmall} wideBanners={promoWide} />
+
+            {/* Category Showcase Grid */}
+            {categoryShowcase.length > 0 && (
+              <CategoryShowcase categories={categoryShowcase} />
+            )}
+
+            {/* Hot Deals - horizontal scrollable strip */}
+            <SaleStrip products={saleProducts} />
+
+            {/* Featured Products */}
+            {featuredProducts.length > 0 && (
+              <ProductSection
+                title="Featured Products"
+                subtitle="Handpicked for you"
+                products={featuredProducts}
+                viewAllHref="/catalog?featured=true"
+                viewAllLabel="View all featured"
+                columns={5}
+              />
+            )}
+
+            {/* Brand Strip */}
             {brands.length > 0 && <BrandStrip brands={brands} />}
 
+            {/* Popular Products */}
+            {popularProducts.length > 0 && (
+              <ProductSection
+                title="Popular Products"
+                subtitle="Most loved by customers"
+                products={popularProducts}
+                viewAllHref="/catalog"
+                viewAllLabel="View all"
+                bg="gray"
+                columns={5}
+              />
+            )}
+
+            {/* Admin-configured sections */}
             {sections.map((section) => {
               const products = sectionProducts[section.slug] || [];
               if (!products.length) return null;
@@ -137,13 +178,80 @@ export function MarketplaceHome({ data }: Props) {
                 <ProductSection
                   key={section.id}
                   title={section.title}
+                  subtitle={section.subtitle || undefined}
                   products={products}
                   viewAllHref={section.viewAllUrl || "/catalog"}
+                  viewAllLabel={section.viewAllLabel}
                   bg={section.bgStyle as "white" | "gray"}
                   columns={section.columns}
                 />
               );
             })}
+
+            {/* Products By Category */}
+            {categorySections.map((cs, i) => (
+              <ProductSection
+                key={cs.category.id}
+                title={cs.category.name}
+                subtitle={`${cs.products.length}+ products`}
+                products={cs.products}
+                tabs={cs.subcategoryTabs}
+                viewAllHref={`/catalog/${cs.category.slug}`}
+                viewAllLabel={`All ${cs.category.name}`}
+                bg={i % 2 === 1 ? "gray" : "white"}
+                columns={5}
+              />
+            ))}
+
+            {/* Brand Product Sections */}
+            {brandSections.length > 0 && (
+              <>
+                {brandSections.slice(0, 6).map((bs, i) => (
+                  <ProductSection
+                    key={bs.brand}
+                    title={`${bs.brand} Products`}
+                    subtitle={`${bs.products.length} items`}
+                    products={bs.products}
+                    viewAllHref={`/catalog?brand=${encodeURIComponent(bs.brand)}`}
+                    viewAllLabel={`All ${bs.brand}`}
+                    bg={i % 2 === 0 ? "gray" : "white"}
+                    columns={4}
+                  />
+                ))}
+              </>
+            )}
+
+            {/* New Arrivals */}
+            {newProducts.length > 0 && (
+              <ProductSection
+                title="New Arrivals"
+                subtitle="Just landed in store"
+                products={newProducts}
+                viewAllHref="/catalog?sort=newest"
+                viewAllLabel="View all new"
+                bg="gray"
+                columns={5}
+              />
+            )}
+
+            {/* Wide Promo Banner */}
+            {promoWide.length > 0 && (
+              <PromoBannerGrid smallBanners={[]} wideBanners={promoWide} />
+            )}
+
+            {/* Remaining brand sections */}
+            {brandSections.length > 6 && brandSections.slice(6).map((bs, i) => (
+              <ProductSection
+                key={bs.brand}
+                title={`${bs.brand} Products`}
+                subtitle={`${bs.products.length} items`}
+                products={bs.products}
+                viewAllHref={`/catalog?brand=${encodeURIComponent(bs.brand)}`}
+                viewAllLabel={`All ${bs.brand}`}
+                bg={i % 2 === 1 ? "gray" : "white"}
+                columns={4}
+              />
+            ))}
           </div>
         </div>
       </div>
