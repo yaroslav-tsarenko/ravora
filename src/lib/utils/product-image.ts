@@ -13,8 +13,9 @@ export function getProductImage(
   productName?: string,
   size = "400x400"
 ): string {
-  if (imageUrl && imageUrl.startsWith("http")) return imageUrl;
-  if (imageUrl && imageUrl.startsWith("/")) return imageUrl;
+  if (imageUrl && (imageUrl.startsWith("http") || imageUrl.startsWith("/"))) {
+    return imageUrl;
+  }
 
   const label = encodeURIComponent(productName?.slice(0, 20) || "Product");
   const color = CATEGORY_COLORS.default;

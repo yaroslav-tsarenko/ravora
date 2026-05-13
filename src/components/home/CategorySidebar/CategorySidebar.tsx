@@ -9,20 +9,20 @@ import {
 import styles from "./CategorySidebar.module.css";
 
 const categories = [
-  { name: "Computers & Office", slug: "electronics", icon: Monitor },
-  { name: "Phones & Tablets", slug: "electronics", icon: Smartphone },
-  { name: "Gaming", slug: "electronics", icon: Gamepad2 },
-  { name: "TV, Audio & Video", slug: "electronics", icon: Tv },
-  { name: "Computer Components", slug: "electronics", icon: Cpu },
-  { name: "Home Appliances", slug: "home-garden", icon: Home },
-  { name: "Beauty & Health", slug: "clothing", icon: Sparkles },
-  { name: "Sports & Fitness", slug: "sports", icon: Dumbbell },
-  { name: "Garden & Tools", slug: "home-garden", icon: Wrench },
-  { name: "Furniture", slug: "home-garden", icon: Sofa },
-  { name: "Kids & Baby", slug: "clothing", icon: Baby },
-  { name: "Auto Goods", slug: "sports", icon: Car },
-  { name: "Clothing & Accessories", slug: "clothing", icon: Shirt },
-  { name: "Outlet", slug: "electronics", icon: Tag },
+  { name: "Electronics", slug: "electronics", icon: Monitor },
+  { name: "Smartphones", slug: "smartphones", icon: Smartphone },
+  { name: "Laptops & Computers", slug: "laptops-computers", icon: Cpu },
+  { name: "Audio & Headphones", slug: "audio-headphones", icon: Tv },
+  { name: "Wearable Technology", slug: "wearable-tech", icon: Gamepad2 },
+  { name: "Clothing & Fashion", slug: "clothing", icon: Shirt },
+  { name: "Shoes & Footwear", slug: "shoes-footwear", icon: Sparkles },
+  { name: "Home & Garden", slug: "home-garden", icon: Home },
+  { name: "Kitchen & Dining", slug: "kitchen-dining", icon: Wrench },
+  { name: "Furniture", slug: "furniture", icon: Sofa },
+  { name: "Garden & Outdoor", slug: "garden-outdoor", icon: Baby },
+  { name: "Sports & Outdoors", slug: "sports", icon: Dumbbell },
+  { name: "Fitness Equipment", slug: "fitness-equipment", icon: Car },
+  { name: "Cycling", slug: "cycling", icon: Tag },
 ];
 
 export function CategorySidebar() {

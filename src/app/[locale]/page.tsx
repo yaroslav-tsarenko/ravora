@@ -42,7 +42,7 @@ async function getHomeData() {
       prisma.product.findMany({
         where: { status: "ACTIVE" },
         include: productInclude,
-        take: 50,
+        take: 500,
       }),
       prisma.category.findMany({
         where: { isActive: true, parentId: null },
