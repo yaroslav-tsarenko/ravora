@@ -95,12 +95,11 @@ export default function CartPage() {
                   width: "100%",
                   padding: "0.875rem",
                   borderRadius: "var(--radius-xl)",
-                  background: "var(--gradient-primary)",
+                  background: "var(--color-accent)",
                   color: "white",
                   fontWeight: 700,
                   fontSize: "0.9375rem",
                   textDecoration: "none",
-                  boxShadow: "var(--shadow-accent)",
                   transition: "transform 0.15s, box-shadow 0.15s",
                 }}
               >

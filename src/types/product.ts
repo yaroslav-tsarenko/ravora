@@ -47,7 +47,9 @@ export interface ProductDetail extends ProductListItem {
   metaDescription: string | null;
   brand: string | null;
   gtin: string | null;
+  ean: string | null;
   mpn: string | null;
+  characteristics: Record<string, Record<string, string>> | null;
   googleCategory: string | null;
   condition: string;
   metadata: Record<string, unknown> | null;

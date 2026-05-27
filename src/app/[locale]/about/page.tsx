@@ -53,7 +53,7 @@ export default function AboutPage() {
         <div style={{
           padding: "2.5rem",
           borderRadius: "var(--radius-2xl)",
-          background: "var(--gradient-primary)",
+          background: "var(--color-accent)",
           color: "white",
           textAlign: "center",
         }}>

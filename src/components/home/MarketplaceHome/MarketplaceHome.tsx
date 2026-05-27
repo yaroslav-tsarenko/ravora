@@ -10,6 +10,9 @@ import { BrandStrip } from "../BrandStrip/BrandStrip";
 import { ProductSection } from "../ProductSection/ProductSection";
 import { CategoryShowcase } from "../CategoryShowcase/CategoryShowcase";
 import { SaleStrip } from "../SaleStrip/SaleStrip";
+import { DealOfTheDay } from "../DealOfTheDay/DealOfTheDay";
+import { NewsletterBanner } from "../NewsletterBanner/NewsletterBanner";
+import { TrustStrip } from "../TrustStrip/TrustStrip";
 import styles from "./MarketplaceHome.module.css";
 import type { HomepageProduct, CategorySection, BrandSection } from "@/lib/homepage-products";
 
@@ -142,6 +145,9 @@ export function MarketplaceHome({ data }: Props) {
             {/* Hot Deals - horizontal scrollable strip */}
             <SaleStrip products={saleProducts} />
 
+            {/* Trust / Guarantee Strip */}
+            <TrustStrip />
+
             {/* Featured Products */}
             {featuredProducts.length > 0 && (
               <ProductSection
@@ -156,6 +162,11 @@ export function MarketplaceHome({ data }: Props) {
 
             {/* Brand Strip */}
             {brands.length > 0 && <BrandStrip brands={brands} />}
+
+            {/* Deal of the Day */}
+            {saleProducts.length > 0 && (
+              <DealOfTheDay product={saleProducts[0]} />
+            )}
 
             {/* Popular Products */}
             {popularProducts.length > 0 && (
@@ -187,6 +198,9 @@ export function MarketplaceHome({ data }: Props) {
                 />
               );
             })}
+
+            {/* Newsletter / Discount CTA */}
+            <NewsletterBanner />
 
             {/* Products By Category */}
             {categorySections.map((cs, i) => (

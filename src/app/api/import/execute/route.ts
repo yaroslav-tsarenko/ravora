@@ -4,6 +4,75 @@ import { getSessionUser } from "@/lib/auth";
 import { slugify } from "@/lib/utils/slugify";
 import { importRowSchema } from "@/lib/validators/import-row";
 
+function parseCharacteristics(raw: string | undefined): Record<string, Record<string, string>> | undefined {
+  if (!raw) return undefined;
+  const result: Record<string, Record<string, string>> = {};
+  const pairs = raw.split("|");
+  for (const pair of pairs) {
+    const groupSep = pair.indexOf(">>");
+    if (groupSep !== -1) {
+      const group = pair.substring(0, groupSep).trim();
+      const rest = pair.substring(groupSep + 2);
+      const colonIdx = rest.indexOf(":");
+      if (colonIdx !== -1) {
+        const key = rest.substring(0, colonIdx).trim();
+        const value = rest.substring(colonIdx + 1).trim();
+        if (!result[group]) result[group] = {};
+        result[group][key] = value;
+      }
+    } else {
+      const colonIdx = pair.indexOf(":");
+      if (colonIdx !== -1) {
+        const key = pair.substring(0, colonIdx).trim();
+        const value = pair.substring(colonIdx + 1).trim();
+        if (!result["General"]) result["General"] = {};
+        result["General"][key] = value;
+      }
+    }
+  }
+  return Object.keys(result).length > 0 ? result : undefined;
+}
+
+async function findOrCreateCategoryChain(
+  category?: string,
+  subCategory?: string,
+  subSubCategory?: string,
+): Promise<string | undefined> {
+  if (!category) return undefined;
+
+  let parentId: string | undefined;
+
+  const catSlug = slugify(category);
+  const cat = await prisma.category.upsert({
+    where: { slug: catSlug },
+    update: {},
+    create: { name: category, slug: catSlug },
+  });
+  parentId = cat.id;
+
+  if (subCategory) {
+    const subSlug = slugify(`${category}-${subCategory}`);
+    const sub = await prisma.category.upsert({
+      where: { slug: subSlug },
+      update: {},
+      create: { name: subCategory, slug: subSlug, parentId },
+    });
+    parentId = sub.id;
+
+    if (subSubCategory) {
+      const subSubSlug = slugify(`${category}-${subCategory}-${subSubCategory}`);
+      const subSub = await prisma.category.upsert({
+        where: { slug: subSubSlug },
+        update: {},
+        create: { name: subSubCategory, slug: subSubSlug, parentId },
+      });
+      parentId = subSub.id;
+    }
+  }
+
+  return parentId;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const user = await getSessionUser();
@@ -29,6 +98,8 @@ export async function POST(request: NextRequest) {
     for (let i = 0; i < rows.length; i++) {
       try {
         const validated = importRowSchema.parse(rows[i]);
+        const characteristics = parseCharacteristics(validated.characteristics);
+        const ean = validated.ean || undefined;
 
         if (mode === "price") {
           await prisma.product.update({
@@ -44,39 +115,53 @@ export async function POST(request: NextRequest) {
             data: { quantity: validated.quantity },
           });
         } else {
-          await prisma.product.upsert({
+          const categoryId = await findOrCreateCategoryChain(
+            validated.category,
+            validated.subCategory,
+            validated.subSubCategory,
+          );
+
+          const productData = {
+            name: validated.name,
+            price: validated.price,
+            comparePrice: validated.comparePrice,
+            quantity: validated.quantity,
+            description: validated.description,
+            shortDescription: validated.shortDescription,
+            brand: validated.brand,
+            status: validated.status,
+            gtin: validated.gtin,
+            ean,
+            mpn: validated.mpn,
+            googleCategory: validated.googleCategory,
+            condition: validated.condition,
+            characteristics: characteristics ?? undefined,
+          };
+
+          const product = await prisma.product.upsert({
             where: { sku: validated.sku },
-            update: {
-              name: validated.name,
-              price: validated.price,
-              comparePrice: validated.comparePrice,
-              quantity: validated.quantity,
-              description: validated.description,
-              shortDescription: validated.shortDescription,
-              brand: validated.brand,
-              status: validated.status,
-              gtin: validated.gtin,
-              mpn: validated.mpn,
-              googleCategory: validated.googleCategory,
-              condition: validated.condition,
-            },
+            update: productData,
             create: {
-              name: validated.name,
+              ...productData,
               slug: slugify(validated.name),
               sku: validated.sku,
-              price: validated.price,
-              comparePrice: validated.comparePrice,
-              quantity: validated.quantity,
-              description: validated.description,
-              shortDescription: validated.shortDescription,
-              brand: validated.brand,
               status: validated.status || "DRAFT",
-              gtin: validated.gtin,
-              mpn: validated.mpn,
-              googleCategory: validated.googleCategory,
               condition: validated.condition || "new",
             },
           });
+
+          if (categoryId) {
+            await prisma.productCategory.upsert({
+              where: {
+                productId_categoryId: {
+                  productId: product.id,
+                  categoryId,
+                },
+              },
+              update: {},
+              create: { productId: product.id, categoryId },
+            });
+          }
         }
         processed++;
       } catch (err) {

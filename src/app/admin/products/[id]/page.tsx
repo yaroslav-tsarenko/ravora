@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
@@ -9,25 +9,78 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { productSchema, type ProductFormData } from "@/lib/validators/product";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner/LoadingSpinner";
 import { toast } from "sonner";
+import { Plus, Trash2, Upload, GripVertical, Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
+
+interface ProductImage {
+  id: string;
+  url: string;
+  alt: string | null;
+  sortOrder: number;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  children?: Category[];
+}
+
+function flattenCategories(cats: Category[], depth = 0): { id: string; name: string; depth: number }[] {
+  const result: { id: string; name: string; depth: number }[] = [];
+  for (const cat of cats) {
+    result.push({ id: cat.id, name: cat.name, depth });
+    if (cat.children) result.push(...flattenCategories(cat.children, depth + 1));
+  }
+  return result;
+}
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [images, setImages] = useState<ProductImage[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [charRows, setCharRows] = useState<{ group: string; key: string; value: string }[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { register, handleSubmit, formState: { errors }, setValue, watch, reset } = useForm<ProductFormData>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(productSchema) as any,
   });
 
+  const syncCharacteristics = (rows: { group: string; key: string; value: string }[]) => {
+    const obj: Record<string, Record<string, string>> = {};
+    rows.forEach((r) => {
+      if (r.key) {
+        const group = r.group || "General";
+        if (!obj[group]) obj[group] = {};
+        obj[group][r.key] = r.value;
+      }
+    });
+    setValue("characteristics", Object.keys(obj).length > 0 ? obj : undefined);
+  };
+
   useEffect(() => {
     Promise.all([
       fetch(`/api/products/${id}`).then((r) => r.json()),
       fetch("/api/categories").then((r) => r.json()),
     ]).then(([product, cats]) => {
-      setCategories(cats);
+      setCategories(Array.isArray(cats) ? cats : []);
+      setImages(product.images || []);
+
+      const chars = product.characteristics as Record<string, Record<string, string>> | null;
+      if (chars) {
+        const rows: { group: string; key: string; value: string }[] = [];
+        Object.entries(chars).forEach(([group, entries]) => {
+          Object.entries(entries).forEach(([key, value]) => {
+            rows.push({ group, key, value });
+          });
+        });
+        setCharRows(rows);
+      }
+
       reset({
         name: product.name,
         sku: product.sku,
@@ -44,12 +97,14 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         trackInventory: product.trackInventory,
         brand: product.brand || "",
         gtin: product.gtin || "",
+        ean: product.ean || "",
         mpn: product.mpn || "",
         googleCategory: product.googleCategory || "",
         condition: product.condition || "new",
         metaTitle: product.metaTitle || "",
         metaDescription: product.metaDescription || "",
         categoryIds: product.categories?.map((c: { categoryId: string }) => c.categoryId) || [],
+        characteristics: product.characteristics || undefined,
       });
       setFetching(false);
     }).catch(console.error);
@@ -72,6 +127,52 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     }
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      Array.from(files).forEach((f) => formData.append("files", f));
+
+      const res = await fetch(`/api/products/${id}/images`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Upload failed");
+      }
+
+      const data = await res.json();
+      setImages((prev) => [...prev, ...data.images]);
+      toast.success(`${data.images.length} image(s) uploaded`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleImageDelete = async (imageId: string) => {
+    try {
+      await fetch(`/api/products/${id}/images`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageId }),
+      });
+      setImages((prev) => prev.filter((img) => img.id !== imageId));
+      toast.success("Image deleted");
+    } catch {
+      toast.error("Failed to delete image");
+    }
+  };
+
+  const flatCats = flattenCategories(categories);
+
   if (fetching) return <LoadingSpinner />;
 
   return (
@@ -84,6 +185,117 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       <h1 className="admin-page-title" style={{ marginBottom: "1.5rem" }}>Edit Product</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+
+        {/* Images */}
+        <div className="admin-form-card">
+          <div className="admin-form-section-title">Product Images</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", marginBottom: "1rem" }}>
+            {images.map((img) => (
+              <div
+                key={img.id}
+                style={{
+                  position: "relative",
+                  width: "110px",
+                  height: "110px",
+                  borderRadius: "var(--radius-lg)",
+                  overflow: "hidden",
+                  border: "1px solid var(--admin-border)",
+                  background: "var(--admin-bg-secondary)",
+                }}
+              >
+                <Image
+                  src={img.url}
+                  alt={img.alt || "Product image"}
+                  fill
+                  sizes="110px"
+                  style={{ objectFit: "cover" }}
+                />
+                <button
+                  type="button"
+                  onClick={() => handleImageDelete(img.id)}
+                  style={{
+                    position: "absolute",
+                    top: "4px",
+                    right: "4px",
+                    width: "24px",
+                    height: "24px",
+                    borderRadius: "50%",
+                    border: "none",
+                    background: "rgba(0,0,0,0.6)",
+                    color: "white",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "0",
+                  }}
+                >
+                  <Trash2 size={12} />
+                </button>
+                <div style={{
+                  position: "absolute",
+                  bottom: "4px",
+                  left: "4px",
+                  background: "rgba(0,0,0,0.5)",
+                  color: "white",
+                  fontSize: "0.625rem",
+                  padding: "0.0625rem 0.25rem",
+                  borderRadius: "var(--radius-sm)",
+                }}>
+                  <GripVertical size={10} style={{ display: "inline", verticalAlign: "middle" }} /> {img.sortOrder + 1}
+                </div>
+              </div>
+            ))}
+
+            {/* Upload button */}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              style={{
+                width: "110px",
+                height: "110px",
+                borderRadius: "var(--radius-lg)",
+                border: "2px dashed var(--admin-border)",
+                background: "none",
+                cursor: uploading ? "wait" : "pointer",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.25rem",
+                color: "var(--admin-text-muted)",
+                fontSize: "0.75rem",
+                transition: "border-color 0.2s, color 0.2s",
+              }}
+            >
+              {uploading ? (
+                <LoadingSpinner />
+              ) : (
+                <>
+                  <Upload size={20} />
+                  Upload
+                </>
+              )}
+            </button>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
+            multiple
+            onChange={handleImageUpload}
+            style={{ display: "none" }}
+          />
+          {images.length === 0 && (
+            <p style={{ fontSize: "0.8125rem", color: "var(--admin-text-muted)" }}>
+              <ImageIcon size={14} style={{ display: "inline", verticalAlign: "middle", marginRight: "0.25rem" }} />
+              Upload product images. First image is the main photo.
+            </p>
+          )}
+        </div>
+
+        {/* Basic Info */}
         <div className="admin-form-card">
           <div className="admin-form-section-title">Basic Information</div>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -98,16 +310,17 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
               {errors.sku && <span className="admin-field-error">{errors.sku.message}</span>}
             </div>
             <div>
-              <label className="admin-label">Description</label>
-              <textarea className="admin-textarea" rows={4} {...register("description")} />
+              <label className="admin-label">Short Description</label>
+              <input className="admin-input" {...register("shortDescription")} placeholder="Brief summary shown on product card" />
             </div>
             <div>
-              <label className="admin-label">Short Description</label>
-              <input className="admin-input" {...register("shortDescription")} />
+              <label className="admin-label">Full Description</label>
+              <textarea className="admin-textarea" rows={5} {...register("description")} />
             </div>
           </div>
         </div>
 
+        {/* Pricing */}
         <div className="admin-form-card">
           <div className="admin-form-section-title">Pricing</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
@@ -126,6 +339,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
 
+        {/* Inventory */}
         <div className="admin-form-card">
           <div className="admin-form-section-title">Inventory</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
@@ -144,6 +358,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
 
+        {/* Organization */}
         <div className="admin-form-card">
           <div className="admin-form-section-title">Organization</div>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -157,8 +372,18 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             </div>
             <div>
               <label className="admin-label">Categories</label>
-              <select className="admin-select" style={{ height: "auto", minHeight: "44px" }} multiple value={watch("categoryIds") || []} onChange={(e) => setValue("categoryIds", Array.from(e.target.selectedOptions, (o) => o.value))}>
-                {categories.map((cat) => (<option key={cat.id} value={cat.id}>{cat.name}</option>))}
+              <select
+                className="admin-select"
+                style={{ height: "auto", minHeight: "44px" }}
+                multiple
+                value={watch("categoryIds") || []}
+                onChange={(e) => setValue("categoryIds", Array.from(e.target.selectedOptions, (o) => o.value))}
+              >
+                {flatCats.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {"  ".repeat(cat.depth)}{cat.depth > 0 ? "└ " : ""}{cat.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div style={{ display: "flex", gap: "2rem" }}>
@@ -174,6 +399,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
 
+        {/* Product Identifiers */}
         <div className="admin-form-card">
           <div className="admin-form-section-title">Product Identifiers</div>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -181,7 +407,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
               <label className="admin-label">Brand</label>
               <input className="admin-input" {...register("brand")} />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
+              <div>
+                <label className="admin-label">EAN (13 digits)</label>
+                <input className="admin-input" maxLength={13} placeholder="4751234567890" {...register("ean")} />
+                {errors.ean && <span className="admin-field-error">{errors.ean.message}</span>}
+              </div>
               <div>
                 <label className="admin-label">GTIN</label>
                 <input className="admin-input" {...register("gtin")} />
@@ -198,6 +429,79 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
 
+        {/* Characteristics */}
+        <div className="admin-form-card">
+          <div className="admin-form-section-title">Characteristics</div>
+          <p style={{ fontSize: "0.8125rem", color: "var(--admin-text-tertiary)", marginBottom: "0.75rem" }}>
+            Group similar properties under a section name (e.g. Dimensions, Connection, Materials).
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            {charRows.map((row, i) => (
+              <div key={i} style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                <input
+                  className="admin-input"
+                  placeholder="Group"
+                  value={row.group}
+                  onChange={(e) => {
+                    const next = [...charRows];
+                    next[i] = { ...next[i], group: e.target.value };
+                    setCharRows(next);
+                    syncCharacteristics(next);
+                  }}
+                  style={{ flex: 0.8 }}
+                />
+                <input
+                  className="admin-input"
+                  placeholder="Name"
+                  value={row.key}
+                  onChange={(e) => {
+                    const next = [...charRows];
+                    next[i] = { ...next[i], key: e.target.value };
+                    setCharRows(next);
+                    syncCharacteristics(next);
+                  }}
+                  style={{ flex: 1 }}
+                />
+                <input
+                  className="admin-input"
+                  placeholder="Value"
+                  value={row.value}
+                  onChange={(e) => {
+                    const next = [...charRows];
+                    next[i] = { ...next[i], value: e.target.value };
+                    setCharRows(next);
+                    syncCharacteristics(next);
+                  }}
+                  style={{ flex: 1 }}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = charRows.filter((_, j) => j !== i);
+                    setCharRows(next);
+                    syncCharacteristics(next);
+                  }}
+                  style={{ background: "none", border: "none", cursor: "pointer", color: "var(--admin-text-tertiary)", padding: "0.5rem" }}
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => setCharRows([...charRows, { group: charRows[charRows.length - 1]?.group || "", key: "", value: "" }])}
+              style={{
+                display: "flex", alignItems: "center", gap: "0.375rem",
+                background: "none", border: "1px dashed var(--admin-border)", borderRadius: "var(--radius-md)",
+                padding: "0.625rem 1rem", cursor: "pointer", color: "var(--admin-text-secondary)", fontSize: "0.875rem",
+              }}
+            >
+              <Plus size={14} /> Add Characteristic
+            </button>
+          </div>
+        </div>
+
+        {/* SEO */}
         <div className="admin-form-card">
           <div className="admin-form-section-title">SEO</div>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ProductGallery } from "@/components/product/ProductGallery/ProductGallery";
 import { ProductInfo } from "@/components/product/ProductInfo/ProductInfo";
+import { ProductTabs } from "@/components/product/ProductTabs/ProductTabs";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
 import { JsonLd } from "@/components/shared/SEO/JsonLd";
 
@@ -10,6 +11,24 @@ export const revalidate = 60;
 
 interface ProductPageProps {
   params: Promise<{ slug: string; locale: string }>;
+}
+
+async function getCategoryChain(categoryId: string): Promise<{ name: string; slug: string }[]> {
+  const chain: { name: string; slug: string }[] = [];
+  let currentId: string | null = categoryId;
+
+  while (currentId) {
+    const cat: { name: string; slug: string; parentId: string | null } | null =
+      await prisma.category.findUnique({
+        where: { id: currentId },
+        select: { name: true, slug: true, parentId: true },
+      });
+    if (!cat) break;
+    chain.unshift({ name: cat.name, slug: cat.slug });
+    currentId = cat.parentId;
+  }
+
+  return chain;
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
@@ -50,15 +69,27 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   if (!product || product.status === "ARCHIVED") notFound();
 
+  const primaryCategory = product.categories[0]?.category;
+  const categoryChain = primaryCategory
+    ? await getCategoryChain(primaryCategory.id)
+    : [];
+
+  const reviewCount = product.reviews.length;
+  const avgRating = reviewCount > 0
+    ? product.reviews.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / reviewCount
+    : 0;
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const categoryName = product.categories[0]?.category?.name;
+
+  const characteristics = product.characteristics as Record<string, Record<string, string>> | null;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    description: product.description || product.name,
+    description: product.description || product.shortDescription || product.name,
     sku: product.sku,
+    gtin13: product.ean || product.gtin || undefined,
     image: product.images[0]?.url,
     brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
     offers: {
@@ -70,34 +101,41 @@ export default async function ProductPage({ params }: ProductPageProps) {
         : "https://schema.org/OutOfStock",
       url: `${siteUrl}/en/product/${product.slug}`,
     },
-    ...(product.reviews.length > 0 && {
+    ...(reviewCount > 0 && {
       aggregateRating: {
         "@type": "AggregateRating",
-        ratingValue: (
-          product.reviews.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / product.reviews.length
-        ).toFixed(1),
-        reviewCount: product.reviews.length,
+        ratingValue: avgRating.toFixed(1),
+        reviewCount,
       },
     }),
   };
+
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Catalog", href: "/catalog" },
+    ...categoryChain.map((cat) => ({
+      label: cat.name,
+      href: `/catalog/${cat.slug}`,
+    })),
+    { label: product.name },
+  ];
 
   return (
     <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 4rem" }}>
       <JsonLd data={jsonLd} />
 
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Catalog", href: "/catalog" },
-          ...(categoryName
-            ? [{ label: categoryName, href: `/catalog/${product.categories[0].category.slug}` }]
-            : []),
-          { label: product.name },
-        ]}
-      />
+      <Breadcrumbs items={breadcrumbItems} />
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", marginTop: "0.5rem" }}>
-        <ProductGallery images={product.images} productName={product.name} />
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: "3rem",
+        marginTop: "0.5rem",
+        alignItems: "start",
+      }}>
+        <div style={{ position: "sticky", top: "calc(var(--header-height) + 1rem)" }}>
+          <ProductGallery images={product.images} productName={product.name} />
+        </div>
         <ProductInfo
           id={product.id}
           name={product.name}
@@ -106,46 +144,27 @@ export default async function ProductPage({ params }: ProductPageProps) {
           price={Number(product.price)}
           comparePrice={product.comparePrice ? Number(product.comparePrice) : null}
           quantity={product.quantity}
+          shortDescription={product.shortDescription}
           description={product.description}
           brand={product.brand}
           condition={product.condition}
           lowStockAlert={product.lowStockAlert}
           imageUrl={product.images[0]?.url}
+          ean={product.ean}
+          reviewCount={reviewCount}
+          avgRating={avgRating}
+          categoryPath={categoryChain}
         />
       </div>
 
-      {product.reviews.length > 0 && (
-        <section style={{ borderTop: "1px solid var(--color-border)", paddingTop: "2.5rem", marginTop: "3rem" }}>
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: "1.5rem" }}>
-            Customer Reviews <span style={{ color: "var(--color-text-tertiary)", fontWeight: 500, fontSize: "1rem" }}>({product.reviews.length})</span>
-          </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1rem" }}>
-            {product.reviews.map((review: { id: string; rating: number; comment: string | null; user: { name: string | null } }) => (
-              <div
-                key={review.id}
-                style={{
-                  padding: "1.25rem",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: "var(--radius-xl)",
-                  background: "var(--color-bg-secondary)",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-                  <span style={{ fontWeight: 700, fontSize: "0.9375rem" }}>{review.user.name || "Anonymous"}</span>
-                  <span style={{ color: "var(--color-warning)", fontSize: "0.875rem" }}>
-                    {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
-                  </span>
-                </div>
-                {review.comment && (
-                  <p style={{ color: "var(--color-text-secondary)", fontSize: "0.875rem", lineHeight: 1.6 }}>
-                    {review.comment}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      <ProductTabs
+        description={product.description}
+        characteristics={characteristics}
+        reviews={product.reviews.map((r) => ({
+          ...r,
+          createdAt: r.createdAt.toISOString(),
+        }))}
+      />
     </div>
   );
 }
