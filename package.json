@@ -10,7 +10,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1054.0",
     "@heroui/react": "^3.0.3",
     "@heroui/system": "^2.4.28",
     "@heroui/theme": "^2.4.26",

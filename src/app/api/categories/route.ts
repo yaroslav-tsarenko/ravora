@@ -12,37 +12,15 @@ const categorySchema = z.object({
   isActive: z.boolean().optional(),
 });
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
-    const flat = searchParams.get("flat") === "true";
-
-    if (flat) {
-      const categories = await prisma.category.findMany({
-        orderBy: { name: "asc" },
-        include: { _count: { select: { products: true } } },
-      });
-      return NextResponse.json(categories);
-    }
-
     const categories = await prisma.category.findMany({
+      include: {
+        children: { orderBy: { sortOrder: "asc" } },
+        _count: { select: { products: true } },
+      },
       where: { parentId: null },
       orderBy: { sortOrder: "asc" },
-      include: {
-        _count: { select: { products: true } },
-        children: {
-          orderBy: { sortOrder: "asc" },
-          include: {
-            _count: { select: { products: true } },
-            children: {
-              orderBy: { sortOrder: "asc" },
-              include: {
-                _count: { select: { products: true } },
-              },
-            },
-          },
-        },
-      },
     });
 
     return NextResponse.json(categories);
@@ -57,15 +35,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validated = categorySchema.parse(body);
 
-    const slug = validated.parentId
-      ? await (async () => {
-          const parent = await prisma.category.findUnique({ where: { id: validated.parentId! }, select: { slug: true } });
-          return parent ? slugify(`${parent.slug}-${validated.name}`) : slugify(validated.name);
-        })()
-      : slugify(validated.name);
-
     const category = await prisma.category.create({
-      data: { ...validated, slug },
+      data: {
+        ...validated,
+        slug: slugify(validated.name),
+      },
     });
 
     return NextResponse.json(category, { status: 201 });

@@ -17,11 +17,10 @@ model User {
   role         UserRole @default(CUSTOMER)
   phone        String?
 
-  addresses          Address[]
-  orders             Order[]
-  reviews            Review[]
-  wishlist           WishlistItem[]
-  passwordResetTokens PasswordResetToken[]
+  addresses Address[]
+  orders    Order[]
+  reviews   Review[]
+  wishlist  WishlistItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -31,16 +30,6 @@ enum UserRole {
   CUSTOMER
   ADMIN
   SUPER_ADMIN
-}
-
-model PasswordResetToken {
-  id        String   @id @default(cuid())
-  token     String   @unique
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt DateTime
-  usedAt    DateTime?
-  createdAt DateTime @default(now())
 }
 
 model Address {
@@ -126,13 +115,11 @@ model Product {
   isFeatured       Boolean           @default(false)
   metadata         Json?
 
-  brand            String?
-  gtin             String?
-  ean              String?
-  mpn              String?
-  googleCategory   String?
-  condition        String @default("new")
-  characteristics  Json?
+  brand          String?
+  gtin           String?
+  mpn            String?
+  googleCategory String?
+  condition      String @default("new")
 
   images     ProductImage[]
   categories ProductCategory[]

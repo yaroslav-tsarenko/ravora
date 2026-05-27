@@ -27,13 +27,18 @@
 .cardBg1 {
   position: absolute;
   inset: 0;
-  background: var(--color-accent);
+  background: linear-gradient(135deg, #6C5CE7 0%, #a855f7 40%, #ec4899 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease infinite;
 }
 
 .cardBg2 {
   position: absolute;
   inset: 0;
-  background: var(--color-accent-2);
+  background: linear-gradient(135deg, #00CECE 0%, #6C5CE7 40%, #a855f7 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease infinite;
+  animation-delay: -3s;
 }
 
 .cardContent {

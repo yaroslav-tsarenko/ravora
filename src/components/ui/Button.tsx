@@ -49,7 +49,7 @@ export function Button({
   const resolvedVariant = resolveVariant(variant, color);
 
   const variantStyles: Record<string, React.CSSProperties> = {
-    primary: { background: "var(--color-accent)", color: "#fff", border: "none" },
+    primary: { background: "var(--gradient-primary)", color: "#fff", border: "none", boxShadow: "var(--shadow-accent)" },
     secondary: { background: "var(--color-bg-secondary)", color: "var(--color-text)", border: "1px solid var(--color-border)" },
     tertiary: { background: "transparent", color: "var(--color-text-secondary)", border: "none" },
     outline: { background: "transparent", color: "var(--color-text)", border: "1px solid var(--color-border)" },
