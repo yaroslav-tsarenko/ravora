@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword, setSessionCookie } from "@/lib/auth";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,6 +27,8 @@ export async function POST(request: NextRequest) {
     });
 
     await setSessionCookie(user.id);
+
+    sendWelcomeEmail(user.email, user.name).catch(console.error);
 
     return NextResponse.json({
       user: { id: user.id, email: user.email, name: user.name, role: user.role },
