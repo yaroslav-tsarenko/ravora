@@ -1,7 +1,5 @@
 .section {
-  background: var(--gradient-primary);
-  background-size: 200% 200%;
-  animation: gradientShift 6s ease infinite;
+  background: var(--color-accent);
   position: relative;
   overflow: hidden;
 }

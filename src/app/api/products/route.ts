@@ -128,7 +128,9 @@ export async function POST(request: NextRequest) {
         isFeatured: validated.isFeatured,
         brand: validated.brand,
         gtin: validated.gtin,
+        ean: validated.ean || undefined,
         mpn: validated.mpn,
+        characteristics: validated.characteristics ?? undefined,
         googleCategory: validated.googleCategory,
         condition: validated.condition,
         categories: validated.categoryIds

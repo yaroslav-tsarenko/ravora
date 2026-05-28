@@ -104,14 +104,20 @@ export default function LoginPage() {
             </div>
           </motion.div>
 
-          <motion.div custom={3} variants={fadeUp} initial="hidden" animate="visible" className={styles.submitButton}>
+          <motion.div custom={3} variants={fadeUp} initial="hidden" animate="visible">
+            <Link href="/auth/forgot-password" className={styles.forgotPasswordLink}>
+              {t("forgotPassword")}
+            </Link>
+          </motion.div>
+
+          <motion.div custom={4} variants={fadeUp} initial="hidden" animate="visible" className={styles.submitButton}>
             <Button type="submit" color="primary" fullWidth isLoading={loading}>
               {t("signIn")}
             </Button>
           </motion.div>
         </form>
 
-        <motion.p className={styles.authFooter} custom={4} variants={fadeUp} initial="hidden" animate="visible">
+        <motion.p className={styles.authFooter} custom={5} variants={fadeUp} initial="hidden" animate="visible">
           {t("noAccount")}{" "}
           <Link href="/auth/register">
             {t("signUp")}
