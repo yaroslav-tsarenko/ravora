@@ -1,32 +1,63 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@/i18n/routing";
-import {
-  Monitor, Smartphone, Gamepad2, Tv, Cpu, Home, Sparkles,
-  Dumbbell, Wrench, Sofa, Baby, Car, Shirt, Tag, ChevronRight, Menu, X
-} from "lucide-react";
+import { ChevronRight, ChevronDown, Menu, X } from "lucide-react";
 import styles from "./CategorySidebar.module.css";
 
-const categories = [
-  { name: "Electronics", slug: "electronics", icon: Monitor },
-  { name: "Smartphones", slug: "smartphones", icon: Smartphone },
-  { name: "Laptops & Computers", slug: "laptops-computers", icon: Cpu },
-  { name: "Audio & Headphones", slug: "audio-headphones", icon: Tv },
-  { name: "Wearable Technology", slug: "wearable-tech", icon: Gamepad2 },
-  { name: "Clothing & Fashion", slug: "clothing", icon: Shirt },
-  { name: "Shoes & Footwear", slug: "shoes-footwear", icon: Sparkles },
-  { name: "Home & Garden", slug: "home-garden", icon: Home },
-  { name: "Kitchen & Dining", slug: "kitchen-dining", icon: Wrench },
-  { name: "Furniture", slug: "furniture", icon: Sofa },
-  { name: "Garden & Outdoor", slug: "garden-outdoor", icon: Baby },
-  { name: "Sports & Outdoors", slug: "sports", icon: Dumbbell },
-  { name: "Fitness Equipment", slug: "fitness-equipment", icon: Car },
-  { name: "Cycling", slug: "cycling", icon: Tag },
-];
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  _count?: { products: number };
+  children?: Category[];
+}
+
+function CategoryItem({ cat, depth = 0, onNavigate }: { cat: Category; depth?: number; onNavigate: () => void }) {
+  const [expanded, setExpanded] = useState(false);
+  const hasChildren = cat.children && cat.children.length > 0;
+  const count = cat._count?.products || 0;
+
+  return (
+    <>
+      <div className={styles.item} style={{ paddingLeft: `${0.75 + depth * 0.75}rem` }}>
+        <Link
+          href={`/catalog/${cat.slug}`}
+          className={styles.itemLink}
+          onClick={onNavigate}
+        >
+          <span className={styles.name}>{cat.name}</span>
+          {count > 0 && <span className={styles.count}>{count}</span>}
+        </Link>
+        {hasChildren && (
+          <button
+            className={styles.expandBtn}
+            onClick={(e) => { e.preventDefault(); setExpanded(!expanded); }}
+            aria-label={expanded ? "Collapse" : "Expand"}
+          >
+            {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+          </button>
+        )}
+      </div>
+      {hasChildren && expanded && cat.children!.map((child) => (
+        <CategoryItem key={child.id} cat={child} depth={depth + 1} onNavigate={onNavigate} />
+      ))}
+    </>
+  );
+}
 
 export function CategorySidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((r) => r.json())
+      .then((d) => setCategories(Array.isArray(d) ? d : []))
+      .catch(console.error);
+  }, []);
+
+  const closeMobile = () => setMobileOpen(false);
 
   return (
     <>
@@ -40,7 +71,7 @@ export function CategorySidebar() {
       </button>
 
       {mobileOpen && (
-        <div className={styles.overlay} onClick={() => setMobileOpen(false)} />
+        <div className={styles.overlay} onClick={closeMobile} />
       )}
 
       <aside className={`${styles.sidebar} ${mobileOpen ? styles.open : ""}`}>
@@ -51,25 +82,27 @@ export function CategorySidebar() {
           </h3>
           <button
             className={styles.closeBtn}
-            onClick={() => setMobileOpen(false)}
+            onClick={closeMobile}
             aria-label="Close categories"
           >
             <X size={20} />
           </button>
         </div>
         <nav className={styles.list}>
-          {categories.map((cat) => (
-            <Link
-              key={cat.name}
-              href={`/catalog/${cat.slug}`}
-              className={styles.item}
-              onClick={() => setMobileOpen(false)}
-            >
-              <cat.icon size={16} className={styles.icon} />
-              <span className={styles.name}>{cat.name}</span>
-              <ChevronRight size={14} className={styles.arrow} />
-            </Link>
-          ))}
+          {categories.length === 0 ? (
+            <div className={styles.skeleton}>
+              {Array.from({ length: 10 }).map((_, i) => (
+                <div key={i} className={styles.skeletonItem}>
+                  <div className={styles.skeletonBar} style={{ width: `${55 + (i * 17) % 35}%`, flexShrink: 0 }} />
+                  <div className={styles.skeletonBar} style={{ width: "24px", marginLeft: "auto" }} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            categories.map((cat) => (
+              <CategoryItem key={cat.id} cat={cat} onNavigate={closeMobile} />
+            ))
+          )}
         </nav>
       </aside>
     </>

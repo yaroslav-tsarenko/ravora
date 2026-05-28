@@ -137,10 +137,33 @@ export function MarketplaceHome({ data }: Props) {
             <HeroCarousel slides={heroSlides} deals={dealCards} />
             <PromoBannerGrid smallBanners={promoSmall} wideBanners={promoWide} />
 
-            {/* Category Showcase Grid */}
-            {categoryShowcase.length > 0 && (
-              <CategoryShowcase categories={categoryShowcase} />
+            {/* Most Popular Products */}
+            {popularProducts.length > 0 && (
+              <ProductSection
+                title="Most Popular"
+                subtitle="Top products by availability"
+                products={popularProducts}
+                viewAllHref="/catalog?sort=popular"
+                viewAllLabel="View all popular"
+                bg="white"
+                columns={5}
+              />
             )}
+
+            {/* Top categories by product count */}
+            {categorySections.slice(0, 3).map((cs, i) => (
+              <ProductSection
+                key={cs.category.id}
+                title={cs.category.name}
+                subtitle={`${cs.products.length}+ products`}
+                products={cs.products}
+                tabs={cs.subcategoryTabs}
+                viewAllHref={`/catalog/${cs.category.slug}`}
+                viewAllLabel={`All ${cs.category.name}`}
+                bg={i % 2 === 1 ? "gray" : "white"}
+                columns={5}
+              />
+            ))}
 
             {/* Hot Deals - horizontal scrollable strip */}
             <SaleStrip products={saleProducts} />
@@ -148,38 +171,28 @@ export function MarketplaceHome({ data }: Props) {
             {/* Trust / Guarantee Strip */}
             <TrustStrip />
 
-            {/* Featured Products */}
-            {featuredProducts.length > 0 && (
-              <ProductSection
-                title="Featured Products"
-                subtitle="Handpicked for you"
-                products={featuredProducts}
-                viewAllHref="/catalog?featured=true"
-                viewAllLabel="View all featured"
-                columns={5}
-              />
-            )}
-
-            {/* Brand Strip */}
-            {brands.length > 0 && <BrandStrip brands={brands} />}
-
             {/* Deal of the Day */}
             {saleProducts.length > 0 && (
               <DealOfTheDay product={saleProducts[0]} />
             )}
 
-            {/* Popular Products */}
-            {popularProducts.length > 0 && (
+            {/* 3 more top categories after deal */}
+            {categorySections.slice(3, 6).map((cs, i) => (
               <ProductSection
-                title="Popular Products"
-                subtitle="Most loved by customers"
-                products={popularProducts}
-                viewAllHref="/catalog"
-                viewAllLabel="View all"
-                bg="gray"
+                key={cs.category.id}
+                title={cs.category.name}
+                subtitle={`${cs.products.length}+ products`}
+                products={cs.products}
+                tabs={cs.subcategoryTabs}
+                viewAllHref={`/catalog/${cs.category.slug}`}
+                viewAllLabel={`All ${cs.category.name}`}
+                bg={i % 2 === 0 ? "gray" : "white"}
                 columns={5}
               />
-            )}
+            ))}
+
+            {/* Brand Strip */}
+            {brands.length > 0 && <BrandStrip brands={brands} />}
 
             {/* Admin-configured sections */}
             {sections.map((section) => {
@@ -202,39 +215,6 @@ export function MarketplaceHome({ data }: Props) {
             {/* Newsletter / Discount CTA */}
             <NewsletterBanner />
 
-            {/* Products By Category */}
-            {categorySections.map((cs, i) => (
-              <ProductSection
-                key={cs.category.id}
-                title={cs.category.name}
-                subtitle={`${cs.products.length}+ products`}
-                products={cs.products}
-                tabs={cs.subcategoryTabs}
-                viewAllHref={`/catalog/${cs.category.slug}`}
-                viewAllLabel={`All ${cs.category.name}`}
-                bg={i % 2 === 1 ? "gray" : "white"}
-                columns={5}
-              />
-            ))}
-
-            {/* Brand Product Sections */}
-            {brandSections.length > 0 && (
-              <>
-                {brandSections.slice(0, 6).map((bs, i) => (
-                  <ProductSection
-                    key={bs.brand}
-                    title={`${bs.brand} Products`}
-                    subtitle={`${bs.products.length} items`}
-                    products={bs.products}
-                    viewAllHref={`/catalog?brand=${encodeURIComponent(bs.brand)}`}
-                    viewAllLabel={`All ${bs.brand}`}
-                    bg={i % 2 === 0 ? "gray" : "white"}
-                    columns={4}
-                  />
-                ))}
-              </>
-            )}
-
             {/* New Arrivals */}
             {newProducts.length > 0 && (
               <ProductSection
@@ -247,25 +227,6 @@ export function MarketplaceHome({ data }: Props) {
                 columns={5}
               />
             )}
-
-            {/* Wide Promo Banner */}
-            {promoWide.length > 0 && (
-              <PromoBannerGrid smallBanners={[]} wideBanners={promoWide} />
-            )}
-
-            {/* Remaining brand sections */}
-            {brandSections.length > 6 && brandSections.slice(6).map((bs, i) => (
-              <ProductSection
-                key={bs.brand}
-                title={`${bs.brand} Products`}
-                subtitle={`${bs.products.length} items`}
-                products={bs.products}
-                viewAllHref={`/catalog?brand=${encodeURIComponent(bs.brand)}`}
-                viewAllLabel={`All ${bs.brand}`}
-                bg={i % 2 === 1 ? "gray" : "white"}
-                columns={4}
-              />
-            ))}
           </div>
         </div>
       </div>

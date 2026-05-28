@@ -7,7 +7,7 @@ import { SlidersHorizontal, X } from "lucide-react";
 import { ProductGrid } from "@/components/product/ProductGrid/ProductGrid";
 import { ProductFilters } from "@/components/product/ProductFilters/ProductFilters";
 import { ProductSort } from "@/components/product/ProductSort/ProductSort";
-import { LoadingSpinner } from "@/components/shared/LoadingSpinner/LoadingSpinner";
+import { ProductSkeleton } from "@/components/product/ProductSkeleton/ProductSkeleton";
 import { EmptyState } from "@/components/shared/EmptyState/EmptyState";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
 
@@ -158,9 +158,9 @@ export default function CatalogPage() {
           />
         </aside>
 
-        <div>
+        <div style={{ minWidth: 0 }}>
           {loading ? (
-            <LoadingSpinner label={t("sortBy")} />
+            <ProductSkeleton count={12} />
           ) : products.length === 0 ? (
             <EmptyState
               title={t("filterBy")}
@@ -172,7 +172,7 @@ export default function CatalogPage() {
             <>
               <ProductGrid products={products} />
               {totalPages > 1 && (
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "0.375rem", marginTop: "2.5rem" }}>
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "0.375rem", marginTop: "2.5rem", paddingBottom: "3rem" }}>
                   <button
                     onClick={() => updateParams({ page: String(page - 1) })}
                     disabled={page <= 1}
@@ -190,28 +190,59 @@ export default function CatalogPage() {
                   >
                     Prev
                   </button>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                    <button
-                      key={p}
-                      onClick={() => updateParams({ page: String(p) })}
-                      style={{
-                        width: "2.25rem",
-                        height: "2.25rem",
-                        borderRadius: "var(--radius-lg)",
-                        border: p === page ? "none" : "1px solid var(--color-border)",
-                        background: p === page ? "var(--color-accent)" : "var(--color-bg)",
-                        color: p === page ? "white" : "var(--color-text)",
-                        cursor: "pointer",
-                        fontSize: "0.8125rem",
-                        fontWeight: p === page ? 700 : 500,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {p}
-                    </button>
-                  ))}
+                  {(() => {
+                    const pages: (number | "ellipsis-start" | "ellipsis-end")[] = [];
+                    if (totalPages <= 7) {
+                      for (let i = 1; i <= totalPages; i++) pages.push(i);
+                    } else {
+                      pages.push(1);
+                      if (page > 3) pages.push("ellipsis-start");
+                      const start = Math.max(2, page - 1);
+                      const end = Math.min(totalPages - 1, page + 1);
+                      for (let i = start; i <= end; i++) pages.push(i);
+                      if (page < totalPages - 2) pages.push("ellipsis-end");
+                      pages.push(totalPages);
+                    }
+                    return pages.map((p) =>
+                      typeof p === "string" ? (
+                        <span
+                          key={p}
+                          style={{
+                            width: "2.25rem",
+                            height: "2.25rem",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "0.8125rem",
+                            color: "var(--color-text-secondary)",
+                          }}
+                        >
+                          …
+                        </span>
+                      ) : (
+                        <button
+                          key={p}
+                          onClick={() => updateParams({ page: String(p) })}
+                          style={{
+                            width: "2.25rem",
+                            height: "2.25rem",
+                            borderRadius: "var(--radius-lg)",
+                            border: p === page ? "none" : "1px solid var(--color-border)",
+                            background: p === page ? "var(--color-accent)" : "var(--color-bg)",
+                            color: p === page ? "white" : "var(--color-text)",
+                            cursor: "pointer",
+                            fontSize: "0.8125rem",
+                            fontWeight: p === page ? 700 : 500,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          {p}
+                        </button>
+                      )
+                    );
+                  })()}
                   <button
                     onClick={() => updateParams({ page: String(page + 1) })}
                     disabled={page >= totalPages}

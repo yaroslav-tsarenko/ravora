@@ -7,15 +7,17 @@ import { Heart, ShoppingCart, Shield, Truck, RotateCcw, Lock } from "lucide-reac
 import { PriceDisplay } from "@/components/shared/PriceDisplay/PriceDisplay";
 import { QuantitySelector } from "@/components/shared/QuantitySelector/QuantitySelector";
 import { useCart } from "@/providers/CartProvider";
+import { useCurrency } from "@/providers/CurrencyProvider";
+import { formatPrice } from "@/lib/utils/format-price";
 import { useRouter } from "@/i18n/routing";
 import { toast } from "sonner";
 import styles from "./ProductInfo.module.css";
 
-const GUARANTEE_OPTIONS = [
+const WARRANTY_OPTIONS = [
   { key: "none", years: 0, priceAdd: 0 },
-  { key: "1year", years: 1, priceAdd: 4.99 },
-  { key: "2year", years: 2, priceAdd: 9.99 },
-  { key: "3year", years: 3, priceAdd: 14.99 },
+  { key: "1year", years: 1, priceAdd: 9.99 },
+  { key: "2year", years: 2, priceAdd: 17.99 },
+  { key: "3year", years: 3, priceAdd: 24.99 },
 ];
 
 interface ProductInfoProps {
@@ -57,21 +59,22 @@ export function ProductInfo({
 }: ProductInfoProps) {
   const t = useTranslations("product");
   const [qty, setQty] = useState(1);
-  const [selectedGuarantee, setSelectedGuarantee] = useState(0);
+  const [selectedWarranty, setSelectedWarranty] = useState(0);
   const { addItem } = useCart();
+  const { currency, convert } = useCurrency();
   const router = useRouter();
 
   const outOfStock = stockQuantity <= 0;
   const lowStock = stockQuantity > 0 && stockQuantity <= lowStockAlert;
 
-  const guaranteeOption = GUARANTEE_OPTIONS[selectedGuarantee];
-  const totalPrice = price + guaranteeOption.priceAdd;
+  const warrantyOption = WARRANTY_OPTIONS[selectedWarranty];
+  const totalPrice = price + warrantyOption.priceAdd;
 
   const handleAddToCart = () => {
     addItem({
       productId: id,
-      name: guaranteeOption.years > 0
-        ? `${name} + ${guaranteeOption.years}yr guarantee`
+      name: warrantyOption.years > 0
+        ? `${name} + ${warrantyOption.years}yr warranty`
         : name,
       slug,
       sku,
@@ -80,14 +83,13 @@ export function ProductInfo({
       imageUrl: imageUrl || null,
       maxQuantity: stockQuantity,
     });
-    toast.success(t("addToCart"));
   };
 
   const handleBuyNow = () => {
     addItem({
       productId: id,
-      name: guaranteeOption.years > 0
-        ? `${name} + ${guaranteeOption.years}yr guarantee`
+      name: warrantyOption.years > 0
+        ? `${name} + ${warrantyOption.years}yr warranty`
         : name,
       slug,
       sku,
@@ -163,18 +165,21 @@ export function ProductInfo({
 
       <div className={styles.guaranteeSection}>
         <span className={styles.guaranteeLabel}>
-          <Shield size={14} /> {t("guarantee")}
+          <Shield size={14} /> {t("warranty")}
         </span>
+        <p style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)", marginBottom: "0.5rem" }}>
+          {t("warrantyStandard")}
+        </p>
         <div className={styles.guaranteeOptions}>
-          {GUARANTEE_OPTIONS.map((opt, idx) => (
+          {WARRANTY_OPTIONS.map((opt, idx) => (
             <button
               key={opt.key}
-              className={`${styles.guaranteeOption} ${idx === selectedGuarantee ? styles.guaranteeOptionActive : ""}`}
-              onClick={() => setSelectedGuarantee(idx)}
+              className={`${styles.guaranteeOption} ${idx === selectedWarranty ? styles.guaranteeOptionActive : ""}`}
+              onClick={() => setSelectedWarranty(idx)}
             >
-              {idx === 0 ? t("noGuarantee") : t(`guaranteeOption${opt.years}year` as "guaranteeOption1year" | "guaranteeOption2year" | "guaranteeOption3year")}
+              {idx === 0 ? t("noWarranty") : t(`warrantyOption${opt.years}year` as "warrantyOption1year" | "warrantyOption2year" | "warrantyOption3year")}
               {opt.priceAdd > 0 && (
-                <span className={styles.guaranteePrice}>+€{opt.priceAdd.toFixed(2)}</span>
+                <span className={styles.guaranteePrice}>+{formatPrice(convert(opt.priceAdd), currency)}</span>
               )}
             </button>
           ))}
@@ -195,7 +200,7 @@ export function ProductInfo({
           startContent={<ShoppingCart size={18} />}
           style={{ flex: 1 }}
         >
-          {selectedGuarantee > 0 ? t("addToCartWithGuarantee") : t("addToCart")}
+          {selectedWarranty > 0 ? t("addToCartWithWarranty") : t("addToCart")}
         </Button>
         <Button
           color="default"

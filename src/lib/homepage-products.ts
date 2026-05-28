@@ -48,7 +48,9 @@ export function getNewProducts(products: HomepageProduct[], limit = 10): Homepag
 }
 
 export function getPopularProducts(products: HomepageProduct[], limit = 10): HomepageProduct[] {
-  return products.filter((p) => p.isFeatured || (p.quantity !== undefined && p.quantity > 50)).slice(0, limit);
+  return [...products]
+    .sort((a, b) => (b.quantity ?? 0) - (a.quantity ?? 0))
+    .slice(0, limit);
 }
 
 export function getProductsByCategory(products: HomepageProduct[], categorySlug: string): HomepageProduct[] {
@@ -78,8 +80,9 @@ export function getHomepageCategorySections(
   products: HomepageProduct[],
   categories: HomepageCategory[],
   maxPerCategory = 10,
+  maxSections?: number,
 ): CategorySection[] {
-  return categories
+  const sections = categories
     .map((cat) => {
       const catProducts = getProductsByCategory(products, cat.slug);
       const childSlugs = cat.children?.map((c) => c.slug) || [];
@@ -99,9 +102,14 @@ export function getHomepageCategorySections(
         category: cat,
         products: unique.slice(0, maxPerCategory),
         subcategoryTabs,
+        totalCount: unique.length,
       };
     })
-    .filter((s) => s.products.length > 0);
+    .filter((s) => s.products.length > 0)
+    .sort((a, b) => b.totalCount - a.totalCount);
+
+  const limited = maxSections ? sections.slice(0, maxSections) : sections;
+  return limited.map(({ totalCount: _, ...rest }) => rest);
 }
 
 export interface BrandSection {

@@ -40,54 +40,116 @@
 .list {
   display: flex;
   flex-direction: column;
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 .item {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  color: #333;
-  font-size: 0.8125rem;
   border-bottom: 1px solid #f0f0f0;
-  transition: background 0.12s, color 0.12s;
 }
 
 .item:last-child {
   border-bottom: none;
 }
 
-.item:hover {
-  background: #f5f5f5;
-  color: #E53935;
-}
-
-.item:hover .icon {
-  color: #E53935;
-}
-
-.item:hover .arrow {
-  opacity: 1;
-  transform: translateX(2px);
-}
-
-.icon {
-  color: #666;
-  flex-shrink: 0;
+.itemLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.25rem 0.5rem 0;
+  text-decoration: none;
+  color: #333;
+  font-size: 0.8125rem;
   transition: color 0.12s;
+}
+
+.itemLink:hover {
+  color: #E53935;
 }
 
 .name {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.arrow {
-  color: #ccc;
+.count {
+  font-size: 0.6875rem;
+  color: #999;
   flex-shrink: 0;
-  opacity: 0;
-  transition: opacity 0.12s, transform 0.12s;
+}
+
+.expandBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  flex-shrink: 0;
+  border-radius: 4px;
+  transition: background 0.12s, color 0.12s;
+  margin-right: 0.25rem;
+}
+
+.expandBtn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  color: #999;
+  font-size: 0.8125rem;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.skeletonItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.skeletonItem:last-child {
+  border-bottom: none;
+}
+
+.skeletonBar {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+[data-theme="dark"] .skeletonBar {
+  background: linear-gradient(90deg, #222 25%, #2a2a2a 50%, #222 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .mobileToggle {

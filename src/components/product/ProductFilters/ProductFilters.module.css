@@ -143,3 +143,23 @@
   width: 1rem;
   height: 1rem;
 }
+
+.skeletonItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.625rem;
+}
+
+.skeletonBar {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--color-bg-tertiary) 25%, var(--color-bg-secondary) 50%, var(--color-bg-tertiary) 75%);
+  background-size: 200% 100%;
+  animation: filterShimmer 1.5s infinite;
+}
+
+@keyframes filterShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

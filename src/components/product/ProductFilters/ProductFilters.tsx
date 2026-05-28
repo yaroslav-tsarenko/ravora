@@ -123,23 +123,34 @@ export function ProductFilters({
   return (
     <aside className={styles.filters}>
       <FilterSection title={t("filterBy")}>
-        <ul className={styles.categoryList}>
-          <li
-            className={`${styles.categoryItem} ${!selectedCategory ? styles.categoryItemActive : ""}`}
-            onClick={() => onCategoryChange("")}
-          >
-            {nav("allCategories")}
-          </li>
-          {categories.map((cat) => (
-            <CategoryItem
-              key={cat.id}
-              cat={cat}
-              depth={0}
-              selectedCategory={selectedCategory}
-              onCategoryChange={onCategoryChange}
-            />
-          ))}
-        </ul>
+        {categories.length === 0 ? (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className={styles.skeletonItem}>
+                <div className={styles.skeletonBar} style={{ width: `${50 + (i * 19) % 40}%`, flex: 1 }} />
+                <div className={styles.skeletonBar} style={{ width: "20px" }} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <ul className={styles.categoryList}>
+            <li
+              className={`${styles.categoryItem} ${!selectedCategory ? styles.categoryItemActive : ""}`}
+              onClick={() => onCategoryChange("")}
+            >
+              {nav("allCategories")}
+            </li>
+            {categories.map((cat) => (
+              <CategoryItem
+                key={cat.id}
+                cat={cat}
+                depth={0}
+                selectedCategory={selectedCategory}
+                onCategoryChange={onCategoryChange}
+              />
+            ))}
+          </ul>
+        )}
       </FilterSection>
 
       <FilterSection title={t("priceRange")}>

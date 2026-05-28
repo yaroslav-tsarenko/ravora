@@ -25,7 +25,7 @@ export function CartItem({ item }: CartItemProps) {
             alt={item.name}
             fill
             sizes="80px"
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: "contain", padding: "4px" }}
           />
         ) : (
           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.625rem", color: "var(--color-text-tertiary)" }}>

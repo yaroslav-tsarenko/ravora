@@ -1,36 +1,76 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/routing";
 import {
   ShoppingCart, Search, Menu, X, User, Shield,
-  ChevronRight, Sparkles, Tag, Flame, Package, Heart, ChevronDown,
+  ChevronRight, Heart, ChevronDown,
+  Cable, LayoutGrid, Zap, Lightbulb, CircuitBoard, Plug,
+  Box, Wrench, Shield as ShieldIcon, SquareStack,
 } from "lucide-react";
 import { useCart } from "@/providers/CartProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { AnimatePresence, motion } from "framer-motion";
+import { AvontLogo } from "../AvontLogo";
+import { CurrencySwitcher } from "./CurrencySwitcher";
 import styles from "./Header.module.css";
 
-const SHOP_MENU_ITEMS = [
-  { href: "/catalog", icon: Package, label: "All Products", desc: "Browse our full catalog" },
-  { href: "/catalog?sort=newest", icon: Sparkles, label: "New Arrivals", desc: "Just dropped this week" },
-  { href: "/catalog?onSale=true", icon: Tag, label: "On Sale", desc: "Best deals right now" },
-  { href: "/catalog?sort=popular", icon: Flame, label: "Best Sellers", desc: "Customer favorites" },
-];
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  _count: { products: number };
+  children?: Category[];
+}
+
+function subtreeCount(cat: Category): number {
+  const own = cat._count?.products || 0;
+  return own + (cat.children || []).reduce((s, c) => s + subtreeCount(c), 0);
+}
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  "wiring": Cable,
+  "cable": Cable,
+  "automation": CircuitBoard,
+  "control": CircuitBoard,
+  "distribution": LayoutGrid,
+  "energy": Zap,
+  "protection": ShieldIcon,
+  "protective": ShieldIcon,
+  "fuse": Zap,
+  "lighting": Lightbulb,
+  "light": Lightbulb,
+  "terminal": SquareStack,
+  "mounting": Box,
+  "box": Box,
+  "conduit": Wrench,
+  "connector": Plug,
+  "power": Zap,
+  "plug": Plug,
+};
+
+function getIconForCategory(name: string) {
+  const lower = name.toLowerCase();
+  for (const [keyword, Icon] of Object.entries(ICON_MAP)) {
+    if (lower.includes(keyword)) return Icon;
+  }
+  return LayoutGrid;
+}
 
 export function Header() {
   const t = useTranslations("nav");
   const router = useRouter();
-  const { itemCount } = useCart();
+  const { itemCount, cartBounce } = useCart();
   const { user, role } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
   const megaRef = useRef<HTMLDivElement>(null);
   const megaTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -49,14 +89,21 @@ export function Header() {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
-  const openMega = () => {
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((r) => r.json())
+      .then((data) => { if (Array.isArray(data)) setCategories(data); })
+      .catch(() => {});
+  }, []);
+
+  const openMega = useCallback(() => {
     clearTimeout(megaTimeout.current);
     setMegaOpen(true);
-  };
+  }, []);
 
-  const closeMega = () => {
-    megaTimeout.current = setTimeout(() => setMegaOpen(false), 150);
-  };
+  const closeMega = useCallback(() => {
+    megaTimeout.current = setTimeout(() => setMegaOpen(false), 200);
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +117,8 @@ export function Header() {
       <header className={`${styles.header} ${scrolled ? styles.headerScrolled : ""}`}>
         <div className={styles.container}>
           <Link href="/" className={styles.logo}>
-            <span className={styles.logoText}>Store</span>
+            <AvontLogo size={24} />
+            <span className={styles.logoText}>AvontShop</span>
           </Link>
 
           <nav className={styles.nav}>
@@ -88,46 +136,6 @@ export function Header() {
                 {t("catalog")}
                 <ChevronDown size={14} style={{ transition: "transform 0.2s", transform: megaOpen ? "rotate(180deg)" : undefined }} />
               </button>
-
-              <AnimatePresence>
-                {megaOpen && (
-                  <motion.div
-                    className={styles.megaMenu}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 8 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <div className={styles.megaMenuGrid}>
-                      {SHOP_MENU_ITEMS.map((item) => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className={styles.megaMenuItem}
-                          onClick={() => setMegaOpen(false)}
-                        >
-                          <div className={styles.megaMenuIcon}>
-                            <item.icon size={18} />
-                          </div>
-                          <div>
-                            <div className={styles.megaMenuLabel}>{item.label}</div>
-                            <div className={styles.megaMenuDesc}>{item.desc}</div>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                    <div className={styles.megaMenuFooter}>
-                      <Link
-                        href="/catalog"
-                        className={styles.megaMenuFooterLink}
-                        onClick={() => setMegaOpen(false)}
-                      >
-                        View all products <ChevronRight size={14} />
-                      </Link>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
 
             <Link href="/contact" className={styles.navLink}>
@@ -155,6 +163,7 @@ export function Header() {
             </Link>
 
             <ThemeToggle />
+            <CurrencySwitcher />
             <LanguageSwitcher />
 
             {user && (
@@ -166,7 +175,15 @@ export function Header() {
             <Link href="/cart" className={`${styles.iconButton} ${styles.cartButton}`} aria-label={t("cart")}>
               <ShoppingCart size={20} />
               {itemCount > 0 && (
-                <span className={styles.cartBadge}>{itemCount > 99 ? "99+" : itemCount}</span>
+                <motion.span
+                  key={cartBounce}
+                  className={styles.cartBadge}
+                  initial={cartBounce > 0 ? { scale: 0.5 } : false}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", damping: 10, stiffness: 400 }}
+                >
+                  {itemCount > 99 ? "99+" : itemCount}
+                </motion.span>
               )}
             </Link>
 
@@ -196,6 +213,83 @@ export function Header() {
           </div>
         </div>
       </header>
+
+      {/* Mega Menu - full width, outside header */}
+      <AnimatePresence>
+        {megaOpen && (
+          <>
+            <motion.div
+              className={styles.megaOverlay}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setMegaOpen(false)}
+            />
+            <motion.div
+              className={styles.megaMenu}
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              onMouseEnter={openMega}
+              onMouseLeave={closeMega}
+            >
+              <div className={styles.megaInner}>
+                {categories.length === 0 ? (
+                  <div className={styles.megaSkeleton}>
+                    {Array.from({ length: 10 }).map((_, i) => (
+                      <div key={i} className={styles.megaSkeletonCard}>
+                        <div className={styles.megaSkeletonIcon} />
+                        <div className={styles.megaSkeletonText}>
+                          <div className={styles.megaSkeletonBar} style={{ width: `${55 + (i * 17) % 35}%` }} />
+                          <div className={styles.megaSkeletonBar} style={{ width: "40%" }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                <div className={styles.megaGrid}>
+                  {[...categories]
+                    .sort((a, b) => subtreeCount(b) - subtreeCount(a))
+                    .slice(0, 10)
+                    .map((cat) => {
+                      const Icon = getIconForCategory(cat.name);
+                      const count = subtreeCount(cat);
+                      return (
+                        <Link
+                          key={cat.id}
+                          href={`/catalog/${cat.slug}`}
+                          className={styles.megaCard}
+                          onClick={() => setMegaOpen(false)}
+                        >
+                          <div className={styles.megaCardIcon}>
+                            <Icon size={20} />
+                          </div>
+                          <div className={styles.megaCardText}>
+                            <span className={styles.megaCardName}>{cat.name}</span>
+                            <span className={styles.megaCardCount}>{count} products</span>
+                          </div>
+                          <ChevronRight size={14} className={styles.megaCardArrow} />
+                        </Link>
+                      );
+                    })}
+                </div>
+                )}
+                <div className={styles.megaFooter}>
+                  <Link
+                    href="/catalog"
+                    className={styles.megaFooterLink}
+                    onClick={() => setMegaOpen(false)}
+                  >
+                    Browse all categories <ChevronRight size={14} />
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {mobileOpen && (

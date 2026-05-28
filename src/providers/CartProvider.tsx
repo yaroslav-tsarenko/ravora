@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
 import type { Cart, CartItem } from "@/types/cart";
 import { toast } from "sonner";
+import { CartToast } from "@/components/cart/CartToast/CartToast";
 
 interface CartContextType {
   cart: Cart;
@@ -11,6 +12,7 @@ interface CartContextType {
   updateQuantity: (productId: string, quantity: number, variantId?: string) => void;
   clearCart: () => void;
   itemCount: number;
+  cartBounce: number;
 }
 
 const CART_STORAGE_KEY = "e-commerce-cart";
@@ -38,6 +40,7 @@ function calculateTotals(items: CartItem[], taxRate: number = 21): Cart {
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<Cart>(emptyCart);
+  const [cartBounce, setCartBounce] = useState(0);
 
   useEffect(() => {
     const stored = localStorage.getItem(CART_STORAGE_KEY);
@@ -82,7 +85,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }
 
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updatedItems));
-        toast.success("Added to cart!");
+        setCartBounce((b) => b + 1);
+        toast.custom(() => (
+          <CartToast
+            name={newItem.name}
+            imageUrl={newItem.imageUrl}
+            quantity={newItem.quantity}
+          />
+        ), { duration: 2500 });
         return calculateTotals(updatedItems);
       });
     },
@@ -127,7 +137,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ cart, addItem, removeItem, updateQuantity, clearCart, itemCount: cart.itemCount }}
+      value={{ cart, addItem, removeItem, updateQuantity, clearCart, itemCount: cart.itemCount, cartBounce }}
     >
       {children}
     </CartContext.Provider>
