@@ -14,14 +14,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "My Store — Quality Products Delivered Worldwide",
-    template: "%s | My Store",
+    default: "AvontShop — Electrical Materials & Supplies",
+    template: "%s | AvontShop",
   },
-  description: "Discover our collection of quality products delivered worldwide.",
+  description: "Your trusted source for electrical materials, wiring, and installation supplies. Professional quality delivered to your door.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   openGraph: {
     type: "website",
-    siteName: "My Store",
+    siteName: "AvontShop",
   },
 };
 

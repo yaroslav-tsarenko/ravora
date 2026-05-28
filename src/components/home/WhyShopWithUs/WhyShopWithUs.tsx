@@ -19,8 +19,8 @@ const reasons = [
   },
   {
     icon: <Heart size={24} />,
-    title: "Curated Selection",
-    desc: "Every product is hand-picked for quality and value by our team.",
+    title: "Certified Products",
+    desc: "Every electrical material is sourced from certified manufacturers and meets professional standards.",
     gradient: "linear-gradient(135deg, #FF6B6B 0%, #FFB800 100%)",
   },
   {
@@ -48,9 +48,9 @@ export function WhyShopWithUs() {
     <section className={`section-padding ${styles.section}`}>
       <div className="section-container">
         <div className={styles.header}>
-          <h2 className="section-title">Why shop with us</h2>
+          <h2 className="section-title">Why choose AvontShop</h2>
           <p className="section-subtitle" style={{ margin: "0.5rem auto 0" }}>
-            We go above and beyond to deliver the best shopping experience
+            Professional-grade electrical materials with expert support and fast delivery
           </p>
         </div>
 

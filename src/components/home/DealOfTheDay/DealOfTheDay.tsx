@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
 import { ArrowRight } from "lucide-react";
+import { motion, useInView } from "framer-motion";
 import { formatPrice } from "@/lib/utils/format-price";
 import { getProductImage, getProductImageFallback } from "@/lib/utils/product-image";
 import { getDiscountPercent, type HomepageProduct } from "@/lib/homepage-products";
@@ -26,6 +27,8 @@ function getTimeUntilMidnight() {
 
 export function DealOfTheDay({ product }: Props) {
   const [time, setTime] = useState(getTimeUntilMidnight);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
 
   useEffect(() => {
     const id = setInterval(() => setTime(getTimeUntilMidnight()), 1000);
@@ -37,10 +40,27 @@ export function DealOfTheDay({ product }: Props) {
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
-    <section className={styles.section}>
-      <div className={styles.textSide}>
+    <motion.section
+      ref={ref}
+      className={styles.section}
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={isInView ? { opacity: 1, scale: 1 } : {}}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className={styles.textSide}
+        initial={{ opacity: 0, x: -30 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.5, delay: 0.15 }}
+      >
         <div className={styles.topRow}>
-          <span className={styles.badge}>Deal of the Day</span>
+          <motion.span
+            className={styles.badge}
+            animate={isInView ? { scale: [1, 1.08, 1] } : {}}
+            transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 4 }}
+          >
+            Deal of the Day
+          </motion.span>
           <div className={styles.timer}>
             <span className={styles.timeBlock}>{pad(time.h)}</span>
             <span className={styles.timeSep}>:</span>
@@ -51,7 +71,7 @@ export function DealOfTheDay({ product }: Props) {
         </div>
         <h2 className={styles.title}>{product.name}</h2>
         <p className={styles.subtitle}>
-Limited time offer — grab it before the deal expires!
+          Limited time offer — grab it before the deal expires!
         </p>
         <div className={styles.priceRow}>
           <span className={styles.newPrice}>{formatPrice(Number(product.price))}</span>
@@ -63,19 +83,29 @@ Limited time offer — grab it before the deal expires!
         <Link href={`/product/${product.slug}`} className={styles.cta}>
           Shop Now <ArrowRight size={16} />
         </Link>
-      </div>
-      <div className={styles.imageSide}>
-        <Image
-          src={imgUrl}
-          alt={product.name}
-          width={240}
-          height={200}
-          className={styles.productImage}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = getProductImageFallback("240x200");
-          }}
-        />
-      </div>
-    </section>
+      </motion.div>
+      <motion.div
+        className={styles.imageSide}
+        initial={{ opacity: 0, x: 30 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.5, delay: 0.25 }}
+      >
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 200 }}
+        >
+          <Image
+            src={imgUrl}
+            alt={product.name}
+            width={240}
+            height={200}
+            className={styles.productImage}
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = getProductImageFallback("240x200");
+            }}
+          />
+        </motion.div>
+      </motion.div>
+    </motion.section>
   );
 }

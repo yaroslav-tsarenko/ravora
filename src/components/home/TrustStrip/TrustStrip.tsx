@@ -1,6 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import { Truck, ShieldCheck, RotateCcw, Headphones } from "lucide-react";
+import { motion, useInView } from "framer-motion";
 import styles from "./TrustStrip.module.css";
 
 const items = [
@@ -11,18 +13,32 @@ const items = [
 ];
 
 export function TrustStrip() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-30px" });
+
   return (
-    <section className={styles.section}>
-      {items.map((item) => (
-        <div key={item.label} className={styles.item}>
-          <div className={styles.iconWrap} style={{ background: item.color }}>
+    <section ref={ref} className={styles.section}>
+      {items.map((item, i) => (
+        <motion.div
+          key={item.label}
+          className={styles.item}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.4, delay: i * 0.1 }}
+        >
+          <motion.div
+            className={styles.iconWrap}
+            style={{ background: item.color }}
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
             <item.icon size={20} style={{ color: item.iconColor }} />
-          </div>
+          </motion.div>
           <div>
             <p className={styles.label}>{item.label}</p>
             <p className={styles.desc}>{item.desc}</p>
           </div>
-        </div>
+        </motion.div>
       ))}
     </section>
   );

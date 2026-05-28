@@ -1,45 +1,16 @@
 "use client";
 
+import { useRef } from "react";
 import { Link } from "@/i18n/routing";
-import {
-  Monitor, Shirt, Home, Dumbbell, Smartphone, Laptop, Headphones,
-  Camera, Watch, ShoppingBag, Footprints, Sofa, Wrench, Bike, Package,
-} from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import { Package } from "lucide-react";
 import styles from "./CategoryShowcase.module.css";
 
-const ICON_MAP: Record<string, React.ElementType> = {
-  electronics: Monitor,
-  clothing: Shirt,
-  "home-garden": Home,
-  sports: Dumbbell,
-  smartphones: Smartphone,
-  "laptops-computers": Laptop,
-  "audio-headphones": Headphones,
-  "cameras-photography": Camera,
-  "wearable-tech": Watch,
-  "bags-accessories": ShoppingBag,
-  "shoes-footwear": Footprints,
-  furniture: Sofa,
-  "garden-outdoor": Wrench,
-  cycling: Bike,
-};
-
-const COLOR_MAP: Record<string, string> = {
-  electronics: "#EDE9FE",
-  clothing: "#FCE7F3",
-  "home-garden": "#DCFCE7",
-  sports: "#FEF3C7",
-  smartphones: "#DBEAFE",
-  "laptops-computers": "#E0E7FF",
-  "audio-headphones": "#F3E8FF",
-  "cameras-photography": "#FEE2E2",
-  "wearable-tech": "#CFFAFE",
-  "bags-accessories": "#FFF7ED",
-  "shoes-footwear": "#FCE7F3",
-  furniture: "#ECFDF5",
-  "garden-outdoor": "#F0FDF4",
-  cycling: "#FEF9C3",
-};
+const COLORS = [
+  "#EDE9FE", "#FCE7F3", "#DCFCE7", "#FEF3C7",
+  "#DBEAFE", "#E0E7FF", "#F3E8FF", "#FEE2E2",
+  "#CFFAFE", "#FFF7ED", "#ECFDF5", "#FEF9C3",
+];
 
 interface CategoryItem {
   id: string;
@@ -54,29 +25,40 @@ interface Props {
 }
 
 export function CategoryShowcase({ categories }: Props) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-40px" });
+
   if (categories.length === 0) return null;
 
   return (
-    <section className={styles.section}>
-      <div className={styles.header}>
+    <section ref={ref} className={styles.section}>
+      <motion.div
+        className={styles.header}
+        initial={{ opacity: 0, y: 16 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.5 }}
+      >
         <h2 className={styles.title}>Shop by Category</h2>
-      </div>
+      </motion.div>
       <div className={styles.grid}>
-        {categories.map((cat) => {
-          const Icon = ICON_MAP[cat.slug] || Package;
-          const bg = COLOR_MAP[cat.slug] || "#F3F4F6";
-          return (
-            <Link key={cat.id} href={`/catalog/${cat.slug}`} className={styles.card}>
-              <div className={styles.iconWrap} style={{ background: bg }}>
-                <Icon size={22} />
+        {categories.map((cat, i) => (
+          <motion.div
+            key={cat.id}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.35, delay: i * 0.06 }}
+          >
+            <Link href={`/catalog/${cat.slug}`} className={styles.card}>
+              <div className={styles.iconWrap} style={{ background: COLORS[i % COLORS.length] }}>
+                <Package size={22} />
               </div>
               <div className={styles.info}>
                 <h3 className={styles.cardName}>{cat.name}</h3>
                 <span className={styles.cardCount}>{cat.productCount} products</span>
               </div>
             </Link>
-          );
-        })}
+          </motion.div>
+        ))}
       </div>
     </section>
   );

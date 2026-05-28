@@ -1,10 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image, { type StaticImageData } from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import { ChevronLeft, ChevronRight, ArrowRight, Sparkles, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import banner1 from "@/assets/banner1.png";
+import banner2 from "@/assets/banner2.png";
+import banner3 from "@/assets/banner3.png";
 import styles from "./HeroBanner.module.css";
 
 interface Slide {
@@ -15,17 +19,19 @@ interface Slide {
   secondaryCtaHref?: string;
   secondaryCtaKey?: string;
   badge?: string;
+  image: StaticImageData;
 }
 
 const slides: Slide[] = [
   {
-    badge: "New Season Collection",
+    badge: "Professional Grade",
     titleKey: "heroTitle",
     subtitleKey: "heroSubtitle",
     ctaHref: "/catalog",
     ctaKey: "heroCta",
     secondaryCtaHref: "/catalog?sort=newest",
     secondaryCtaKey: "heroExplore",
+    image: banner1,
   },
   {
     badge: "Limited Time Offer",
@@ -33,6 +39,7 @@ const slides: Slide[] = [
     subtitleKey: "heroSaleSubtitle",
     ctaHref: "/catalog?onSale=true",
     ctaKey: "heroShopSale",
+    image: banner2,
   },
   {
     badge: "Just Arrived",
@@ -40,6 +47,7 @@ const slides: Slide[] = [
     subtitleKey: "heroNewSubtitle",
     ctaHref: "/catalog?sort=newest",
     ctaKey: "heroExplore",
+    image: banner3,
   },
 ];
 
@@ -59,30 +67,27 @@ export function HeroBanner() {
 
   return (
     <section className={styles.hero}>
-      {/* Floating decorative objects */}
-      <div className={styles.floatingObjects}>
-        <div className={`${styles.floatObj} ${styles.floatObj1}`} />
-        <div className={`${styles.floatObj} ${styles.floatObj2}`} />
-        <div className={`${styles.floatObj} ${styles.floatObj3}`} />
-        <div className={`${styles.floatObj} ${styles.floatObj4}`} />
-        <div className={`${styles.floatObj} ${styles.floatObj5}`} />
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={current}
+          className={styles.bgImage}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Image
+            src={slide.image}
+            alt=""
+            fill
+            sizes="100vw"
+            className={styles.bgImg}
+            priority={current === 0}
+          />
+        </motion.div>
+      </AnimatePresence>
 
-      {/* Decorative floating cards */}
-      <div className={styles.decoCard}>
-        <span className={styles.decoCardLabel}>Products</span>
-        <span className={styles.decoCardValue}>500+</span>
-        <span className={styles.decoCardLabel}>in catalog</span>
-      </div>
-
-      <div className={styles.decoCard2}>
-        <div className={styles.decoStars}>
-          {[...Array(5)].map((_, i) => (
-            <Star key={i} size={14} fill="currentColor" />
-          ))}
-        </div>
-        <span className={styles.decoReviewText}>4.9 avg rating</span>
-      </div>
+      <div className={styles.overlay} />
 
       <div className={styles.content}>
         <AnimatePresence mode="wait">

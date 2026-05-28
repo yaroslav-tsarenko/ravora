@@ -20,7 +20,27 @@
   transition: opacity 0.4s ease;
 }
 
+.bgImg {
+  object-fit: cover;
+  object-position: center right;
+  z-index: 0;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.35) 50%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+}
+
 .slideContent {
+  position: relative;
+  z-index: 2;
   padding: 2.5rem;
   max-width: 500px;
 }

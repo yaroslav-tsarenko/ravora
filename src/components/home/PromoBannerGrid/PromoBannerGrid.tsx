@@ -22,13 +22,13 @@ interface Props {
 }
 
 const defaultSmall: BannerData[] = [
-  { id: "1", badgeText: "Smartphones", title: "New Season, New Phone", subtitle: "From €299", bgColor: "#F0F4FF", textColor: "#1A1A2E", linkUrl: "/catalog/electronics" },
-  { id: "2", badgeText: "Home & Kitchen", title: "Upgrade Your Kitchen", subtitle: "Up to 30% off", bgColor: "#FFF8F0", textColor: "#1A1A2E", linkUrl: "/catalog/home-garden" },
-  { id: "3", badgeText: "Gaming", title: "Level Up Your Setup", subtitle: "From €49.99", bgColor: "#F0FFF4", textColor: "#1A1A2E", linkUrl: "/catalog/electronics" },
+  { id: "1", badgeText: "Circuit Breakers", title: "Protect Every Circuit", subtitle: "From €12.99", bgColor: "#F0F4FF", textColor: "#1A1A2E", linkUrl: "/catalog" },
+  { id: "2", badgeText: "Cables & Wiring", title: "Premium Copper Cables", subtitle: "Up to 30% off", bgColor: "#FFF8F0", textColor: "#1A1A2E", linkUrl: "/catalog" },
+  { id: "3", badgeText: "LED Lighting", title: "Illuminate Your Space", subtitle: "From €4.99", bgColor: "#F0FFF4", textColor: "#1A1A2E", linkUrl: "/catalog" },
 ];
 
 const defaultWide: BannerData[] = [
-  { id: "w1", badgeText: "Member Exclusive", title: "Join Our Club & Get 10% Off", subtitle: "Free shipping, early access, member-only deals", bgColor: "#1A1A2E", textColor: "#ffffff", linkUrl: "/auth/register", ctaLabel: "Join Free" },
+  { id: "w1", badgeText: "Pro Account", title: "Register & Get 10% Off Your First Order", subtitle: "Free shipping over €50, trade pricing, and priority support", bgColor: "#1A1A2E", textColor: "#ffffff", linkUrl: "/auth/register", ctaLabel: "Join Free" },
 ];
 
 export function PromoBannerGrid({ smallBanners, wideBanners }: Props) {

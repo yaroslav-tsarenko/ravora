@@ -38,9 +38,30 @@ export async function GET(request: NextRequest) {
     }
 
     if (category) {
-      where.categories = {
-        some: { category: { slug: category } },
-      };
+      const cat = await prisma.category.findUnique({
+        where: { slug: category },
+        include: {
+          children: {
+            select: { slug: true, children: { select: { slug: true } } },
+          },
+        },
+      });
+      if (cat) {
+        const slugs = [cat.slug];
+        for (const child of cat.children) {
+          slugs.push(child.slug);
+          for (const grandchild of child.children) {
+            slugs.push(grandchild.slug);
+          }
+        }
+        where.categories = {
+          some: { category: { slug: { in: slugs } } },
+        };
+      } else {
+        where.categories = {
+          some: { category: { slug: category } },
+        };
+      }
     }
 
     if (minPrice || maxPrice) {

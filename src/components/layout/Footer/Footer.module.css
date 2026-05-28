@@ -38,6 +38,9 @@
 }
 
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -136,16 +139,13 @@
 }
 
 .paymentBadge {
-  height: 1.5rem;
-  padding: 0.25rem 0.625rem;
-  border-radius: var(--radius-sm);
-  background: var(--color-bg-tertiary);
-  border: 1px solid var(--color-border);
-  font-size: 0.625rem;
-  font-weight: 700;
-  color: var(--color-text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  letter-spacing: 0.03em;
+}
+
+.paymentImg {
+  width: 60px !important;
+  height: auto !important;
+  object-fit: contain;
 }

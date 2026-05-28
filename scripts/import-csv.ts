@@ -1,162 +1,372 @@
+import "dotenv/config";
 import fs from "fs";
 import path from "path";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
+import { parse } from "papaparse";
+import pg from "pg";
 
-const connectionString =
-  process.env.DIRECT_URL ||
-  "postgres://postgres:postgres@localhost:51214/template1?sslmode=disable";
+const connectionString = process.env.DIRECT_URL;
+if (!connectionString) throw new Error("DIRECT_URL not set in .env");
 
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
+let client: pg.Client;
 
-function parseCSV(text: string): Record<string, string>[] {
-  const lines = text.split("\n").filter((l) => l.trim());
-  const headers = lines[0].split(",").map((h) => h.trim());
-  const rows: Record<string, string>[] = [];
+async function connect() {
+  client = new pg.Client({
+    connectionString,
+    ssl: { rejectUnauthorized: false },
+  });
+  client.on("error", () => {});
+  await client.connect();
+}
 
-  for (let i = 1; i < lines.length; i++) {
-    const values: string[] = [];
-    let current = "";
-    let inQuotes = false;
-
-    for (const char of lines[i]) {
-      if (char === '"') {
-        inQuotes = !inQuotes;
-      } else if (char === "," && !inQuotes) {
-        values.push(current.trim());
-        current = "";
-      } else {
-        current += char;
-      }
-    }
-    values.push(current.trim());
-
-    const row: Record<string, string> = {};
-    headers.forEach((h, idx) => {
-      row[h] = values[idx] || "";
-    });
-    rows.push(row);
-  }
-  return rows;
+async function reconnect() {
+  try { await client.end(); } catch {}
+  await connect();
 }
 
 function slugify(text: string) {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+    .replace(/(^-|-$)/g, "")
+    .substring(0, 200);
+}
+
+function cuid(): string {
+  const ts = Date.now().toString(36);
+  const rand = Math.random().toString(36).substring(2, 10);
+  return `c${ts}${rand}`;
+}
+
+function parseCharacteristics(raw: string | undefined): string | null {
+  if (!raw) return null;
+  const result: Record<string, Record<string, string>> = {};
+  for (const pair of raw.split("|")) {
+    const groupSep = pair.indexOf(">>");
+    if (groupSep !== -1) {
+      const group = pair.substring(0, groupSep).trim();
+      const rest = pair.substring(groupSep + 2);
+      const colonIdx = rest.indexOf(":");
+      if (colonIdx !== -1) {
+        if (!result[group]) result[group] = {};
+        result[group][rest.substring(0, colonIdx).trim()] = rest.substring(colonIdx + 1).trim();
+      }
+    } else {
+      const colonIdx = pair.indexOf(":");
+      if (colonIdx !== -1) {
+        if (!result["General"]) result["General"] = {};
+        result["General"][pair.substring(0, colonIdx).trim()] = pair.substring(colonIdx + 1).trim();
+      }
+    }
+  }
+  return Object.keys(result).length > 0 ? JSON.stringify(result) : null;
+}
+
+async function query(sql: string, params?: unknown[]) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      return await client.query(sql, params);
+    } catch (err: any) {
+      if (err.message?.includes("terminated") || err.message?.includes("Connection") || err.code === "EPIPE") {
+        console.log(`\n  Reconnecting (attempt ${attempt + 1})...`);
+        await reconnect();
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw new Error("Failed after 3 retries");
 }
 
 async function main() {
-  const csvPath = path.resolve(__dirname, "../data/products.csv");
+  const csvPath = path.resolve(__dirname, "../data/products-import.csv");
   const csvText = fs.readFileSync(csvPath, "utf-8");
-  const rows = parseCSV(csvText);
+  const { data: rows } = parse<Record<string, string>>(csvText, {
+    header: true,
+    skipEmptyLines: true,
+  });
 
-  console.log(`Parsed ${rows.length} products from CSV`);
+  console.log(`Parsed ${rows.length} rows from CSV`);
 
-  const categoryMap = new Map<string, string>();
+  await connect();
 
-  const categoryNames: Record<string, string> = {
-    electronics: "Electronics",
-    clothing: "Clothing",
-    home: "Home & Garden",
-    sports: "Sports & Outdoors",
-  };
+  // Phase 1: Clean up
+  console.log("Deleting existing data...");
+  await query('DELETE FROM "ProductCategory"');
+  await query('DELETE FROM "ProductImage"');
+  await query('DELETE FROM "Review"');
+  await query('DELETE FROM "WishlistItem"');
+  await query('DELETE FROM "Product"');
+  await query('DELETE FROM "Category"');
+  console.log("Done");
 
-  for (const [slug, name] of Object.entries(categoryNames)) {
-    const cat = await prisma.category.upsert({
-      where: { slug },
-      update: { name },
-      create: { name, slug, isActive: true, sortOrder: Object.keys(categoryNames).indexOf(slug) },
-    });
-    categoryMap.set(slug, cat.id);
-  }
-
-  console.log(`Ensured ${categoryMap.size} categories`);
-
-  let created = 0;
-  let updated = 0;
-  let errors = 0;
+  // Phase 2: Build categories
+  console.log("Creating categories...");
+  const categoryMap = new Map<string, { name: string; slug: string; parentSlug?: string }>();
 
   for (const row of rows) {
-    try {
-      const slug = slugify(row.name);
-      const price = parseFloat(row.price);
-      const comparePrice = row.comparePrice ? parseFloat(row.comparePrice) : null;
-      const quantity = parseInt(row.quantity) || 0;
-      const isFeatured = row.isFeatured === "true";
-      const categorySlug = row.category || "";
-      const categoryId = categoryMap.get(categorySlug);
+    const cat = row.category?.trim();
+    if (!cat) continue;
+    const catSlug = slugify(cat);
+    if (!categoryMap.has(catSlug)) categoryMap.set(catSlug, { name: cat, slug: catSlug });
 
-      const existing = await prisma.product.findUnique({ where: { sku: row.sku } });
+    const sub = row.subCategory?.trim();
+    if (!sub) continue;
+    const subSlug = slugify(`${cat}-${sub}`);
+    if (!categoryMap.has(subSlug)) categoryMap.set(subSlug, { name: sub, slug: subSlug, parentSlug: catSlug });
 
-      if (existing) {
-        await prisma.product.update({
-          where: { sku: row.sku },
-          data: {
-            name: row.name,
-            price,
-            comparePrice,
-            quantity,
-            description: row.description,
-            shortDescription: row.shortDescription,
-            brand: row.brand || null,
-            status: (row.status as "ACTIVE" | "DRAFT") || "ACTIVE",
-            condition: row.condition || "new",
-            isFeatured,
-          },
-        });
-        updated++;
-      } else {
-        const product = await prisma.product.create({
-          data: {
-            name: row.name,
-            slug,
-            sku: row.sku,
-            price,
-            comparePrice,
-            quantity,
-            description: row.description,
-            shortDescription: row.shortDescription,
-            brand: row.brand || null,
-            status: (row.status as "ACTIVE" | "DRAFT") || "ACTIVE",
-            condition: row.condition || "new",
-            isFeatured,
-          },
-        });
+    const subSub = row.subSubCategory?.trim();
+    if (!subSub) continue;
+    const subSubSlug = slugify(`${cat}-${sub}-${subSub}`);
+    if (!categoryMap.has(subSubSlug)) categoryMap.set(subSubSlug, { name: subSub, slug: subSubSlug, parentSlug: subSlug });
+  }
 
-        if (categoryId) {
-          await prisma.productCategory.create({
-            data: { productId: product.id, categoryId },
-          });
-        }
-
-        if (row.imageUrl) {
-          await prisma.productImage.create({
-            data: {
-              productId: product.id,
-              url: row.imageUrl,
-              alt: row.name,
-              sortOrder: 0,
-            },
-          });
-        }
-
-        created++;
-      }
-    } catch (err) {
-      errors++;
-      console.error(`Error importing ${row.sku}: ${err instanceof Error ? err.message : err}`);
+  // Sort into levels
+  const levels: { name: string; slug: string; parentSlug?: string }[][] = [[], [], []];
+  for (const entry of categoryMap.values()) {
+    if (!entry.parentSlug) levels[0].push(entry);
+    else {
+      const parent = categoryMap.get(entry.parentSlug);
+      if (parent && !parent.parentSlug) levels[1].push(entry);
+      else levels[2].push(entry);
     }
   }
 
-  console.log(`\nImport complete:`);
-  console.log(`  Created: ${created}`);
-  console.log(`  Updated: ${updated}`);
-  console.log(`  Errors: ${errors}`);
+  const slugToId = new Map<string, string>();
+  const now = new Date().toISOString();
 
-  await prisma.$disconnect();
+  for (const level of levels) {
+    for (const entry of level) {
+      const id = cuid();
+      const parentId = entry.parentSlug ? slugToId.get(entry.parentSlug) || null : null;
+      await query(
+        `INSERT INTO "Category" (id, name, slug, "parentId", "sortOrder", "isActive", "createdAt", "updatedAt")
+         VALUES ($1, $2, $3, $4, 0, true, $5, $5)
+         ON CONFLICT (slug) DO UPDATE SET name = $2, "parentId" = $4
+         RETURNING id`,
+        [id, entry.name, entry.slug, parentId, now],
+      ).then((r) => slugToId.set(entry.slug, r.rows[0].id));
+    }
+  }
+  console.log(`Created ${slugToId.size} categories`);
+
+  // Phase 3: Prepare products
+  console.log("Inserting products...");
+  const usedSlugs = new Set<string>();
+  const usedSkus = new Set<string>();
+
+  function uniqueSlug(name: string, sku: string): string {
+    let base = slugify(name);
+    if (!base) base = slugify(sku) || "product";
+    let slug = base;
+    let counter = 1;
+    while (usedSlugs.has(slug)) {
+      slug = `${base}-${counter}`;
+      counter++;
+    }
+    usedSlugs.add(slug);
+    return slug;
+  }
+
+  interface PreparedProduct {
+    id: string;
+    name: string;
+    slug: string;
+    sku: string;
+    price: number;
+    comparePrice: number | null;
+    quantity: number;
+    description: string | null;
+    shortDescription: string | null;
+    brand: string | null;
+    weight: number | null;
+    status: string;
+    gtin: string | null;
+    ean: string | null;
+    mpn: string | null;
+    googleCategory: string | null;
+    condition: string;
+    characteristics: string | null;
+    categorySlug?: string;
+    imageUrl?: string;
+  }
+
+  const products: PreparedProduct[] = [];
+
+  for (const row of rows) {
+    const name = row.name?.trim();
+    const sku = row.sku?.trim();
+    const priceStr = row.price?.trim();
+    if (!name || !sku || !priceStr) continue;
+    const price = parseFloat(priceStr);
+    if (isNaN(price)) continue;
+    if (usedSkus.has(sku)) continue;
+    usedSkus.add(sku);
+
+    const comparePrice = row.comparePrice ? parseFloat(row.comparePrice) : null;
+    const quantity = row.quantity ? parseInt(row.quantity, 10) : 0;
+    const weight = row.weight ? parseFloat(row.weight) : null;
+    const ean = row.ean && /^\d{13}$/.test(row.ean) ? row.ean : null;
+
+    let categorySlug: string | undefined;
+    if (row.category?.trim()) {
+      const cat = row.category.trim();
+      const sub = row.subCategory?.trim();
+      const subSub = row.subSubCategory?.trim();
+      if (subSub && sub) categorySlug = slugify(`${cat}-${sub}-${subSub}`);
+      else if (sub) categorySlug = slugify(`${cat}-${sub}`);
+      else categorySlug = slugify(cat);
+    }
+
+    products.push({
+      id: cuid(),
+      name,
+      slug: uniqueSlug(name, sku),
+      sku,
+      price,
+      comparePrice: comparePrice && !isNaN(comparePrice) ? comparePrice : null,
+      quantity: isNaN(quantity) ? 0 : quantity,
+      description: row.description || null,
+      shortDescription: row.shortDescription || null,
+      brand: row.brand || null,
+      weight: weight && !isNaN(weight) ? weight : null,
+      status: row.status || "ACTIVE",
+      gtin: row.gtin || null,
+      ean,
+      mpn: row.mpn || null,
+      googleCategory: row.googleCategory || null,
+      condition: row.condition || "new",
+      characteristics: parseCharacteristics(row.characteristics),
+      categorySlug,
+      imageUrl: row.imageUrl?.trim(),
+    });
+  }
+
+  console.log(`Prepared ${products.length} products`);
+
+  // Batch insert products
+  const BATCH = 50;
+  let inserted = 0;
+
+  for (let i = 0; i < products.length; i += BATCH) {
+    const batch = products.slice(i, i + BATCH);
+    const values: unknown[] = [];
+    const placeholders: string[] = [];
+
+    for (let j = 0; j < batch.length; j++) {
+      const p = batch[j];
+      const offset = j * 18;
+      placeholders.push(
+        `($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4}, $${offset + 5}, $${offset + 6}, $${offset + 7}, $${offset + 8}, $${offset + 9}, $${offset + 10}, $${offset + 11}, $${offset + 12}, $${offset + 13}, $${offset + 14}, $${offset + 15}, $${offset + 16}, $${offset + 17}, $${offset + 18})`,
+      );
+      values.push(
+        p.id, p.name, p.slug, p.sku, p.price, p.comparePrice,
+        p.quantity, p.description, p.shortDescription, p.brand,
+        p.weight, p.status, p.gtin, p.ean, p.mpn, p.condition,
+        p.characteristics, now,
+      );
+    }
+
+    try {
+      await query(
+        `INSERT INTO "Product" (id, name, slug, sku, price, "comparePrice", quantity, description, "shortDescription", brand, weight, status, gtin, ean, mpn, condition, characteristics, "createdAt", "updatedAt")
+         VALUES ${placeholders.map((p) => p.replace(/\)$/, `, $${values.length + 1})`))}
+         ON CONFLICT (sku) DO NOTHING`.replace(
+          new RegExp(`\\$${values.length + 1}`, "g"),
+          `'${now}'`,
+        ),
+        values,
+      );
+      inserted += batch.length;
+    } catch (err) {
+      // Something wrong with the batch SQL template, fall back to one-by-one
+      for (const p of batch) {
+        try {
+          await query(
+            `INSERT INTO "Product" (id, name, slug, sku, price, "comparePrice", quantity, description, "shortDescription", brand, weight, status, gtin, ean, mpn, condition, characteristics, "createdAt", "updatedAt")
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$18)
+             ON CONFLICT (sku) DO NOTHING`,
+            [p.id, p.name, p.slug, p.sku, p.price, p.comparePrice, p.quantity, p.description, p.shortDescription, p.brand, p.weight, p.status, p.gtin, p.ean, p.mpn, p.condition, p.characteristics, now],
+          );
+          inserted++;
+        } catch (e2) {
+          console.error(`Failed ${p.sku}: ${e2 instanceof Error ? e2.message : e2}`);
+        }
+      }
+    }
+
+    process.stdout.write(`\r  Products: ${Math.min(i + BATCH, products.length)}/${products.length}`);
+  }
+  console.log(`\n  Inserted: ${inserted}`);
+
+  // Phase 4: Fetch product IDs by SKU
+  console.log("Linking categories and images...");
+  const allProducts = await query('SELECT id, sku FROM "Product"');
+  const skuToId = new Map(allProducts.rows.map((r: { id: string; sku: string }) => [r.sku, r.id]));
+
+  // Category links - batch insert
+  const catLinks: { productId: string; categoryId: string }[] = [];
+  for (const p of products) {
+    if (!p.categorySlug) continue;
+    const productId = skuToId.get(p.sku);
+    const categoryId = slugToId.get(p.categorySlug);
+    if (productId && categoryId) catLinks.push({ productId, categoryId });
+  }
+
+  for (let i = 0; i < catLinks.length; i += 200) {
+    const batch = catLinks.slice(i, i + 200);
+    const values: unknown[] = [];
+    const placeholders: string[] = [];
+    batch.forEach((l, j) => {
+      placeholders.push(`($${j * 2 + 1}, $${j * 2 + 2})`);
+      values.push(l.productId, l.categoryId);
+    });
+    await query(
+      `INSERT INTO "ProductCategory" ("productId", "categoryId") VALUES ${placeholders.join(",")} ON CONFLICT DO NOTHING`,
+      values,
+    );
+    process.stdout.write(`\r  Category links: ${Math.min(i + 200, catLinks.length)}/${catLinks.length}`);
+  }
+  console.log();
+
+  // Images - batch insert
+  const images: { id: string; url: string; alt: string; productId: string }[] = [];
+  for (const p of products) {
+    if (!p.imageUrl) continue;
+    const productId = skuToId.get(p.sku);
+    if (productId) images.push({ id: cuid(), url: p.imageUrl, alt: p.name, productId });
+  }
+
+  for (let i = 0; i < images.length; i += 200) {
+    const batch = images.slice(i, i + 200);
+    const values: unknown[] = [];
+    const placeholders: string[] = [];
+    batch.forEach((img, j) => {
+      placeholders.push(`($${j * 4 + 1}, $${j * 4 + 2}, $${j * 4 + 3}, 0, $${j * 4 + 4})`);
+      values.push(img.id, img.url, img.alt, img.productId);
+    });
+    await query(
+      `INSERT INTO "ProductImage" (id, url, alt, "sortOrder", "productId") VALUES ${placeholders.join(",")} ON CONFLICT DO NOTHING`,
+      values,
+    );
+    process.stdout.write(`\r  Images: ${Math.min(i + 200, images.length)}/${images.length}`);
+  }
+  console.log();
+
+  // Summary
+  const counts = await Promise.all([
+    query('SELECT count(*) FROM "Product"'),
+    query('SELECT count(*) FROM "Category"'),
+    query('SELECT count(*) FROM "ProductImage"'),
+    query('SELECT count(*) FROM "ProductCategory"'),
+  ]);
+
+  console.log(`\nImport complete!`);
+  console.log(`  Products: ${counts[0].rows[0].count}`);
+  console.log(`  Categories: ${counts[1].rows[0].count}`);
+  console.log(`  Images: ${counts[2].rows[0].count}`);
+  console.log(`  Category links: ${counts[3].rows[0].count}`);
+
+  await client.end();
 }
 
 main().catch((err) => {

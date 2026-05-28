@@ -61,13 +61,15 @@ export function ProductCard({
     <Link href={`/product/${slug}`} className={styles.card}>
       <div className={styles.imageWrapper}>
         {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={name}
-            fill
-            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className={styles.image}
-          />
+          <div className={styles.imageInner}>
+            <Image
+              src={imageUrl}
+              alt={name}
+              fill
+              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              className={styles.image}
+            />
+          </div>
         ) : (
           <div className={styles.noImage}>
             <ImageOff size={32} />

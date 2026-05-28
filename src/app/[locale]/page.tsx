@@ -120,6 +120,7 @@ async function getHomeData() {
         _count: c._count,
       })),
       10,
+      6,
     );
 
     const brandSections = getBrandSections(products, TOP_BRANDS, 8);
@@ -139,7 +140,9 @@ async function getHomeData() {
         imageUrl: null as string | null,
         productCount: directCount + childProductCount,
       };
-    }).filter((c) => c.productCount > 0);
+    }).filter((c) => c.productCount > 0)
+      .sort((a, b) => b.productCount - a.productCount)
+      .slice(0, 8);
 
     return serialize({
       heroSlides,
@@ -184,9 +187,9 @@ export default async function HomePage() {
         data={{
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "Store",
+          name: "AvontShop",
           url: siteUrl,
-          description: "Quality products delivered worldwide",
+          description: "Your trusted source for electrical materials, wiring, and installation supplies.",
         }}
       />
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}

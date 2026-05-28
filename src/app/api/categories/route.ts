@@ -27,15 +27,15 @@ export async function GET(request: NextRequest) {
 
     const categories = await prisma.category.findMany({
       where: { parentId: null },
-      orderBy: { sortOrder: "asc" },
+      orderBy: { name: "asc" },
       include: {
         _count: { select: { products: true } },
         children: {
-          orderBy: { sortOrder: "asc" },
+          orderBy: { name: "asc" },
           include: {
             _count: { select: { products: true } },
             children: {
-              orderBy: { sortOrder: "asc" },
+              orderBy: { name: "asc" },
               include: {
                 _count: { select: { products: true } },
               },
@@ -45,7 +45,22 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(categories);
+    function subtreeCount(cat: any): number {
+      const own = cat._count?.products || 0;
+      const childSum = (cat.children || []).reduce((s: number, c: any) => s + subtreeCount(c), 0);
+      return own + childSum;
+    }
+
+    function pruneEmpty(cats: any[]): any[] {
+      return cats
+        .filter((c) => subtreeCount(c) > 0)
+        .map((c) => ({
+          ...c,
+          children: c.children ? pruneEmpty(c.children) : [],
+        }));
+    }
+
+    return NextResponse.json(pruneEmpty(categories));
   } catch (error) {
     console.error("Error fetching categories:", error);
     return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });

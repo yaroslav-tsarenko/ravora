@@ -2,6 +2,12 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
+import Image from "next/image";
+import { FaLinkedinIn, FaInstagram, FaXTwitter } from "react-icons/fa6";
+import { AvontLogo } from "../AvontLogo";
+import visaLogo from "@/assets/visa-logo.svg";
+import mastercardLogo from "@/assets/mastercard-logo.svg";
+import pciDssLogo from "@/assets/pci-dss-compliant-logo-vector.svg";
 import styles from "./Footer.module.css";
 
 export function Footer() {
@@ -14,14 +20,23 @@ export function Footer() {
       <div className={styles.container}>
         <div className={styles.topSection}>
           <div className={styles.brandCol}>
-            <Link href="/" className={styles.logo}>Store</Link>
+            <Link href="/" className={styles.logo}>
+              <AvontLogo size={28} />
+              <span>AvontShop</span>
+            </Link>
             <p className={styles.brandDesc}>
-              Quality products, curated with care. We deliver the best shopping experience right to your door.
+              Your trusted source for electrical materials, wiring, and installation supplies. Professional quality delivered to your door.
             </p>
             <div className={styles.socialRow}>
-              <a href="#" className={styles.socialIcon} aria-label="Facebook" target="_blank" rel="noopener noreferrer">f</a>
-              <a href="#" className={styles.socialIcon} aria-label="Instagram" target="_blank" rel="noopener noreferrer">in</a>
-              <a href="#" className={styles.socialIcon} aria-label="Twitter" target="_blank" rel="noopener noreferrer">x</a>
+              <a href="#" className={styles.socialIcon} aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                <FaLinkedinIn size={16} />
+              </a>
+              <a href="#" className={styles.socialIcon} aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                <FaInstagram size={16} />
+              </a>
+              <a href="#" className={styles.socialIcon} aria-label="X" target="_blank" rel="noopener noreferrer">
+                <FaXTwitter size={16} />
+              </a>
             </div>
           </div>
 
@@ -58,13 +73,18 @@ export function Footer() {
 
         <div className={styles.bottom}>
           <p className={styles.copyright}>
-            {t("copyright", { year: currentYear, storeName: "Store" })}
+            {t("copyright", { year: currentYear, storeName: "AvontShop" })}
           </p>
           <div className={styles.paymentMethods}>
-            <span className={styles.paymentBadge}>VISA</span>
-            <span className={styles.paymentBadge}>MC</span>
-            <span className={styles.paymentBadge}>AMEX</span>
-            <span className={styles.paymentBadge}>PAYPAL</span>
+            <span className={styles.paymentBadge}>
+              <Image src={visaLogo} alt="Visa" height={100} width={100} className={styles.paymentImg} />
+            </span>
+            <span className={styles.paymentBadge}>
+              <Image src={mastercardLogo} alt="Mastercard" height={100} width={100} className={styles.paymentImg} />
+            </span>
+            <span className={styles.paymentBadge}>
+              <Image src={pciDssLogo} alt="PCI DSS Compliant" height={100} width={100} className={styles.paymentImg} />
+            </span>
           </div>
         </div>
       </div>

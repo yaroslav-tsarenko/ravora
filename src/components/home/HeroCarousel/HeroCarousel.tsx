@@ -1,8 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image, { type StaticImageData } from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import banner1 from "@/assets/banner1.png";
+import banner2 from "@/assets/banner2.png";
+import banner3 from "@/assets/banner3.png";
 import styles from "./HeroCarousel.module.css";
 
 interface SlideData {
@@ -28,11 +32,59 @@ interface DealData {
   imageUrl?: string | null;
 }
 
-const defaultSlides: SlideData[] = [
-  { id: "1", badgeText: "Hot Deal", title: "Summer Electronics Sale", subtitle: "Up to 40% off on laptops, tablets, and accessories", ctaLabel: "Shop Now", linkUrl: "/catalog/electronics", bgColor: "#1A1A2E", textColor: "#ffffff" },
-  { id: "2", badgeText: "New Arrival", title: "Smart Home Collection", subtitle: "Transform your home with the latest smart devices", ctaLabel: "Explore", linkUrl: "/catalog/home-garden", bgColor: "#F5F5F5", textColor: "#1A1A2E" },
-  { id: "3", badgeText: "Limited Time", title: "Gaming Gear Festival", subtitle: "Top brands, best prices", ctaLabel: "View Deals", linkUrl: "/catalog/electronics", bgColor: "#0D1B2A", textColor: "#ffffff" },
+interface DefaultSlide {
+  id: string;
+  badgeText: string;
+  title: string;
+  subtitle: string;
+  ctaLabel: string;
+  linkUrl: string;
+  bgColor: string;
+  textColor: string;
+  bgImage: StaticImageData;
+}
+
+const defaultSlides: DefaultSlide[] = [
+  {
+    id: "1",
+    badgeText: "Professional Grade",
+    title: "Switchgear & Distribution Boards",
+    subtitle: "Certified panels, circuit breakers, and modular enclosures for residential and commercial installations",
+    ctaLabel: "Shop Now",
+    linkUrl: "/catalog",
+    bgColor: "#1A1A2E",
+    textColor: "#ffffff",
+    bgImage: banner1,
+  },
+  {
+    id: "2",
+    badgeText: "Complete Range",
+    title: "Industrial Control & Automation",
+    subtitle: "From compact enclosures to full-size distribution cabinets — everything for your next project",
+    ctaLabel: "Browse Equipment",
+    linkUrl: "/catalog",
+    bgColor: "#F5F5F5",
+    textColor: "#ffffff",
+    bgImage: banner2,
+  },
+  {
+    id: "3",
+    badgeText: "Top Quality",
+    title: "Cables, Wiring & Connectors",
+    subtitle: "Premium copper cables, flexible wiring, terminal blocks and accessories at wholesale prices",
+    ctaLabel: "View Cables",
+    linkUrl: "/catalog",
+    bgColor: "#0D1B2A",
+    textColor: "#ffffff",
+    bgImage: banner3,
+  },
 ];
+
+const bgImageMap: Record<string, StaticImageData> = {
+  "1": banner1,
+  "2": banner2,
+  "3": banner3,
+};
 
 interface Props {
   slides: SlideData[];
@@ -40,7 +92,8 @@ interface Props {
 }
 
 export function HeroCarousel({ slides, deals }: Props) {
-  const activeSlides = slides.length > 0 ? slides : defaultSlides;
+  const useDefaults = slides.length === 0;
+  const activeSlides = useDefaults ? defaultSlides : slides;
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => {
@@ -58,14 +111,30 @@ export function HeroCarousel({ slides, deals }: Props) {
   }, [next, activeSlides.length]);
 
   const slide = activeSlides[current];
+  const bgImage = useDefaults
+    ? (slide as DefaultSlide).bgImage
+    : bgImageMap[slide.id] || null;
 
   return (
     <div className={styles.heroArea}>
       <div className={styles.carousel}>
         <div
           className={styles.slide}
-          style={{ background: slide.bgColor, color: slide.textColor }}
+          style={bgImage ? { color: "#fff" } : { background: slide.bgColor, color: slide.textColor }}
         >
+          {bgImage && (
+            <>
+              <Image
+                src={bgImage}
+                alt=""
+                fill
+                sizes="(max-width: 1024px) 100vw, 75vw"
+                className={styles.bgImg}
+                priority={current === 0}
+              />
+              <div className={styles.overlay} />
+            </>
+          )}
           <div className={styles.slideContent}>
             {slide.badgeText && (
               <span className={styles.badge}>{slide.badgeText}</span>

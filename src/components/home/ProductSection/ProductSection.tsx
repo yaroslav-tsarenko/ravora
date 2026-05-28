@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { Link } from "@/i18n/routing";
 import { ChevronRight } from "lucide-react";
+import { motion, useInView } from "framer-motion";
 import { MarketplaceProductCard } from "../MarketplaceProductCard/MarketplaceProductCard";
 import styles from "./ProductSection.module.css";
 
@@ -35,6 +36,8 @@ export function ProductSection({
   title, subtitle, products, viewAllHref, viewAllLabel, tabs, bg = "white", columns = 5,
 }: Props) {
   const [activeTab, setActiveTab] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
 
   const filtered = useMemo(() => {
     if (!tabs || tabs.length === 0 || activeTab === 0) return products;
@@ -47,8 +50,13 @@ export function ProductSection({
   if (!products.length) return null;
 
   return (
-    <section className={`${styles.section} ${bg === "gray" ? styles.gray : ""}`}>
-      <div className={styles.header}>
+    <section ref={ref} className={`${styles.section} ${bg === "gray" ? styles.gray : ""}`}>
+      <motion.div
+        className={styles.header}
+        initial={{ opacity: 0, y: 20 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.5 }}
+      >
         <div className={styles.titleGroup}>
           <h2 className={styles.title}>{title}</h2>
           {subtitle && <span className={styles.subtitle}>{subtitle}</span>}
@@ -71,13 +79,20 @@ export function ProductSection({
             {viewAllLabel || "View all"} <ChevronRight size={14} />
           </Link>
         )}
-      </div>
+      </motion.div>
       <div
         className={styles.grid}
         style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
       >
-        {filtered.map((p) => (
-          <MarketplaceProductCard key={p.id} product={p} />
+        {filtered.map((p, i) => (
+          <motion.div
+            key={p.id}
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.4, delay: Math.min(i * 0.07, 0.5) }}
+          >
+            <MarketplaceProductCard product={p} />
+          </motion.div>
         ))}
       </div>
     </section>

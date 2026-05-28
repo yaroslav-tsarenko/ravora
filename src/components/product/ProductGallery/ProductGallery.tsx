@@ -30,7 +30,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
           alt={images[selectedIndex].alt || productName}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          style={{ objectFit: "cover" }}
+          style={{ objectFit: "contain" }}
           priority
         />
       </div>
@@ -47,7 +47,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                 alt={image.alt || `${productName} ${index + 1}`}
                 fill
                 sizes="64px"
-                style={{ objectFit: "cover" }}
+                style={{ objectFit: "contain" }}
               />
             </button>
           ))}

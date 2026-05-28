@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { CheckCircle } from "lucide-react";
+import { motion, useInView } from "framer-motion";
 import styles from "./NewsletterBanner.module.css";
 
 export function NewsletterBanner() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-40px" });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,24 +17,49 @@ export function NewsletterBanner() {
   };
 
   return (
-    <section className={styles.section}>
-      <div className={styles.textSide}>
+    <motion.section
+      ref={ref}
+      className={styles.section}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.div
+        className={styles.textSide}
+        initial={{ opacity: 0, x: -30 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <div className={styles.topRow}>
-          <div className={styles.discountCircle}>
+          <motion.div
+            className={styles.discountCircle}
+            animate={isInView ? { rotate: [0, -8, 8, -4, 0] } : {}}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
             <span className={styles.discountNum}>10%</span>
             <span className={styles.discountOff}>OFF</span>
-          </div>
+          </motion.div>
           <div>
             <h2 className={styles.title}>Subscribe & Save 10%</h2>
             <p className={styles.subtitle}>Get exclusive deals, new arrivals & special offers straight to your inbox.</p>
           </div>
         </div>
-      </div>
-      <div className={styles.formSide}>
+      </motion.div>
+      <motion.div
+        className={styles.formSide}
+        initial={{ opacity: 0, x: 30 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
         {submitted ? (
-          <span className={styles.successMsg}>
+          <motion.span
+            className={styles.successMsg}
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 200 }}
+          >
             <CheckCircle size={18} /> You&apos;re in! Check your inbox.
-          </span>
+          </motion.span>
         ) : (
           <form onSubmit={handleSubmit} style={{ display: "flex", gap: "0.5rem" }}>
             <input
@@ -45,7 +73,7 @@ export function NewsletterBanner() {
             <button type="submit" className={styles.submitBtn}>Subscribe</button>
           </form>
         )}
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }
