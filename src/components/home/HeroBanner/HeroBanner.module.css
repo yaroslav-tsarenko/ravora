@@ -73,7 +73,10 @@
 }
 
 .titleGradient {
-  color: var(--color-accent);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .subtitle {
@@ -100,7 +103,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--color-accent);
+  background: var(--gradient-primary);
   color: white;
   padding: 0.875rem 2rem;
   border-radius: var(--radius-pill);
@@ -108,13 +111,14 @@
   font-size: 0.9375rem;
   border: none;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
   text-decoration: none;
+  box-shadow: var(--shadow-accent);
 }
 
 .ctaPrimary:hover {
   transform: translateY(-2px);
-  background: var(--color-accent-hover);
+  box-shadow: 0 12px 40px rgba(108, 92, 231, 0.3);
 }
 
 .ctaPrimary:active {
@@ -249,7 +253,10 @@
 .decoCardValue {
   font-size: 1.75rem;
   font-weight: 800;
-  color: var(--color-accent);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .decoCard2 {

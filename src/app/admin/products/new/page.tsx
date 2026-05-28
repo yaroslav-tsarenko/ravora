@@ -8,31 +8,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { productSchema, type ProductFormData } from "@/lib/validators/product";
 import { toast } from "sonner";
-import { Plus, Trash2 } from "lucide-react";
 
 export default function NewProductPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
-  const [charRows, setCharRows] = useState<{ group: string; key: string; value: string }[]>([]);
 
   const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<ProductFormData>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(productSchema) as any,
     defaultValues: { status: "DRAFT", condition: "new", trackInventory: true, isFeatured: false, quantity: 0, lowStockAlert: 5 },
   });
-
-  const syncCharacteristics = (rows: { group: string; key: string; value: string }[]) => {
-    const obj: Record<string, Record<string, string>> = {};
-    rows.forEach((r) => {
-      if (r.key) {
-        const group = r.group || "General";
-        if (!obj[group]) obj[group] = {};
-        obj[group][r.key] = r.value;
-      }
-    });
-    setValue("characteristics", Object.keys(obj).length > 0 ? obj : undefined);
-  };
 
   useEffect(() => {
     fetch("/api/categories")
@@ -167,12 +153,7 @@ export default function NewProductPage() {
               <label className="admin-label">Brand</label>
               <input className="admin-input" {...register("brand")} />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
-              <div>
-                <label className="admin-label">EAN (13 digits)</label>
-                <input className="admin-input" maxLength={13} placeholder="4751234567890" {...register("ean")} />
-                {errors.ean && <span className="admin-field-error">{errors.ean.message}</span>}
-              </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
               <div>
                 <label className="admin-label">GTIN</label>
                 <input className="admin-input" {...register("gtin")} />
@@ -186,77 +167,6 @@ export default function NewProductPage() {
               <label className="admin-label">Google Category</label>
               <input className="admin-input" {...register("googleCategory")} />
             </div>
-          </div>
-        </div>
-
-        <div className="admin-form-card">
-          <div className="admin-form-section-title">Characteristics</div>
-          <p style={{ fontSize: "0.8125rem", color: "var(--admin-text-tertiary)", marginBottom: "0.75rem" }}>
-            Group similar properties under a section name (e.g. Dimensions, Connection, Materials).
-          </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-            {charRows.map((row, i) => (
-              <div key={i} style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                <input
-                  className="admin-input"
-                  placeholder="Group (e.g. Dimensions)"
-                  value={row.group}
-                  onChange={(e) => {
-                    const next = [...charRows];
-                    next[i] = { ...next[i], group: e.target.value };
-                    setCharRows(next);
-                    syncCharacteristics(next);
-                  }}
-                  style={{ flex: 0.8 }}
-                />
-                <input
-                  className="admin-input"
-                  placeholder="Name (e.g. Height)"
-                  value={row.key}
-                  onChange={(e) => {
-                    const next = [...charRows];
-                    next[i] = { ...next[i], key: e.target.value };
-                    setCharRows(next);
-                    syncCharacteristics(next);
-                  }}
-                  style={{ flex: 1 }}
-                />
-                <input
-                  className="admin-input"
-                  placeholder="Value (e.g. 703 mm)"
-                  value={row.value}
-                  onChange={(e) => {
-                    const next = [...charRows];
-                    next[i] = { ...next[i], value: e.target.value };
-                    setCharRows(next);
-                    syncCharacteristics(next);
-                  }}
-                  style={{ flex: 1 }}
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    const next = charRows.filter((_, j) => j !== i);
-                    setCharRows(next);
-                    syncCharacteristics(next);
-                  }}
-                  style={{ background: "none", border: "none", cursor: "pointer", color: "var(--admin-text-tertiary)", padding: "0.5rem" }}
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => setCharRows([...charRows, { group: charRows[charRows.length - 1]?.group || "", key: "", value: "" }])}
-              style={{
-                display: "flex", alignItems: "center", gap: "0.375rem",
-                background: "none", border: "1px dashed var(--admin-border)", borderRadius: "var(--radius-md)",
-                padding: "0.625rem 1rem", cursor: "pointer", color: "var(--admin-text-secondary)", fontSize: "0.875rem",
-              }}
-            >
-              <Plus size={14} /> Add Characteristic
-            </button>
           </div>
         </div>
 

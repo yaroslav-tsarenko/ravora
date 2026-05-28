@@ -9,8 +9,6 @@ interface Category {
   id: string;
   name: string;
   slug: string;
-  _count?: { products: number };
-  children?: Category[];
 }
 
 interface ProductFiltersProps {
@@ -40,64 +38,6 @@ function FilterSection({ title, defaultOpen = true, children }: { title: string;
       </button>
       {open && <div className={styles.sectionContent}>{children}</div>}
     </div>
-  );
-}
-
-function CategoryItem({
-  cat,
-  depth,
-  selectedCategory,
-  onCategoryChange,
-}: {
-  cat: Category;
-  depth: number;
-  selectedCategory: string;
-  onCategoryChange: (slug: string) => void;
-}) {
-  const [expanded, setExpanded] = useState(true);
-  const hasChildren = cat.children && cat.children.length > 0;
-  const isActive = selectedCategory === cat.slug;
-  const count = cat._count?.products || 0;
-
-  return (
-    <>
-      <li
-        className={`${styles.categoryItem} ${isActive ? styles.categoryItemActive : ""}`}
-        style={{ paddingLeft: `${0.75 + depth * 1}rem` }}
-      >
-        <span
-          onClick={() => onCategoryChange(cat.slug)}
-          style={{ flex: 1, cursor: "pointer" }}
-        >
-          {cat.name}
-          {count > 0 && (
-            <span style={{ color: "var(--color-text-tertiary)", fontSize: "0.75rem", marginLeft: "0.25rem" }}>
-              ({count})
-            </span>
-          )}
-        </span>
-        {hasChildren && (
-          <button
-            onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
-            style={{
-              background: "none", border: "none", cursor: "pointer",
-              color: "var(--color-text-tertiary)", padding: "0.125rem", display: "flex",
-            }}
-          >
-            {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-          </button>
-        )}
-      </li>
-      {hasChildren && expanded && cat.children!.map((child) => (
-        <CategoryItem
-          key={child.id}
-          cat={child}
-          depth={depth + 1}
-          selectedCategory={selectedCategory}
-          onCategoryChange={onCategoryChange}
-        />
-      ))}
-    </>
   );
 }
 
@@ -131,13 +71,13 @@ export function ProductFilters({
             {nav("allCategories")}
           </li>
           {categories.map((cat) => (
-            <CategoryItem
+            <li
               key={cat.id}
-              cat={cat}
-              depth={0}
-              selectedCategory={selectedCategory}
-              onCategoryChange={onCategoryChange}
-            />
+              className={`${styles.categoryItem} ${selectedCategory === cat.slug ? styles.categoryItemActive : ""}`}
+              onClick={() => onCategoryChange(cat.slug)}
+            >
+              {cat.name}
+            </li>
           ))}
         </ul>
       </FilterSection>

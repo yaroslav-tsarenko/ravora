@@ -103,7 +103,7 @@
 }
 
 .saleBadge {
-  background: var(--color-danger);
+  background: var(--gradient-badge);
   color: white;
 }
 
@@ -113,7 +113,7 @@
 }
 
 .newBadge {
-  background: var(--color-accent);
+  background: var(--gradient-accent);
   color: white;
 }
 
