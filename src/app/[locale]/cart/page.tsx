@@ -74,7 +74,7 @@ export default function CartPage() {
                     {cart.itemCount} {cart.itemCount === 1 ? "item" : "items"} in your cart
                   </span>
                 </div>
-                {cart.subtotal >= 50 && (
+                {cart.subtotal >= 100 && (
                   <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", fontSize: "0.75rem", fontWeight: 600, color: "#2E7D32" }}>
                     <Truck size={14} />
                     Free shipping
@@ -241,7 +241,7 @@ export default function CartPage() {
                     }}
                   >
                     <Truck size={14} />
-                    Add {formatPrice(convert(50 - cart.subtotal), currency)} more for free shipping
+                    Add {formatPrice(convert(100 - cart.subtotal), currency)} more for free shipping
                   </div>
                 )}
 

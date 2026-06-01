@@ -28,7 +28,7 @@ const defaultSmall: BannerData[] = [
 ];
 
 const defaultWide: BannerData[] = [
-  { id: "w1", badgeText: "Pro Account", title: "Register & Get 10% Off Your First Order", subtitle: "Free shipping over €50, trade pricing, and priority support", bgColor: "#1A1A2E", textColor: "#ffffff", linkUrl: "/auth/register", ctaLabel: "Join Free" },
+  { id: "w1", badgeText: "Pro Account", title: "Register & Get 10% Off Your First Order", subtitle: "Free shipping over €100, trade pricing, and priority support", bgColor: "#1A1A2E", textColor: "#ffffff", linkUrl: "/auth/register", ctaLabel: "Join Free" },
 ];
 
 export function PromoBannerGrid({ smallBanners, wideBanners }: Props) {

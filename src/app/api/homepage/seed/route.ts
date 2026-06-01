@@ -23,7 +23,7 @@ export async function POST() {
 
     // ── Promo Strip Items ──────────────────────────────
     const promoStripItems = [
-      { icon: "Truck", title: "Free Delivery", subtitle: "On orders over $50", sortOrder: 0 },
+      { icon: "Truck", title: "Free Delivery", subtitle: "On orders over €100", sortOrder: 0 },
       { icon: "RotateCcw", title: "Easy Returns", subtitle: "30-day return policy", sortOrder: 1 },
       { icon: "Shield", title: "2-Year Warranty", subtitle: "Official guarantee", sortOrder: 2 },
       { icon: "Gift", title: "Gift Cards", subtitle: "Perfect for any occasion", sortOrder: 3 },

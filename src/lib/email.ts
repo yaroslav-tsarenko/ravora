@@ -66,7 +66,7 @@ export async function sendWelcomeEmail(email: string, name?: string | null) {
           <li>Browse our full catalog of products</li>
           <li>Save items to your wishlist</li>
           <li>Track your orders in real time</li>
-          <li>Get free shipping on orders over &euro;50</li>
+          <li>Get free shipping on orders over &euro;100</li>
         </ul>
       </div>
       <div style="text-align:center;">

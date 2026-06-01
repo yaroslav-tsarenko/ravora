@@ -14,7 +14,7 @@ const reasons = [
   {
     icon: <Zap size={24} />,
     title: "Fast Delivery",
-    desc: "Free shipping on orders over €50 with express options available.",
+    desc: "Free shipping on orders over €100 with express options available.",
     gradient: "linear-gradient(135deg, #00CECE 0%, #6C5CE7 100%)",
   },
   {

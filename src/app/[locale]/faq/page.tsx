@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const faqs = [
   {
     q: "How long does shipping take?",
-    a: "Standard shipping takes 3-5 business days. Express shipping is available for 1-2 business day delivery. Free shipping is offered on orders over €50.",
+    a: "Standard shipping takes 3-5 business days. Express shipping is available for 1-2 business day delivery. Free shipping is offered on orders over €100.",
   },
   {
     q: "What is your return policy?",

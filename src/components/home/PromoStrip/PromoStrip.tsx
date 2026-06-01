@@ -24,7 +24,7 @@ interface Props {
 }
 
 const defaultItems: PromoItem[] = [
-  { id: "1", icon: "Truck", title: "Free Delivery", subtitle: "Orders over €50" },
+  { id: "1", icon: "Truck", title: "Free Delivery", subtitle: "Orders over €100" },
   { id: "2", icon: "RotateCcw", title: "Easy Returns", subtitle: "30-day policy" },
   { id: "3", icon: "Shield", title: "2-Year Warranty", subtitle: "On all products" },
   { id: "4", icon: "Gift", title: "Gift Cards", subtitle: "Available now" },

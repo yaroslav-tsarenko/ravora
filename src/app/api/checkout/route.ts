@@ -7,9 +7,6 @@ import { sendOrderConfirmationEmail } from "@/lib/email";
 export async function POST(request: NextRequest) {
   try {
     const user = await getSessionUser();
-    if (!user) {
-      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
-    }
 
     const body = await request.json();
     const validated = checkoutSchema.parse(body);
@@ -17,6 +14,10 @@ export async function POST(request: NextRequest) {
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+    }
+
+    if (!validated.contact.email) {
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
     const productIds = items.map((item: { productId: string }) => item.productId);
@@ -47,12 +48,12 @@ export async function POST(request: NextRequest) {
 
     const taxRate = 21;
     const taxAmount = subtotal * (taxRate / 100);
-    const shippingCost = subtotal >= 50 ? 0 : 5.99;
+    const shippingCost = subtotal >= 100 ? 0 : 5.99;
     const total = subtotal + taxAmount + shippingCost;
 
     const order = await prisma.order.create({
       data: {
-        userId: user.id,
+        userId: user?.id || null,
         customerName: `${validated.shipping.firstName} ${validated.shipping.lastName}`,
         customerEmail: validated.contact.email,
         customerPhone: validated.contact.phone,

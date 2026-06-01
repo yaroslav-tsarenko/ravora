@@ -9,12 +9,15 @@ datasource db {
 // ── Auth ────────────────────────────────────────
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
+  id           String    @id @default(cuid())
+  email        String    @unique
   passwordHash String?
   name         String?
+  firstName    String?
+  lastName     String?
+  dateOfBirth  DateTime?
   avatarUrl    String?
-  role         UserRole @default(CUSTOMER)
+  role         UserRole  @default(CUSTOMER)
   phone        String?
 
   addresses          Address[]
@@ -192,8 +195,8 @@ model Order {
   orderNumber     String        @unique @default(cuid())
   status          OrderStatus   @default(PENDING)
 
-  userId          String
-  user            User          @relation(fields: [userId], references: [id])
+  userId          String?
+  user            User?         @relation(fields: [userId], references: [id])
 
   customerName    String
   customerEmail   String

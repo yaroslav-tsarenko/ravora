@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/routing";
 import Image from "next/image";
+import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/Button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,11 +14,12 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useCurrency } from "@/providers/CurrencyProvider";
 import { checkoutSchema, type CheckoutFormData } from "@/lib/validators/checkout";
 import { formatPrice } from "@/lib/utils/format-price";
+import { COUNTRIES } from "@/lib/countries";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
 import { toast } from "sonner";
 import {
   Mail, Phone, MapPin, Truck, CreditCard,
-  ChevronRight, ShieldCheck, Lock, Check, ImageOff,
+  ChevronRight, ShieldCheck, Lock, Check, ImageOff, UserPlus,
 } from "lucide-react";
 
 const SHIPPING_METHODS = [
@@ -51,6 +53,15 @@ const inputPlainStyle: React.CSSProperties = {
   paddingLeft: "1rem",
 };
 
+const selectStyle: React.CSSProperties = {
+  ...inputPlainStyle,
+  appearance: "none" as const,
+  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239E9EB8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "right 0.75rem center",
+  paddingRight: "2rem",
+};
+
 const labelStyle: React.CSSProperties = {
   display: "block",
   fontSize: "0.8125rem",
@@ -78,7 +89,7 @@ function InputWithIcon({ icon: Icon, error, ...props }: { icon: React.ElementTyp
           ...inputBaseStyle,
           borderColor: error ? "var(--color-danger)" : undefined,
         }}
-        onFocus={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(229,57,53,0.1)"; }}
+        onFocus={(e) => { e.currentTarget.style.borderColor = "var(--color-accent)"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(108,92,231,0.1)"; }}
         onBlur={(e) => { e.currentTarget.style.borderColor = error ? "var(--color-danger)" : "var(--color-border)"; e.currentTarget.style.boxShadow = "none"; }}
       />
       {error && <span style={errorStyle}>{error}</span>}
@@ -122,7 +133,14 @@ export default function CheckoutPage() {
 
   const steps = [t("contact"), t("shipping"), t("review")];
   const selectedMethod = watch("shippingMethod");
+  const selectedCountry = watch("shipping.country");
+  const availableMethods = cart.subtotal >= 100
+    ? SHIPPING_METHODS
+    : SHIPPING_METHODS.filter((m) => m.key !== "free");
   const shippingPrice = SHIPPING_METHODS.find((m) => m.key === selectedMethod)?.price ?? 5.99;
+
+  const countryData = COUNTRIES.find((c) => c.code === selectedCountry);
+  const phoneHint = countryData ? `${countryData.phone} XX XXX XXXX` : "+44 XX XXX XXXX";
 
   const goNext = async () => {
     if (step === 0) {
@@ -136,11 +154,6 @@ export default function CheckoutPage() {
   };
 
   const onSubmit = async (data: CheckoutFormData) => {
-    if (!user) {
-      toast.error("Please log in to place an order");
-      return;
-    }
-
     setSubmitting(true);
     try {
       const res = await fetch("/api/checkout", {
@@ -177,6 +190,10 @@ export default function CheckoutPage() {
 
   if (cart.items.length === 0) return null;
 
+  const freeShippingThreshold = 100;
+  const subtotalConverted = convert(cart.subtotal);
+  const amountToFreeShipping = freeShippingThreshold - subtotalConverted;
+
   return (
     <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 4rem" }}>
       <Breadcrumbs items={[{ label: nav("home"), href: "/" }, { label: nav("cart"), href: "/cart" }, { label: t("title") }]} />
@@ -184,10 +201,42 @@ export default function CheckoutPage() {
       <motion.h1
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        style={{ fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "2rem" }}
+        style={{ fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "1rem" }}
       >
         {t("title")}
       </motion.h1>
+
+      {/* Guest checkout notice */}
+      {!user && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            padding: "0.875rem 1.25rem",
+            borderRadius: "12px",
+            background: "var(--color-accent-light)",
+            border: "1px solid var(--color-accent)",
+            marginBottom: "1.5rem",
+            fontSize: "0.875rem",
+          }}
+        >
+          <UserPlus size={18} style={{ color: "var(--color-accent)", flexShrink: 0 }} />
+          <span>
+            Checking out as guest.{" "}
+            <Link href="/auth/login" style={{ color: "var(--color-accent)", fontWeight: 600, textDecoration: "none" }}>
+              Log in
+            </Link>{" "}
+            or{" "}
+            <Link href="/auth/register" style={{ color: "var(--color-accent)", fontWeight: 600, textDecoration: "none" }}>
+              create an account
+            </Link>{" "}
+            to track orders easily.
+          </span>
+        </motion.div>
+      )}
 
       {/* Step Indicator */}
       <motion.div
@@ -272,22 +321,30 @@ export default function CheckoutPage() {
                   <h2 style={{ fontSize: "1.125rem", fontWeight: 700 }}>{t("contact")}</h2>
                 </div>
                 <div>
-                  <label style={labelStyle}>{t("email")}</label>
+                  <label style={labelStyle}>{t("email")} *</label>
                   <InputWithIcon
                     icon={Mail}
                     placeholder="your@email.com"
                     error={errors.contact?.email?.message}
                     {...register("contact.email")}
                   />
+                  {!user && (
+                    <span style={{ fontSize: "0.75rem", color: "var(--color-text-tertiary)", marginTop: "0.25rem", display: "block" }}>
+                      Order confirmation will be sent to this email
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label style={labelStyle}>{t("phone")}</label>
                   <InputWithIcon
                     icon={Phone}
-                    placeholder="+371 20 000 000"
+                    placeholder={phoneHint}
                     error={errors.contact?.phone?.message}
                     {...register("contact.phone")}
                   />
+                  <span style={{ fontSize: "0.75rem", color: "var(--color-text-tertiary)", marginTop: "0.25rem", display: "block" }}>
+                    Include country code (e.g. +371, +44, +49)
+                  </span>
                 </div>
                 <Button color="primary" size="lg" onPress={goNext} style={{ marginTop: "0.5rem" }}>
                   Continue to Shipping <ChevronRight size={16} />
@@ -322,19 +379,19 @@ export default function CheckoutPage() {
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                   <div>
-                    <label style={labelStyle}>{t("firstName")}</label>
+                    <label style={labelStyle}>{t("firstName")} *</label>
                     <input style={{ ...inputPlainStyle, borderColor: errors.shipping?.firstName ? "var(--color-danger)" : undefined }} placeholder="John" {...register("shipping.firstName")} />
                     {errors.shipping?.firstName && <span style={errorStyle}>{errors.shipping.firstName.message}</span>}
                   </div>
                   <div>
-                    <label style={labelStyle}>{t("lastName")}</label>
+                    <label style={labelStyle}>{t("lastName")} *</label>
                     <input style={{ ...inputPlainStyle, borderColor: errors.shipping?.lastName ? "var(--color-danger)" : undefined }} placeholder="Doe" {...register("shipping.lastName")} />
                     {errors.shipping?.lastName && <span style={errorStyle}>{errors.shipping.lastName.message}</span>}
                   </div>
                 </div>
 
                 <div>
-                  <label style={labelStyle}>{t("address")}</label>
+                  <label style={labelStyle}>{t("address")} *</label>
                   <InputWithIcon icon={MapPin} placeholder="123 Main Street" error={errors.shipping?.address1?.message} {...register("shipping.address1")} />
                 </div>
                 <div>
@@ -344,7 +401,7 @@ export default function CheckoutPage() {
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                   <div>
-                    <label style={labelStyle}>{t("city")}</label>
+                    <label style={labelStyle}>{t("city")} *</label>
                     <input style={{ ...inputPlainStyle, borderColor: errors.shipping?.city ? "var(--color-danger)" : undefined }} placeholder="Riga" {...register("shipping.city")} />
                     {errors.shipping?.city && <span style={errorStyle}>{errors.shipping.city.message}</span>}
                   </div>
@@ -356,13 +413,24 @@ export default function CheckoutPage() {
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                   <div>
-                    <label style={labelStyle}>{t("postalCode")}</label>
+                    <label style={labelStyle}>{t("postalCode")} *</label>
                     <input style={{ ...inputPlainStyle, borderColor: errors.shipping?.postalCode ? "var(--color-danger)" : undefined }} placeholder="LV-1001" {...register("shipping.postalCode")} />
                     {errors.shipping?.postalCode && <span style={errorStyle}>{errors.shipping.postalCode.message}</span>}
                   </div>
                   <div>
-                    <label style={labelStyle}>{t("country")}</label>
-                    <input style={{ ...inputPlainStyle, borderColor: errors.shipping?.country ? "var(--color-danger)" : undefined }} placeholder="Latvia" {...register("shipping.country")} />
+                    <label style={labelStyle}>{t("country")} *</label>
+                    <select
+                      style={{
+                        ...selectStyle,
+                        borderColor: errors.shipping?.country ? "var(--color-danger)" : undefined,
+                      }}
+                      {...register("shipping.country")}
+                    >
+                      <option value="">Select country...</option>
+                      {COUNTRIES.map((c) => (
+                        <option key={c.code} value={c.code}>{c.name}</option>
+                      ))}
+                    </select>
                     {errors.shipping?.country && <span style={errorStyle}>{errors.shipping.country.message}</span>}
                   </div>
                 </div>
@@ -371,7 +439,7 @@ export default function CheckoutPage() {
                 <div>
                   <label style={{ ...labelStyle, marginBottom: "0.75rem" }}>{t("shippingMethod")}</label>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
-                    {SHIPPING_METHODS.map((m) => {
+                    {availableMethods.map((m) => {
                       const isSelected = selectedMethod === m.key;
                       return (
                         <label
@@ -535,6 +603,31 @@ export default function CheckoutPage() {
           }}
         >
           <h3 style={{ fontWeight: 700, fontSize: "1.0625rem", marginBottom: "1.25rem" }}>{t("orderSummary")}</h3>
+
+          {/* Free shipping progress */}
+          {amountToFreeShipping > 0 && (
+            <div style={{
+              padding: "0.75rem 1rem",
+              borderRadius: "10px",
+              background: "var(--color-bg-secondary)",
+              marginBottom: "1.25rem",
+              fontSize: "0.8125rem",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                <Truck size={14} style={{ color: "var(--color-accent)" }} />
+                <span>Add <strong>{formatPrice(amountToFreeShipping, currency)}</strong> more for free shipping</span>
+              </div>
+              <div style={{ height: 4, borderRadius: 2, background: "var(--color-border)", overflow: "hidden" }}>
+                <div style={{
+                  width: `${Math.min((subtotalConverted / freeShippingThreshold) * 100, 100)}%`,
+                  height: "100%",
+                  background: "var(--color-accent)",
+                  borderRadius: 2,
+                  transition: "width 0.3s",
+                }} />
+              </div>
+            </div>
+          )}
 
           {/* Mini item list */}
           <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem", marginBottom: "1.25rem", paddingBottom: "1.25rem", borderBottom: "1px solid var(--color-border)" }}>
