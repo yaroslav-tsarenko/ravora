@@ -3,7 +3,7 @@
 }
 
 .gray {
-  background: #f5f5f5;
+  background: var(--color-bg-secondary);
   border-radius: 8px;
   padding: 1.25rem;
 }
@@ -26,13 +26,13 @@
   font-size: 1.125rem;
   font-weight: 800;
   margin: 0;
-  color: #1A1A2E;
+  color: var(--color-text);
   white-space: nowrap;
 }
 
 .subtitle {
   font-size: 0.75rem;
-  color: #999;
+  color: var(--color-text-tertiary);
   white-space: nowrap;
 }
 
@@ -44,19 +44,19 @@
 
 .tab {
   padding: 0.3rem 0.75rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border);
   border-radius: 5px;
-  background: #fff;
+  background: var(--color-bg);
   font-size: 0.75rem;
-  color: #666;
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition: border-color 0.12s, color 0.12s;
   white-space: nowrap;
 }
 
 .tab:hover {
-  border-color: #ccc;
-  color: #333;
+  border-color: var(--color-border-hover);
+  color: var(--color-text);
 }
 
 .tabActive {

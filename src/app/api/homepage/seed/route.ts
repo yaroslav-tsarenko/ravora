@@ -10,8 +10,7 @@ export async function POST() {
       { label: "Returns & Warranty", linkUrl: "/returns", icon: "RotateCcw", position: "left", sortOrder: 2 },
       { label: "FAQ", linkUrl: "/faq", icon: "HelpCircle", position: "left", sortOrder: 3 },
       { label: "Order Info", linkUrl: "/order-info", icon: "Package", position: "left", sortOrder: 4 },
-      { label: "Pickup Points", linkUrl: "/pickup-points", icon: "MapPin", position: "right", sortOrder: 5 },
-      { label: "Contacts", linkUrl: "/contacts", icon: "Phone", position: "right", sortOrder: 6 },
+      { label: "Contacts", linkUrl: "/contacts", icon: "Phone", position: "right", sortOrder: 5 },
     ];
 
     for (const link of utilityLinks) {

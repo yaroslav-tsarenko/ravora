@@ -63,10 +63,12 @@ export function Footer() {
           <div>
             <h3 className={styles.sectionTitle}>Info</h3>
             <ul className={styles.links}>
-              <li><Link href="/policies/privacy" className={styles.link}>{t("privacy")}</Link></li>
               <li><Link href="/policies/terms" className={styles.link}>{t("terms")}</Link></li>
+              <li><Link href="/policies/privacy" className={styles.link}>{t("privacy")}</Link></li>
               <li><Link href="/policies/returns" className={styles.link}>{t("returns")}</Link></li>
-              <li><Link href="/contact" className={styles.link}>Help Center</Link></li>
+              <li><Link href="/policies/shipping" className={styles.link}>Shipping Policy</Link></li>
+              <li><Link href="/policies/warranty" className={styles.link}>Warranty</Link></li>
+              <li><Link href="/policies/payment" className={styles.link}>Payment Policy</Link></li>
             </ul>
           </div>
         </div>

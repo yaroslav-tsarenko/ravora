@@ -1,5 +1,5 @@
 .marketplace {
-  background: #F5F5F5;
+  background: var(--color-bg-secondary);
   min-height: 100vh;
 }
 

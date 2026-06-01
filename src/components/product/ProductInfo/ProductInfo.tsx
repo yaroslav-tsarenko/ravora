@@ -14,11 +14,16 @@ import { toast } from "sonner";
 import styles from "./ProductInfo.module.css";
 
 const WARRANTY_OPTIONS = [
-  { key: "none", years: 0, priceAdd: 0 },
-  { key: "1year", years: 1, priceAdd: 9.99 },
-  { key: "2year", years: 2, priceAdd: 17.99 },
-  { key: "3year", years: 3, priceAdd: 24.99 },
+  { key: "none", years: 0, percent: 0, min: 0 },
+  { key: "1year", years: 1, percent: 10, min: 6.99 },
+  { key: "2year", years: 2, percent: 16, min: 9.99 },
+  { key: "3year", years: 3, percent: 22, min: 12.99 },
 ];
+
+function calcWarrantyPrice(productPrice: number, option: typeof WARRANTY_OPTIONS[number]): number {
+  if (option.percent === 0) return 0;
+  return Math.max(productPrice * (option.percent / 100), option.min);
+}
 
 interface ProductInfoProps {
   id: string;
@@ -68,7 +73,8 @@ export function ProductInfo({
   const lowStock = stockQuantity > 0 && stockQuantity <= lowStockAlert;
 
   const warrantyOption = WARRANTY_OPTIONS[selectedWarranty];
-  const totalPrice = price + warrantyOption.priceAdd;
+  const warrantyPrice = calcWarrantyPrice(price, warrantyOption);
+  const totalPrice = price + warrantyPrice;
 
   const handleAddToCart = () => {
     addItem({
@@ -178,8 +184,8 @@ export function ProductInfo({
               onClick={() => setSelectedWarranty(idx)}
             >
               {idx === 0 ? t("noWarranty") : t(`warrantyOption${opt.years}year` as "warrantyOption1year" | "warrantyOption2year" | "warrantyOption3year")}
-              {opt.priceAdd > 0 && (
-                <span className={styles.guaranteePrice}>+{formatPrice(convert(opt.priceAdd), currency)}</span>
+              {opt.percent > 0 && (
+                <span className={styles.guaranteePrice}>+{formatPrice(convert(calcWarrantyPrice(price, opt)), currency)}</span>
               )}
             </button>
           ))}

@@ -15,24 +15,34 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const category = await prisma.category.findUnique({
     where: { slug },
     include: {
-      products: {
-        include: {
-          product: {
-            include: {
-              images: { orderBy: { sortOrder: "asc" }, take: 1 },
-              categories: { include: { category: { select: { name: true } } } },
-            },
-          },
-        },
-      },
+      children: { select: { id: true, slug: true } },
     },
   });
 
   if (!category) notFound();
 
-  const products = category.products
-    .map((pc: { product: Record<string, unknown> }) => pc.product)
-    .filter((p: Record<string, unknown>) => p.status === "ACTIVE");
+  const categoryIds = [category.id, ...category.children.map((c) => c.id)];
+
+  const productCategories = await prisma.productCategory.findMany({
+    where: { categoryId: { in: categoryIds } },
+    include: {
+      product: {
+        include: {
+          images: { orderBy: { sortOrder: "asc" }, take: 1 },
+          categories: { include: { category: { select: { name: true } } } },
+        },
+      },
+    },
+  });
+
+  const seen = new Set<string>();
+  const products = productCategories
+    .map((pc) => pc.product)
+    .filter((p) => {
+      if (p.status !== "ACTIVE" || seen.has(p.id)) return false;
+      seen.add(p.id);
+      return true;
+    });
 
   return (
     <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem" }}>

@@ -22,9 +22,9 @@ interface Props {
 }
 
 const defaultSmall: BannerData[] = [
-  { id: "1", badgeText: "Circuit Breakers", title: "Protect Every Circuit", subtitle: "From €12.99", bgColor: "#F0F4FF", textColor: "#1A1A2E", linkUrl: "/catalog" },
-  { id: "2", badgeText: "Cables & Wiring", title: "Premium Copper Cables", subtitle: "Up to 30% off", bgColor: "#FFF8F0", textColor: "#1A1A2E", linkUrl: "/catalog" },
-  { id: "3", badgeText: "LED Lighting", title: "Illuminate Your Space", subtitle: "From €4.99", bgColor: "#F0FFF4", textColor: "#1A1A2E", linkUrl: "/catalog" },
+  { id: "1", badgeText: "Circuit Breakers", title: "Protect Every Circuit", subtitle: "From €12.99", bgColor: "var(--promo-bg-blue, #F0F4FF)", textColor: "var(--color-text, #1A1A2E)", linkUrl: "/catalog/smart-modular-circuit-breakers" },
+  { id: "2", badgeText: "Cables & Wiring", title: "Premium Copper Cables", subtitle: "Up to 30% off", bgColor: "var(--promo-bg-warm, #FFF8F0)", textColor: "var(--color-text, #1A1A2E)", linkUrl: "/catalog/installation-and-wiring-materials" },
+  { id: "3", badgeText: "LED Lighting", title: "Illuminate Your Space", subtitle: "From €4.99", bgColor: "var(--promo-bg-green, #F0FFF4)", textColor: "var(--color-text, #1A1A2E)", linkUrl: "/catalog/lighting" },
 ];
 
 const defaultWide: BannerData[] = [

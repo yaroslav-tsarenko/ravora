@@ -19,19 +19,19 @@
   align-items: center;
   gap: 0.375rem;
   padding: 0.4rem 0.75rem;
-  background: #fff;
-  border: 1px solid #e5e5e5;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   font-size: 0.8125rem;
   font-weight: 500;
-  color: #333;
+  color: var(--color-text);
   text-decoration: none;
   white-space: nowrap;
   transition: border-color 0.12s, box-shadow 0.12s;
 }
 
 .tab:hover {
-  border-color: #ccc;
+  border-color: var(--color-border-hover);
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 

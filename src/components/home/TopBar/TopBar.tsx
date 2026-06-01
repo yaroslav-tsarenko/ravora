@@ -22,11 +22,10 @@ interface Props {
 
 const defaultLinks: UtilityLink[] = [
   { id: "1", label: "About", linkUrl: "/about", position: "left" },
-  { id: "2", label: "Payment", linkUrl: "/policies/terms", position: "left" },
-  { id: "3", label: "Delivery", linkUrl: "/faq", position: "left" },
+  { id: "2", label: "Payment", linkUrl: "/policies/payment", position: "left" },
+  { id: "3", label: "Delivery", linkUrl: "/policies/shipping", position: "left" },
   { id: "4", label: "Returns", linkUrl: "/policies/returns", position: "left" },
-  { id: "5", label: "FAQ", linkUrl: "/faq", position: "left" },
-  { id: "6", label: "Pickup Points", linkUrl: "#", icon: "MapPin", position: "right" },
+  { id: "5", label: "Warranty", linkUrl: "/policies/warranty", position: "left" },
   { id: "7", label: "Contacts", linkUrl: "/contact", icon: "Phone", position: "right" },
 ];
 
