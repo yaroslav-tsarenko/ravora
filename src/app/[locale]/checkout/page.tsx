@@ -190,7 +190,7 @@ export default function CheckoutPage() {
 
   if (cart.items.length === 0) return null;
 
-  const freeShippingThreshold = 100;
+  const freeShippingThreshold = convert(100);
   const subtotalConverted = convert(cart.subtotal);
   const amountToFreeShipping = freeShippingThreshold - subtotalConverted;
 
