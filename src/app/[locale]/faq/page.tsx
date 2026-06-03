@@ -102,11 +102,11 @@ export default function FaqPage() {
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "FAQ" }]} />
 
       <div style={{ maxWidth: "720px", margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-          <h1 style={{ fontSize: "2.25rem", fontWeight: 800, letterSpacing: "-0.04em", marginBottom: "0.75rem" }}>
+        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <h1 style={{ fontSize: "clamp(1.5rem, 5.5vw, 2.25rem)", fontWeight: 800, letterSpacing: "-0.04em", marginBottom: "0.75rem", wordBreak: "break-word" }}>
             Frequently Asked <span className="gradient-text">Questions</span>
           </h1>
-          <p style={{ fontSize: "1rem", color: "var(--color-text-secondary)", lineHeight: 1.6 }}>
+          <p style={{ fontSize: "clamp(0.875rem, 2.4vw, 1rem)", color: "var(--color-text-secondary)", lineHeight: 1.6 }}>
             Everything you need to know about shopping with us
           </p>
         </div>

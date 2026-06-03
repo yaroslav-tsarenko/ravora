@@ -13,7 +13,6 @@ import {
 import { useCart } from "@/providers/CartProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { ThemeToggle } from "./ThemeToggle";
-import { LanguageSwitcher } from "./LanguageSwitcher";
 import { AnimatePresence, motion } from "framer-motion";
 import { AvontLogo } from "../AvontLogo";
 import { CurrencySwitcher } from "./CurrencySwitcher";
@@ -164,7 +163,6 @@ export function Header() {
 
             <ThemeToggle />
             <CurrencySwitcher />
-            <LanguageSwitcher />
 
             {user && (
               <Link href="/account/wishlist" className={styles.iconButton} aria-label="Wishlist">

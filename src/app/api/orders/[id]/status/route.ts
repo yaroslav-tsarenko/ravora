@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import {
+  sendOrderShippedEmail,
+  sendOrderStatusEmail,
+} from "@/lib/email";
 
 const statusSchema = z.object({
   status: z.enum([
@@ -18,6 +22,11 @@ export async function PATCH(
     const body = await request.json();
     const validated = statusSchema.parse(body);
 
+    const previous = await prisma.order.findUnique({
+      where: { id },
+      select: { status: true },
+    });
+
     const order = await prisma.order.update({
       where: { id },
       data: {
@@ -28,7 +37,38 @@ export async function PATCH(
             ? "REFUNDED"
             : undefined,
       },
+      include: { items: true },
     });
+
+    const statusChanged = previous?.status !== order.status;
+    if (statusChanged) {
+      const payload = {
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        items: order.items,
+        subtotal: order.subtotal,
+        taxAmount: order.taxAmount,
+        shippingCost: order.shippingCost,
+        discountAmount: order.discountAmount,
+        total: order.total,
+        shippingMethod: order.shippingMethod || "standard",
+        shippingAddress: order.shippingAddress as Record<string, string> | null ?? undefined,
+        trackingNumber: order.trackingNumber,
+        createdAt: order.createdAt,
+      };
+
+      if (order.status === "SHIPPED") {
+        sendOrderShippedEmail(payload).catch(console.error);
+      } else if (
+        order.status === "DELIVERED" ||
+        order.status === "CANCELLED" ||
+        order.status === "REFUNDED"
+      ) {
+        sendOrderStatusEmail(payload, order.status).catch(console.error);
+      }
+    }
 
     return NextResponse.json(order);
   } catch (error) {

@@ -16,11 +16,11 @@ export default async function DynamicPage({ params }: PageProps) {
   if (!page || !page.isActive) notFound();
 
   return (
-    <div style={{ maxWidth: "48rem", margin: "0 auto", padding: "0 1rem 4rem" }}>
+    <div style={{ maxWidth: "48rem", margin: "0 auto", padding: "0 1rem 4rem", overflowWrap: "anywhere" }}>
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: page.title }]} />
-      <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.5rem" }}>{page.title}</h1>
+      <h1 style={{ fontSize: "clamp(1.375rem, 4.5vw, 1.75rem)", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: "1.25rem", wordBreak: "break-word" }}>{page.title}</h1>
       <div
-        style={{ lineHeight: 1.8, color: "var(--color-text-secondary)" }}
+        style={{ lineHeight: 1.75, color: "var(--color-text-secondary)", fontSize: "0.9375rem" }}
         dangerouslySetInnerHTML={{ __html: page.content }}
       />
     </div>

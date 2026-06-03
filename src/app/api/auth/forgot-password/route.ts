@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { randomBytes } from "crypto";
-import { Resend } from "resend";
+import { sendPasswordResetEmail } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,26 +31,14 @@ export async function POST(request: NextRequest) {
       data: { token, userId: user.id, expiresAt },
     });
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || request.headers.get("origin") || "http://localhost:3000";
-    const resetUrl = `${baseUrl}/en/auth/reset-password?token=${token}`;
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      request.headers.get("origin") ||
+      "http://localhost:3000";
+    const resetUrl = `${baseUrl.replace(/\/+$/, "")}/en/auth/reset-password?token=${token}`;
 
-    if (process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL) {
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL,
-        to: email,
-        subject: "Reset your password",
-        html: `
-          <h2>Reset your password</h2>
-          <p>You requested a password reset. Click the link below to set a new password:</p>
-          <p><a href="${resetUrl}" style="display:inline-block;padding:12px 24px;background:#6C5CE7;color:#fff;text-decoration:none;border-radius:8px;">Reset Password</a></p>
-          <p>This link expires in 1 hour.</p>
-          <p>If you didn't request this, you can safely ignore this email.</p>
-        `,
-      });
-    } else {
-      console.log("Password reset link:", resetUrl);
-    }
+    sendPasswordResetEmail(email, resetUrl, user.name).catch(console.error);
 
     return NextResponse.json({ success: true });
   } catch (error) {

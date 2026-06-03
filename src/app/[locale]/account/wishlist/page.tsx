@@ -6,7 +6,6 @@ import { Heart } from "lucide-react";
 import { ProductGrid } from "@/components/product/ProductGrid/ProductGrid";
 import { EmptyState } from "@/components/shared/EmptyState/EmptyState";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner/LoadingSpinner";
-import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
 
 export default function WishlistPage() {
   const t = useTranslations("account");
@@ -29,10 +28,8 @@ export default function WishlistPage() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 4rem" }}>
-      <Breadcrumbs items={[{ label: nav("home"), href: "/" }, { label: t("title"), href: "/account" }, { label: t("wishlist") }]} />
-
-      <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.5rem" }}>{t("wishlist")}</h1>
+    <div>
+      <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.25rem" }}>{t("wishlist")}</h1>
 
       {items.length === 0 ? (
         <EmptyState

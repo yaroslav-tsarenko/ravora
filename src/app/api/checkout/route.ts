@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { checkoutSchema } from "@/lib/validators/checkout";
 import { getSessionUser } from "@/lib/auth";
-import { sendOrderConfirmationEmail } from "@/lib/email";
+import { sendOrderConfirmationEmail, sendOrderInvoiceEmail } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
@@ -76,17 +76,24 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    sendOrderConfirmationEmail({
+    const emailPayload = {
       orderId: order.id,
+      orderNumber: order.orderNumber,
       customerName: order.customerName,
       customerEmail: order.customerEmail,
       items: order.items,
       subtotal: order.subtotal,
       taxAmount: order.taxAmount,
       shippingCost: order.shippingCost,
+      discountAmount: order.discountAmount,
       total: order.total,
       shippingMethod: order.shippingMethod || "standard",
-    }).catch(console.error);
+      shippingAddress: validated.shipping,
+      createdAt: order.createdAt,
+    };
+
+    sendOrderConfirmationEmail(emailPayload).catch(console.error);
+    sendOrderInvoiceEmail(emailPayload).catch(console.error);
 
     return NextResponse.json(order, { status: 201 });
   } catch (error) {

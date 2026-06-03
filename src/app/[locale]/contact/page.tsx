@@ -13,6 +13,7 @@ import {
   Mail, Phone, MapPin, Clock, Send,
   CheckCircle, MessageSquare, HelpCircle, ShieldCheck,
 } from "lucide-react";
+import styles from "./contact.module.css";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
@@ -90,7 +91,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 4rem" }}>
+    <div className={styles.wrapper}>
       <style>{`
         .contact-input:focus {
           border-color: var(--color-accent) !important;
@@ -103,12 +104,12 @@ export default function ContactPage() {
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        style={{ textAlign: "center", marginBottom: "3rem" }}
+        className={styles.hero}
       >
-        <h1 style={{ fontSize: "2.25rem", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "0.75rem" }}>
+        <h1 className={styles.title}>
           {t("title")}
         </h1>
-        <p style={{ color: "var(--color-text-secondary)", fontSize: "1.0625rem", maxWidth: "480px", margin: "0 auto" }}>
+        <p className={styles.subtitle}>
           {t("subtitle")}. We&apos;re here to help with orders, products, and any questions you may have.
         </p>
       </motion.div>
@@ -118,12 +119,7 @@ export default function ContactPage() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "1rem",
-          marginBottom: "3rem",
-        }}
+        className={styles.infoGrid}
       >
         {CONTACT_INFO.map((info, i) => (
           <motion.div
@@ -131,14 +127,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 + i * 0.05 }}
-            style={{
-              padding: "1.5rem",
-              borderRadius: "16px",
-              border: "1px solid var(--color-border)",
-              background: "var(--color-bg)",
-              textAlign: "center",
-              transition: "transform 0.2s, box-shadow 0.2s",
-            }}
+            className={styles.infoCard}
             whileHover={{ y: -4, boxShadow: "0 8px 24px rgba(0,0,0,0.08)" }}
           >
             <div style={{
@@ -162,18 +151,13 @@ export default function ContactPage() {
       </motion.div>
 
       {/* Main Content: Form + Map/Info */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: "2.5rem", alignItems: "start" }}>
+      <div className={styles.layout}>
         {/* Contact Form */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          style={{
-            padding: "2rem",
-            borderRadius: "var(--radius-xl)",
-            border: "1px solid var(--color-border)",
-            background: "var(--color-bg)",
-          }}
+          className={styles.formCard}
         >
           <AnimatePresence mode="wait">
             {submitted ? (
@@ -217,7 +201,7 @@ export default function ContactPage() {
                 {/* Topic Selector */}
                 <div>
                   <label style={labelStyle}>What can we help with?</label>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
+                  <div className={styles.topicGrid}>
                     {TOPICS.map((topic) => {
                       const isActive = selectedTopic === topic.value;
                       return (
@@ -251,7 +235,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div className={styles.twoCol}>
                   <div>
                     <label style={labelStyle}>{t("name")}</label>
                     <input
@@ -323,7 +307,7 @@ export default function ContactPage() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
-          style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
+          className={styles.sidebar}
         >
           {/* FAQ Teaser */}
           <div style={{

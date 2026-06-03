@@ -2,10 +2,22 @@
   margin-top: 3rem;
 }
 
+@media (max-width: 768px) {
+  .container {
+    margin-top: 2rem;
+  }
+}
+
 .tabList {
   display: flex;
   border-bottom: 2px solid var(--color-border);
   gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabList::-webkit-scrollbar {
+  display: none;
 }
 
 .tab {
@@ -20,6 +32,17 @@
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .tab {
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+  }
+  .tabContent {
+    padding: 1.25rem 0;
+  }
 }
 
 .tab:hover {
@@ -118,8 +141,23 @@
 /* Reviews */
 .reviewsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .reviewsGrid {
+    grid-template-columns: 1fr;
+  }
+  .reviewCard {
+    padding: 1rem 1.25rem;
+  }
+  .ratingSummary {
+    padding: 1.25rem;
+  }
+  .ratingNumber {
+    font-size: 2rem;
+  }
 }
 
 .reviewCard {

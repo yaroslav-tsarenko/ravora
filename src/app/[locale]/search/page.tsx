@@ -42,8 +42,8 @@ export default function SearchPage() {
     <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 4rem" }}>
       <Breadcrumbs items={[{ label: nav("home"), href: "/" }, { label: t("search") }]} />
 
-      <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "1.25rem" }}>
+      <div style={{ textAlign: "center", marginBottom: "1.75rem" }}>
+        <h1 style={{ fontSize: "clamp(1.375rem, 4.5vw, 1.75rem)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "1rem" }}>
           Search
         </h1>
         <div style={{ maxWidth: "32rem", margin: "0 auto", position: "relative" }}>

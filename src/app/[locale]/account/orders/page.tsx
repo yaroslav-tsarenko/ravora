@@ -5,11 +5,13 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Chip } from "@heroui/react";
 import { useAuth } from "@/providers/AuthProvider";
+import { useCurrency } from "@/providers/CurrencyProvider";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner/LoadingSpinner";
 import { EmptyState } from "@/components/shared/EmptyState/EmptyState";
-import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
 import { formatPrice } from "@/lib/utils/format-price";
 import { format } from "date-fns";
+import { Package } from "lucide-react";
+import styles from "../account.module.css";
 
 interface Order {
   id: string;
@@ -34,6 +36,7 @@ export default function OrdersPage() {
   const t = useTranslations("account");
   const nav = useTranslations("nav");
   const { user } = useAuth();
+  const { currency, convert } = useCurrency();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,39 +52,30 @@ export default function OrdersPage() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 4rem" }}>
-      <Breadcrumbs items={[{ label: nav("home"), href: "/" }, { label: t("title"), href: "/account" }, { label: t("orders") }]} />
-
-      <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.5rem" }}>{t("orders")}</h1>
+    <div>
+      <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.25rem" }}>{t("orders")}</h1>
 
       {orders.length === 0 ? (
-        <EmptyState title={t("noOrders")} subtitle={t("noOrdersSubtitle")} actionLabel={nav("catalog")} actionHref="/catalog" />
+        <EmptyState
+          title={t("noOrders")}
+          subtitle={t("noOrdersSubtitle")}
+          actionLabel={nav("catalog")}
+          actionHref="/catalog"
+          icon={<Package size={48} />}
+        />
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+        <div className={styles.orderList}>
           {orders.map((order) => (
-            <Link
-              key={order.id}
-              href={`/account/orders/${order.id}`}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "1rem 1.5rem",
-                border: "1px solid var(--color-border)",
-                borderRadius: "var(--radius-md)",
-                transition: "background 0.2s",
-              }}
-            >
-              <div>
-                <span style={{ fontWeight: 600 }}>{t("orderNumber", { number: order.orderNumber.slice(-8) })}</span>
-                <p style={{ fontSize: "0.75rem", color: "var(--color-text-tertiary)", marginTop: "0.25rem" }}>
-                  {format(new Date(order.createdAt), "MMM d, yyyy")}
-                </p>
+            <Link key={order.id} href={`/account/orders/${order.id}`} className={styles.orderCard}>
+              <div className={styles.orderCardMain}>
+                <div className={styles.orderCardNumber}>#{order.orderNumber.slice(-8)}</div>
+                <div className={styles.orderCardDate}>{format(new Date(order.createdAt), "MMM d, yyyy")}</div>
+                <div className={styles.orderCardItems}>
+                  {order.items.length} {order.items.length === 1 ? "item" : "items"}
+                </div>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                <Chip size="sm" color={statusColors[order.status] || "default"}>{order.status}</Chip>
-                <span style={{ fontWeight: 600 }}>{formatPrice(Number(order.total))}</span>
-              </div>
+              <Chip size="sm" color={statusColors[order.status] || "default"}>{order.status}</Chip>
+              <span className={styles.orderCardPrice}>{formatPrice(convert(Number(order.total)), currency)}</span>
             </Link>
           ))}
         </div>

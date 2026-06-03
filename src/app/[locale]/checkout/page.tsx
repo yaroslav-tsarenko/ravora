@@ -17,6 +17,7 @@ import { formatPrice } from "@/lib/utils/format-price";
 import { COUNTRIES } from "@/lib/countries";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
 import { toast } from "sonner";
+import styles from "./checkout.module.css";
 import {
   Mail, Phone, MapPin, Truck, CreditCard,
   ChevronRight, ShieldCheck, Lock, Check, ImageOff, UserPlus,
@@ -195,13 +196,13 @@ export default function CheckoutPage() {
   const amountToFreeShipping = freeShippingThreshold - subtotalConverted;
 
   return (
-    <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 4rem" }}>
+    <div className={styles.wrapper}>
       <Breadcrumbs items={[{ label: nav("home"), href: "/" }, { label: nav("cart"), href: "/cart" }, { label: t("title") }]} />
 
       <motion.h1
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        style={{ fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "1rem" }}
+        className={styles.title}
       >
         {t("title")}
       </motion.h1>
@@ -243,15 +244,7 @@ export default function CheckoutPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0",
-          marginBottom: "2.5rem",
-          padding: "0.25rem",
-          borderRadius: "16px",
-          background: "var(--color-bg-secondary)",
-        }}
+        className={styles.stepIndicator}
       >
         {steps.map((s, i) => {
           const Icon = stepIcons[i];
@@ -286,13 +279,13 @@ export default function CheckoutPage() {
               ) : (
                 <Icon size={16} />
               )}
-              <span style={{ display: "inline" }}>{s}</span>
+              <span className={styles.stepLabel}>{s}</span>
             </button>
           );
         })}
       </motion.div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: "2.5rem", alignItems: "start" }}>
+      <div className={styles.layout}>
         {/* Form Section */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <AnimatePresence mode="wait">
@@ -304,15 +297,7 @@ export default function CheckoutPage() {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.25 }}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1.25rem",
-                  padding: "2rem",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: "var(--radius-xl)",
-                  background: "var(--color-bg)",
-                }}
+                className={styles.formCard}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
                   <div style={{ width: "2rem", height: "2rem", borderRadius: "10px", background: "var(--color-accent-light)", color: "var(--color-accent)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -360,15 +345,7 @@ export default function CheckoutPage() {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.25 }}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1.25rem",
-                  padding: "2rem",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: "var(--radius-xl)",
-                  background: "var(--color-bg)",
-                }}
+                className={styles.formCard}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
                   <div style={{ width: "2rem", height: "2rem", borderRadius: "10px", background: "var(--color-accent-light)", color: "var(--color-accent)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -377,7 +354,7 @@ export default function CheckoutPage() {
                   <h2 style={{ fontSize: "1.125rem", fontWeight: 700 }}>{t("shipping")}</h2>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div className={styles.twoCol}>
                   <div>
                     <label style={labelStyle}>{t("firstName")} *</label>
                     <input style={{ ...inputPlainStyle, borderColor: errors.shipping?.firstName ? "var(--color-danger)" : undefined }} placeholder="John" {...register("shipping.firstName")} />
@@ -399,7 +376,7 @@ export default function CheckoutPage() {
                   <input style={inputPlainStyle} placeholder="Apt 4B (optional)" {...register("shipping.address2")} />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div className={styles.twoCol}>
                   <div>
                     <label style={labelStyle}>{t("city")} *</label>
                     <input style={{ ...inputPlainStyle, borderColor: errors.shipping?.city ? "var(--color-danger)" : undefined }} placeholder="Riga" {...register("shipping.city")} />
@@ -411,7 +388,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div className={styles.twoCol}>
                   <div>
                     <label style={labelStyle}>{t("postalCode")} *</label>
                     <input style={{ ...inputPlainStyle, borderColor: errors.shipping?.postalCode ? "var(--color-danger)" : undefined }} placeholder="LV-1001" {...register("shipping.postalCode")} />
@@ -503,15 +480,7 @@ export default function CheckoutPage() {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.25 }}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1.5rem",
-                  padding: "2rem",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: "var(--radius-xl)",
-                  background: "var(--color-bg)",
-                }}
+                className={styles.formCard}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
                   <div style={{ width: "2rem", height: "2rem", borderRadius: "10px", background: "var(--color-accent-light)", color: "var(--color-accent)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -592,15 +561,7 @@ export default function CheckoutPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          style={{
-            padding: "1.75rem",
-            border: "1px solid var(--color-border)",
-            borderRadius: "var(--radius-xl)",
-            background: "var(--color-bg)",
-            height: "fit-content",
-            position: "sticky",
-            top: "calc(var(--header-height) + var(--announcement-height) + 1rem)",
-          }}
+          className={styles.sidebar}
         >
           <h3 style={{ fontWeight: 700, fontSize: "1.0625rem", marginBottom: "1.25rem" }}>{t("orderSummary")}</h3>
 

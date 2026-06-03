@@ -45,7 +45,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     });
 
   return (
-    <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem" }}>
+    <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 3rem", overflowWrap: "anywhere" }}>
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
@@ -54,12 +54,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         ]}
       />
 
-      <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.5rem" }}>
+      <h1 style={{ fontSize: "clamp(1.25rem, 3.5vw, 1.75rem)", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: "0.75rem", wordBreak: "break-word" }}>
         {category.name}
       </h1>
 
       {category.description && (
-        <p style={{ color: "var(--color-text-secondary)", marginBottom: "2rem" }}>
+        <p style={{ color: "var(--color-text-secondary)", marginBottom: "1.5rem", fontSize: "0.9375rem", lineHeight: 1.6 }}>
           {category.description}
         </p>
       )}

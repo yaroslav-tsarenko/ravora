@@ -20,6 +20,10 @@ const WARRANTY_OPTIONS = [
   { key: "3year", years: 3, percent: 22, min: 12.99 },
 ];
 
+// Hide additional warranty for low-priced items where the minimum
+// charge would be disproportionate to the product price.
+const WARRANTY_MIN_PRODUCT_PRICE = 15;
+
 function calcWarrantyPrice(productPrice: number, option: typeof WARRANTY_OPTIONS[number]): number {
   if (option.percent === 0) return 0;
   return Math.max(productPrice * (option.percent / 100), option.min);
@@ -72,7 +76,8 @@ export function ProductInfo({
   const outOfStock = stockQuantity <= 0;
   const lowStock = stockQuantity > 0 && stockQuantity <= lowStockAlert;
 
-  const warrantyOption = WARRANTY_OPTIONS[selectedWarranty];
+  const warrantyAvailable = price >= WARRANTY_MIN_PRODUCT_PRICE;
+  const warrantyOption = warrantyAvailable ? WARRANTY_OPTIONS[selectedWarranty] : WARRANTY_OPTIONS[0];
   const warrantyPrice = calcWarrantyPrice(price, warrantyOption);
   const totalPrice = price + warrantyPrice;
 
@@ -176,20 +181,22 @@ export function ProductInfo({
         <p style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)", marginBottom: "0.5rem" }}>
           {t("warrantyStandard")}
         </p>
-        <div className={styles.guaranteeOptions}>
-          {WARRANTY_OPTIONS.map((opt, idx) => (
-            <button
-              key={opt.key}
-              className={`${styles.guaranteeOption} ${idx === selectedWarranty ? styles.guaranteeOptionActive : ""}`}
-              onClick={() => setSelectedWarranty(idx)}
-            >
-              {idx === 0 ? t("noWarranty") : t(`warrantyOption${opt.years}year` as "warrantyOption1year" | "warrantyOption2year" | "warrantyOption3year")}
-              {opt.percent > 0 && (
-                <span className={styles.guaranteePrice}>+{formatPrice(convert(calcWarrantyPrice(price, opt)), currency)}</span>
-              )}
-            </button>
-          ))}
-        </div>
+        {warrantyAvailable && (
+          <div className={styles.guaranteeOptions}>
+            {WARRANTY_OPTIONS.map((opt, idx) => (
+              <button
+                key={opt.key}
+                className={`${styles.guaranteeOption} ${idx === selectedWarranty ? styles.guaranteeOptionActive : ""}`}
+                onClick={() => setSelectedWarranty(idx)}
+              >
+                {idx === 0 ? t("noWarranty") : t(`warrantyOption${opt.years}year` as "warrantyOption1year" | "warrantyOption2year" | "warrantyOption3year")}
+                {opt.percent > 0 && (
+                  <span className={styles.guaranteePrice}>+{formatPrice(convert(calcWarrantyPrice(price, opt)), currency)}</span>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className={styles.actions}>

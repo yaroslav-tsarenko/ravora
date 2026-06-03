@@ -6,6 +6,7 @@ import { LoadingSpinner } from "@/components/shared/LoadingSpinner/LoadingSpinne
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
+import styles from "./account.module.css";
 
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -22,9 +23,9 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   if (!user) return null;
 
   return (
-    <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 4rem" }}>
+    <div className={styles.wrapper}>
       <Breadcrumbs items={[{ label: nav("home"), href: "/" }, { label: t("title") }]} />
-      <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: "2rem", alignItems: "start" }}>
+      <div className={styles.layout}>
         <AccountSidebar />
         <div>{children}</div>
       </div>
