@@ -48,7 +48,7 @@ const errorStyle: React.CSSProperties = {
 };
 
 const CONTACT_INFO = [
-  { icon: Mail, title: "Email Us", detail: "support@avontshop.com", sub: "We reply within 24 hours" },
+  { icon: Mail, title: "Email Us", detail: "info@avontshop.com", sub: "We reply within 24 hours" },
   { icon: Phone, title: "Call Us", detail: "+371 20 000 000", sub: "Mon-Fri 9:00-18:00 EET" },
   { icon: MapPin, title: "Visit Us", detail: "Riga, Latvia", sub: "EU-based warehouse" },
   { icon: Clock, title: "Working Hours", detail: "Mon-Fri 9:00-18:00", sub: "Sat 10:00-14:00" },
