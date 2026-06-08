@@ -88,7 +88,7 @@ function emailWrapper(content: string, options: { preheader?: string } = {}): st
     </div>
     <div style="text-align:center;margin-top:24px;font-size:12px;color:#999;line-height:1.6;">
       <p style="margin:0 0 4px;">&copy; ${new Date().getFullYear()} AvontShop. All rights reserved.</p>
-      <p style="margin:0;">AVONTRA LTD &middot; Riga, Latvia &middot; <a href="${getSiteUrl()}" style="color:${BRAND_COLOR};text-decoration:none;">avontshop.com</a></p>
+      <p style="margin:0;">AVONTRA LTD &middot; London, United Kingdom &middot; <a href="${getSiteUrl()}" style="color:${BRAND_COLOR};text-decoration:none;">avontshop.com</a></p>
       <p style="margin:8px 0 0;">
         <a href="${getSiteUrl()}/en/policies/privacy" style="color:#999;text-decoration:underline;margin:0 6px;">Privacy</a>
         <a href="${getSiteUrl()}/en/policies/terms" style="color:#999;text-decoration:underline;margin:0 6px;">Terms</a>

@@ -49,8 +49,8 @@ const errorStyle: React.CSSProperties = {
 
 const CONTACT_INFO = [
   { icon: Mail, title: "Email Us", detail: "info@avontshop.com", sub: "We reply within 24 hours" },
-  { icon: Phone, title: "Call Us", detail: "+371 20 000 000", sub: "Mon-Fri 9:00-18:00 EET" },
-  { icon: MapPin, title: "Visit Us", detail: "Riga, Latvia", sub: "EU-based warehouse" },
+  { icon: Phone, title: "Call Us", detail: "+44 7360 545980", sub: "Mon-Fri 9:00-18:00 GMT" },
+  { icon: MapPin, title: "Our Office", detail: "London, United Kingdom", sub: "AVONTRA LTD", tooltip: "Dept 6735, 196 High Road, Wood Green, London, N22 8HH, UK\nCompany No. 17245887" },
   { icon: Clock, title: "Working Hours", detail: "Mon-Fri 9:00-18:00", sub: "Sat 10:00-14:00" },
 ];
 
@@ -144,7 +144,7 @@ export default function ContactPage() {
               <info.icon size={22} />
             </div>
             <h3 style={{ fontSize: "0.875rem", fontWeight: 700, marginBottom: "0.375rem" }}>{info.title}</h3>
-            <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--color-text)", marginBottom: "0.25rem" }}>{info.detail}</p>
+            <p title={"tooltip" in info ? info.tooltip : undefined} style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--color-text)", marginBottom: "0.25rem", cursor: "tooltip" in info ? "help" : undefined }}>{info.detail}</p>
             <p style={{ fontSize: "0.75rem", color: "var(--color-text-tertiary)" }}>{info.sub}</p>
           </motion.div>
         ))}
