@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "pbplus.eu",
       },
+      {
+        protocol: "https",
+        hostname: "*.r2.cloudflarestorage.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.r2.dev",
+      },
     ],
   },
   headers: async () => [

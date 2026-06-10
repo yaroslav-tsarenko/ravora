@@ -8,12 +8,28 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { productSchema, type ProductFormData } from "@/lib/validators/product";
 import { toast } from "sonner";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Search } from "lucide-react";
+
+interface CategoryTree {
+  id: string;
+  name: string;
+  children?: CategoryTree[];
+}
+
+function flattenCategories(cats: CategoryTree[], depth = 0): { id: string; name: string; depth: number }[] {
+  const result: { id: string; name: string; depth: number }[] = [];
+  for (const cat of cats) {
+    result.push({ id: cat.id, name: cat.name, depth });
+    if (cat.children) result.push(...flattenCategories(cat.children, depth + 1));
+  }
+  return result;
+}
 
 export default function NewProductPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+  const [categories, setCategories] = useState<CategoryTree[]>([]);
+  const [categorySearch, setCategorySearch] = useState("");
   const [charRows, setCharRows] = useState<{ group: string; key: string; value: string }[]>([]);
 
   const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<ProductFormData>({
@@ -35,7 +51,7 @@ export default function NewProductPage() {
   };
 
   useEffect(() => {
-    fetch("/api/categories")
+    fetch("/api/categories?includeEmpty=true")
       .then((res) => res.json())
       .then((d) => setCategories(Array.isArray(d) ? d : []))
       .catch(console.error);
@@ -143,9 +159,63 @@ export default function NewProductPage() {
             </div>
             <div>
               <label className="admin-label">Categories</label>
-              <select className="admin-select" style={{ height: "auto", minHeight: "44px" }} multiple onChange={(e) => setValue("categoryIds", Array.from(e.target.selectedOptions, (o) => o.value))}>
-                {categories.map((cat) => (<option key={cat.id} value={cat.id}>{cat.name}</option>))}
-              </select>
+              <div style={{ position: "relative", marginBottom: "0.5rem" }}>
+                <Search size={14} style={{ position: "absolute", left: "0.75rem", top: "50%", transform: "translateY(-50%)", color: "var(--admin-text-muted)" }} />
+                <input
+                  className="admin-input"
+                  placeholder="Search categories..."
+                  value={categorySearch}
+                  onChange={(e) => setCategorySearch(e.target.value)}
+                  style={{ paddingLeft: "2.25rem", height: "38px", fontSize: "0.8125rem" }}
+                />
+              </div>
+              <div style={{
+                maxHeight: "200px",
+                overflowY: "auto",
+                border: "1px solid var(--admin-border)",
+                borderRadius: "12px",
+                background: "var(--admin-bg-input)",
+                padding: "0.5rem",
+              }}>
+                {flattenCategories(categories)
+                  .filter((cat) => !categorySearch || cat.name.toLowerCase().includes(categorySearch.toLowerCase()))
+                  .map((cat) => {
+                    const selected = watch("categoryIds") || [];
+                    const isChecked = selected.includes(cat.id);
+                    return (
+                      <label
+                        key={cat.id}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          padding: "0.375rem 0.5rem",
+                          paddingLeft: `${0.5 + cat.depth * 1}rem`,
+                          borderRadius: "8px",
+                          cursor: "pointer",
+                          fontSize: "0.8125rem",
+                          color: isChecked ? "var(--admin-accent)" : "var(--admin-text-secondary)",
+                          fontWeight: isChecked ? 500 : 400,
+                          transition: "background 0.15s",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--admin-row-hover, rgba(255,255,255,0.03))")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => {
+                            const prev = selected;
+                            const next = isChecked ? prev.filter((id: string) => id !== cat.id) : [...prev, cat.id];
+                            setValue("categoryIds", next);
+                          }}
+                          style={{ accentColor: "var(--admin-accent)" }}
+                        />
+                        {cat.depth > 0 ? "└ " : ""}{cat.name}
+                      </label>
+                    );
+                  })}
+              </div>
             </div>
             <div style={{ display: "flex", gap: "2rem" }}>
               <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--admin-text-secondary)", fontSize: "0.875rem" }}>

@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { productSchema, type ProductFormData } from "@/lib/validators/product";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner/LoadingSpinner";
 import { toast } from "sonner";
-import { Plus, Trash2, Upload, GripVertical, Image as ImageIcon } from "lucide-react";
+import { Plus, Trash2, Upload, GripVertical, Image as ImageIcon, Search } from "lucide-react";
 import Image from "next/image";
 
 interface ProductImage {
@@ -43,6 +43,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [images, setImages] = useState<ProductImage[]>([]);
   const [uploading, setUploading] = useState(false);
   const [charRows, setCharRows] = useState<{ group: string; key: string; value: string }[]>([]);
+  const [categorySearch, setCategorySearch] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { register, handleSubmit, formState: { errors }, setValue, watch, reset } = useForm<ProductFormData>({
@@ -65,7 +66,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   useEffect(() => {
     Promise.all([
       fetch(`/api/products/${id}`).then((r) => r.json()),
-      fetch("/api/categories").then((r) => r.json()),
+      fetch("/api/categories?includeEmpty=true").then((r) => r.json()),
     ]).then(([product, cats]) => {
       setCategories(Array.isArray(cats) ? cats : []);
       setImages(product.images || []);
@@ -372,19 +373,63 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             </div>
             <div>
               <label className="admin-label">Categories</label>
-              <select
-                className="admin-select"
-                style={{ height: "auto", minHeight: "44px" }}
-                multiple
-                value={watch("categoryIds") || []}
-                onChange={(e) => setValue("categoryIds", Array.from(e.target.selectedOptions, (o) => o.value))}
-              >
-                {flatCats.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {"  ".repeat(cat.depth)}{cat.depth > 0 ? "└ " : ""}{cat.name}
-                  </option>
-                ))}
-              </select>
+              <div style={{ position: "relative", marginBottom: "0.5rem" }}>
+                <Search size={14} style={{ position: "absolute", left: "0.75rem", top: "50%", transform: "translateY(-50%)", color: "var(--admin-text-muted)" }} />
+                <input
+                  className="admin-input"
+                  placeholder="Search categories..."
+                  value={categorySearch}
+                  onChange={(e) => setCategorySearch(e.target.value)}
+                  style={{ paddingLeft: "2.25rem", height: "38px", fontSize: "0.8125rem" }}
+                />
+              </div>
+              <div style={{
+                maxHeight: "200px",
+                overflowY: "auto",
+                border: "1px solid var(--admin-border)",
+                borderRadius: "12px",
+                background: "var(--admin-bg-input)",
+                padding: "0.5rem",
+              }}>
+                {flatCats
+                  .filter((cat) => !categorySearch || cat.name.toLowerCase().includes(categorySearch.toLowerCase()))
+                  .map((cat) => {
+                    const selected = watch("categoryIds") || [];
+                    const isChecked = selected.includes(cat.id);
+                    return (
+                      <label
+                        key={cat.id}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          padding: "0.375rem 0.5rem",
+                          paddingLeft: `${0.5 + cat.depth * 1}rem`,
+                          borderRadius: "8px",
+                          cursor: "pointer",
+                          fontSize: "0.8125rem",
+                          color: isChecked ? "var(--admin-accent)" : "var(--admin-text-secondary)",
+                          fontWeight: isChecked ? 500 : 400,
+                          transition: "background 0.15s",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--admin-row-hover, rgba(255,255,255,0.03))")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => {
+                            const prev = selected;
+                            const next = isChecked ? prev.filter((id: string) => id !== cat.id) : [...prev, cat.id];
+                            setValue("categoryIds", next);
+                          }}
+                          style={{ accentColor: "var(--admin-accent)" }}
+                        />
+                        {cat.depth > 0 ? "└ " : ""}{cat.name}
+                      </label>
+                    );
+                  })}
+              </div>
             </div>
             <div style={{ display: "flex", gap: "2rem" }}>
               <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--admin-text-secondary)", fontSize: "0.875rem" }}>

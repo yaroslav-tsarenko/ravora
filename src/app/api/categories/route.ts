@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const flat = searchParams.get("flat") === "true";
+    const includeEmpty = searchParams.get("includeEmpty") === "true";
 
     if (flat) {
       const categories = await prisma.category.findMany({
@@ -60,7 +61,7 @@ export async function GET(request: NextRequest) {
         }));
     }
 
-    return NextResponse.json(pruneEmpty(categories));
+    return NextResponse.json(includeEmpty ? categories : pruneEmpty(categories));
   } catch (error) {
     console.error("Error fetching categories:", error);
     return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });

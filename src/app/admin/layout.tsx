@@ -1,4 +1,6 @@
-import { ThemeProvider } from "@/providers/ThemeProvider";
+"use client";
+
+import { ThemeProvider, useTheme } from "@/providers/ThemeProvider";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { AdminSidebar } from "@/components/admin/AdminSidebar/AdminSidebar";
 import { AdminTopbar } from "@/components/admin/AdminTopbar/AdminTopbar";
@@ -6,23 +8,27 @@ import { Toaster } from "sonner";
 import "@/styles/globals.css";
 import "@/styles/admin.css";
 
-export const metadata = {
-  title: "Admin Panel | My Store",
-};
+function AdminShell({ children }: { children: React.ReactNode }) {
+  const { theme } = useTheme();
+
+  return (
+    <div className="admin-layout" data-admin-theme data-theme={theme}>
+      <AdminSidebar />
+      <div className="admin-main">
+        <AdminTopbar />
+        <div className="admin-content">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <div className="admin-layout" data-admin-theme>
-          <AdminSidebar />
-          <div className="admin-main">
-            <AdminTopbar />
-            <div className="admin-content">
-              {children}
-            </div>
-          </div>
-        </div>
+        <AdminShell>{children}</AdminShell>
         <Toaster position="bottom-right" richColors />
       </AuthProvider>
     </ThemeProvider>

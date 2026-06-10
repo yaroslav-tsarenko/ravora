@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
-import { FaLinkedinIn, FaInstagram, FaXTwitter } from "react-icons/fa6";
+import { FaLinkedinIn, FaInstagram } from "react-icons/fa6";
 import { AvontLogo } from "../AvontLogo";
 import visaLogo from "@/assets/visa-logo.svg";
 import mastercardLogo from "@/assets/mastercard-logo.svg";
@@ -28,15 +28,16 @@ export function Footer() {
               Your trusted source for electrical materials, wiring, and installation supplies. Professional quality delivered to your door.
             </p>
             <div className={styles.socialRow}>
-              <a href="#" className={styles.socialIcon} aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
-                <FaLinkedinIn size={16} />
-              </a>
-              <a href="#" className={styles.socialIcon} aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-                <FaInstagram size={16} />
-              </a>
-              <a href="#" className={styles.socialIcon} aria-label="X" target="_blank" rel="noopener noreferrer">
-                <FaXTwitter size={16} />
-              </a>
+              {process.env.NEXT_PUBLIC_LINKEDIN_URL && (
+                <a href={process.env.NEXT_PUBLIC_LINKEDIN_URL} className={styles.socialIcon} aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                  <FaLinkedinIn size={16} />
+                </a>
+              )}
+              {process.env.NEXT_PUBLIC_INSTAGRAM_URL && (
+                <a href={process.env.NEXT_PUBLIC_INSTAGRAM_URL} className={styles.socialIcon} aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                  <FaInstagram size={16} />
+                </a>
+              )}
             </div>
           </div>
 

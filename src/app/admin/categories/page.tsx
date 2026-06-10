@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
-import { Plus, Pencil, Trash2, ChevronRight, FolderTree } from "lucide-react";
+import { Plus, Pencil, Trash2, ChevronRight, FolderTree, Search } from "lucide-react";
 import { toast } from "sonner";
 
 interface Category {
@@ -29,12 +29,13 @@ interface ModalState {
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [search, setSearch] = useState("");
   const [modal, setModal] = useState<ModalState>({
     open: false, editId: null, name: "", description: "", parentId: null, isActive: true,
   });
 
   const fetchCategories = () => {
-    fetch("/api/categories")
+    fetch("/api/categories?includeEmpty=true")
       .then((r) => r.json())
       .then((d) => setCategories(Array.isArray(d) ? d : []))
       .catch(console.error);
@@ -96,6 +97,20 @@ export default function AdminCategoriesPage() {
 
   const allParentOptions = getAllCategories(categories);
 
+  const filterCategories = (cats: Category[], query: string): Category[] => {
+    if (!query) return cats;
+    const q = query.toLowerCase();
+    return cats.reduce<Category[]>((acc, cat) => {
+      const childMatches = cat.children ? filterCategories(cat.children, query) : [];
+      if (cat.name.toLowerCase().includes(q) || childMatches.length > 0) {
+        acc.push({ ...cat, children: childMatches.length > 0 ? childMatches : cat.children?.filter((c) => c.name.toLowerCase().includes(q)) });
+      }
+      return acc;
+    }, []);
+  };
+
+  const filteredCategories = filterCategories(categories, search);
+
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
       <div className="admin-page-header">
@@ -105,14 +120,25 @@ export default function AdminCategoriesPage() {
         </Button>
       </div>
 
-      {categories.length === 0 ? (
+      <div style={{ position: "relative", maxWidth: "20rem", marginBottom: "1.25rem" }}>
+        <Search size={16} style={{ position: "absolute", left: "0.875rem", top: "50%", transform: "translateY(-50%)", color: "var(--admin-text-muted)" }} />
+        <input
+          className="admin-input"
+          placeholder="Search categories..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ paddingLeft: "2.5rem" }}
+        />
+      </div>
+
+      {filteredCategories.length === 0 ? (
         <div style={{ textAlign: "center", padding: "3rem", color: "var(--admin-text-muted)" }}>
           <FolderTree size={48} style={{ margin: "0 auto 1rem", opacity: 0.3 }} />
           <p>No categories yet. Import products or create categories manually.</p>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-          {categories.map((cat, i) => (
+          {filteredCategories.map((cat, i) => (
             <CategoryRow
               key={cat.id}
               cat={cat}
@@ -261,10 +287,10 @@ function CategoryRow({
               <Plus size={14} />
             </Button>
           )}
-          <Button isIconOnly size="sm" variant="flat" onPress={() => onEdit(cat)}>
+          <Button isIconOnly size="sm" variant="flat" onPress={() => onEdit(cat)} aria-label="Edit category" style={{ color: "var(--admin-accent)" }}>
             <Pencil size={14} />
           </Button>
-          <Button isIconOnly size="sm" variant="flat" color="danger" onPress={() => onDelete(cat.id)}>
+          <Button isIconOnly size="sm" variant="flat" color="danger" onPress={() => onDelete(cat.id)} aria-label="Delete category">
             <Trash2 size={14} />
           </Button>
         </div>

@@ -36,7 +36,7 @@ export default function AdminProductsPage() {
 
   const fetchData = () => {
     setLoading(true);
-    const params = new URLSearchParams({ page: String(page), pageSize: "20", search, status: "" });
+    const params = new URLSearchParams({ page: String(page), pageSize: "20", search, status: "ALL" });
     fetch(`/api/products?${params}`)
       .then((res) => res.json())
       .then((data) => {
@@ -86,7 +86,7 @@ export default function AdminProductsPage() {
           <Search size={16} style={{ position: "absolute", left: "0.875rem", top: "50%", transform: "translateY(-50%)", color: "var(--admin-text-muted)" }} />
           <input
             className="admin-input"
-            placeholder="Search products..."
+            placeholder="Search by name, SKU, or description..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{ paddingLeft: "2.5rem" }}

@@ -23,9 +23,9 @@ export async function GET(request: NextRequest) {
 
     const where: Prisma.ProductWhereInput = {};
 
-    if (status) {
+    if (status && status !== "ALL") {
       where.status = status as Prisma.EnumProductStatusFilter;
-    } else {
+    } else if (!status) {
       where.status = "ACTIVE";
     }
 
