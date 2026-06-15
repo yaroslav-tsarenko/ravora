@@ -1,7 +1,7 @@
 .sidebar {
   width: 240px;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
+  background: #fff;
+  border: 1px solid #DADDE2;
   border-radius: 8px;
   flex-shrink: 0;
   overflow: hidden;
@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  background: #1A1A2E;
+  background: #073B66;
   color: #fff;
 }
 
@@ -47,7 +47,7 @@
 .item {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #DADDE2;
 }
 
 .item:last-child {
@@ -62,13 +62,13 @@
   min-width: 0;
   padding: 0.5rem 0.25rem 0.5rem 0;
   text-decoration: none;
-  color: var(--color-text);
+  color: #1F2933;
   font-size: 0.8125rem;
   transition: color 0.12s;
 }
 
 .itemLink:hover {
-  color: #E53935;
+  color: #0072CE;
 }
 
 .name {
@@ -81,7 +81,7 @@
 
 .count {
   font-size: 0.6875rem;
-  color: var(--color-text-tertiary);
+  color: #9CA3AF;
   flex-shrink: 0;
 }
 
@@ -94,7 +94,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--color-text-tertiary);
+  color: #9CA3AF;
   flex-shrink: 0;
   border-radius: 4px;
   transition: background 0.12s, color 0.12s;
@@ -102,8 +102,8 @@
 }
 
 .expandBtn:hover {
-  background: var(--color-bg-tertiary);
-  color: var(--color-text);
+  background: #F3F4F6;
+  color: #1F2933;
 }
 
 .empty {
@@ -111,7 +111,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 1rem;
-  color: var(--color-text-tertiary);
+  color: #9CA3AF;
   font-size: 0.8125rem;
 }
 
@@ -126,7 +126,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 0.75rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #DADDE2;
 }
 
 .skeletonItem:last-child {
@@ -157,10 +157,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: #1A1A2E;
+  background: #073B66;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
@@ -200,7 +200,7 @@
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0, 0, 0, 0.4);
     z-index: 999;
   }
 }

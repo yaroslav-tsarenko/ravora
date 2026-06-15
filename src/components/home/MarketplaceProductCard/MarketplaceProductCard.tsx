@@ -76,14 +76,14 @@ export function MarketplaceProductCard({ product }: Props) {
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
             aria-label="Add to wishlist"
           >
-            <Heart size={15} />
+            <Heart size={14} />
           </button>
           <button
             className={styles.actionBtn}
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
             aria-label="Quick view"
           >
-            <Eye size={15} />
+            <Eye size={14} />
           </button>
         </div>
       </div>
@@ -94,7 +94,7 @@ export function MarketplaceProductCard({ product }: Props) {
         <h4 className={styles.name}>{product.name}</h4>
         <div className={styles.rating}>
           {[1,2,3,4,5].map((s) => (
-            <Star key={s} size={11} fill={s <= 4 ? "#FF9800" : "none"} stroke={s <= 4 ? "#FF9800" : "#ccc"} />
+            <Star key={s} size={11} fill={s <= 4 ? "#FF9800" : "none"} stroke={s <= 4 ? "#FF9800" : "#D1D5DB"} />
           ))}
           <span className={styles.ratingCount}>(12)</span>
         </div>

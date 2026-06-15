@@ -48,7 +48,7 @@ const errorStyle: React.CSSProperties = {
 };
 
 const CONTACT_INFO = [
-  { icon: Mail, title: "Email Us", detail: "info@avontshop.com", sub: "We reply within 24 hours" },
+  { icon: Mail, title: "Email Us", detail: "info@voltmarket.store", sub: "We reply within 24 hours" },
   { icon: Phone, title: "Call Us", detail: "+44 7360 545980", sub: "Mon-Fri 9:00-18:00 GMT" },
   { icon: MapPin, title: "Our Office", detail: "London, United Kingdom", sub: "AVONTRA LTD", tooltip: "Dept 6735, 196 High Road, Wood Green, London, N22 8HH, UK\nCompany No. 17245887" },
   { icon: Clock, title: "Working Hours", detail: "Mon-Fri 9:00-18:00", sub: "Sat 10:00-14:00" },
@@ -344,11 +344,11 @@ export default function ContactPage() {
           <div style={{
             padding: "1.5rem",
             borderRadius: "var(--radius-xl)",
-            background: "linear-gradient(135deg, #1A1A2E 0%, #2d2d4e 100%)",
+            background: "linear-gradient(135deg, #073B66 0%, #2F557A 100%)",
             color: "#fff",
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.875rem" }}>
-              <Clock size={18} style={{ color: "#E53935" }} />
+              <Clock size={18} style={{ color: "#FF5A00" }} />
               <h3 style={{ fontSize: "0.9375rem", fontWeight: 700 }}>Response Times</h3>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>

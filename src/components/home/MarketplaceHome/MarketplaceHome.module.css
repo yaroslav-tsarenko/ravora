@@ -1,24 +1,26 @@
 .marketplace {
-  background: var(--color-bg-secondary);
+  background: #F8F9FA;
   min-height: 100vh;
 }
 
+:global([data-theme="dark"]) .marketplace {
+  background: #0a0a0f;
+}
+
 .container {
-  max-width: 1400px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 1rem 1rem 3rem;
+  padding: 1.5rem 1.5rem 4rem;
 }
 
 .mainLayout {
   display: flex;
-  gap: 1rem;
+  gap: 0;
   align-items: flex-start;
 }
 
 .sidebarDesktop {
-  display: block;
-  position: sticky;
-  top: 80px;
+  display: none;
 }
 
 .mobileCategories {
@@ -28,21 +30,13 @@
 .content {
   flex: 1;
   min-width: 0;
-}
-
-@media (max-width: 1024px) {
-  .sidebarDesktop {
-    display: none;
-  }
-
-  .mobileCategories {
-    display: block;
-    margin-bottom: 0.75rem;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
 }
 
 @media (max-width: 640px) {
   .container {
-    padding: 0.75rem 0.5rem 2rem;
+    padding: 1rem 0.75rem 2.5rem;
   }
 }

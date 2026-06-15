@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/routing";
 import {
   ShoppingCart, Search, Menu, X, User, Shield,
-  ChevronRight, Heart, ChevronDown,
+  ChevronRight, Heart, ChevronDown, Bell,
   Cable, LayoutGrid, Zap, Lightbulb, CircuitBoard, Plug,
   Box, Wrench, Shield as ShieldIcon, SquareStack,
 } from "lucide-react";
@@ -70,7 +70,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
-  const megaRef = useRef<HTMLDivElement>(null);
+  const megaRef = useRef<HTMLButtonElement>(null);
   const megaTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
@@ -111,108 +111,186 @@ export function Header() {
     }
   };
 
+  const sortedCategories = [...categories]
+    .sort((a, b) => subtreeCount(b) - subtreeCount(a))
+    .slice(0, 12);
+
   return (
     <>
       <header className={`${styles.header} ${scrolled ? styles.headerScrolled : ""}`}>
-        <div className={styles.container}>
-          <Link href="/" className={styles.logo}>
-            <AvontLogo size={24} />
-            <span className={styles.logoText}>AvontShop</span>
-          </Link>
+        {/* Level 1: Top thin strip */}
+        <div className={styles.topStrip}>
+          <div className={styles.topStripContainer}>
+            <nav className={styles.topNav}>
+              <Link href="/" className={`${styles.topNavLink} ${styles.topNavLinkActive}`}>
+                Shopping
+              </Link>
+              <span className={styles.topNavDivider} />
+              <Link href="/about" className={styles.topNavLink}>
+                About
+              </Link>
+              <span className={styles.topNavDivider} />
+              <Link href="/contact" className={styles.topNavLink}>
+                {t("contact")}
+              </Link>
+            </nav>
+            <div className={styles.topActions}>
+              <ThemeToggle />
+              <CurrencySwitcher />
+            </div>
+          </div>
+        </div>
 
-          <nav className={styles.nav}>
-            <Link href="/" className={styles.navLink}>
-              {t("home")}
-            </Link>
-
-            <div
-              className={styles.navItem}
-              ref={megaRef}
+        {/* Level 2: Main header bar */}
+        <div className={styles.mainBar}>
+          <div className={styles.mainBarContainer}>
+            <button
+              className={styles.catalogBtn}
+              onClick={() => setMegaOpen(!megaOpen)}
               onMouseEnter={openMega}
               onMouseLeave={closeMega}
+              ref={megaRef}
             >
-              <button className={styles.navLink} onClick={() => setMegaOpen(!megaOpen)}>
-                {t("catalog")}
-                <ChevronDown size={14} style={{ transition: "transform 0.2s", transform: megaOpen ? "rotate(180deg)" : undefined }} />
+              <Menu size={18} />
+              <span className={styles.catalogBtnText}>{t("catalog")}</span>
+            </button>
+
+            <Link href="/" className={styles.logo}>
+              <AvontLogo size={26} />
+              <span className={styles.logoText}>VoltMarket</span>
+            </Link>
+
+            <form className={styles.searchBar} onSubmit={handleSearch}>
+              <input
+                type="text"
+                className={styles.searchInput}
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button type="submit" className={styles.searchBtn} aria-label="Search">
+                <Search size={18} />
               </button>
+            </form>
+
+            <div className={styles.headerActions}>
+              {user && (
+                <Link href="/account/wishlist" className={styles.headerAction} aria-label="Wishlist">
+                  <Heart size={20} />
+                  <span className={styles.headerActionLabel}>Wishlist</span>
+                </Link>
+              )}
+
+              <Link href="/search" className={styles.headerAction} aria-label="Alerts">
+                <Bell size={20} />
+                <span className={styles.headerActionLabel}>Alerts</span>
+              </Link>
+
+              <span className={styles.headerActionDivider} />
+
+              {user ? (
+                <Link href="/account" className={styles.headerAction} aria-label={t("account")}>
+                  <User size={20} />
+                  <span className={styles.headerActionLabel}>{t("account")}</span>
+                </Link>
+              ) : (
+                <Link href="/auth/login" className={styles.headerAction} aria-label={t("login")}>
+                  <User size={20} />
+                  <span className={styles.headerActionLabel}>{t("login")}</span>
+                </Link>
+              )}
+
+              {user && (role === "ADMIN" || role === "SUPER_ADMIN") && (
+                <a href="/admin" className={styles.headerAction} aria-label="Admin">
+                  <Shield size={20} />
+                  <span className={styles.headerActionLabel}>Admin</span>
+                </a>
+              )}
+
+              <Link href="/cart" className={styles.headerAction} aria-label={t("cart")}>
+                <ShoppingCart size={20} />
+                <span className={styles.headerActionLabel}>{t("cart")}</span>
+                {itemCount > 0 && (
+                  <motion.span
+                    key={cartBounce}
+                    className={styles.cartBadge}
+                    initial={cartBounce > 0 ? { scale: 0.5 } : false}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", damping: 10, stiffness: 400 }}
+                  >
+                    {itemCount > 99 ? "99+" : itemCount}
+                  </motion.span>
+                )}
+              </Link>
             </div>
 
-            <Link href="/contact" className={styles.navLink}>
-              {t("contact")}
-            </Link>
-          </nav>
-
-          <form className={styles.searchBar} onSubmit={handleSearch}>
-            <Search size={16} className={styles.searchIcon} />
-            <input
-              type="text"
-              className={styles.searchInput}
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button type="submit" className={styles.searchBtn}>
-              Search
-            </button>
-          </form>
-
-          <div className={styles.actions}>
-            <Link href="/search" className={`${styles.iconButton} ${styles.mobileSearchBtn}`} aria-label={t("search")}>
-              <Search size={20} />
-            </Link>
-
-            <ThemeToggle />
-            <CurrencySwitcher />
-
-            {user && (
-              <Link href="/account/wishlist" className={styles.iconButton} aria-label="Wishlist">
-                <Heart size={20} />
+            {/* Mobile actions */}
+            <div className={styles.mobileActions}>
+              <Link href="/search" className={styles.mobileBtn} aria-label={t("search")}>
+                <Search size={20} />
               </Link>
-            )}
+              <Link href="/cart" className={styles.mobileBtn} aria-label={t("cart")}>
+                <ShoppingCart size={20} />
+                {itemCount > 0 && (
+                  <motion.span
+                    key={cartBounce}
+                    className={styles.cartBadgeMobile}
+                    initial={cartBounce > 0 ? { scale: 0.5 } : false}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", damping: 10, stiffness: 400 }}
+                  >
+                    {itemCount > 99 ? "99+" : itemCount}
+                  </motion.span>
+                )}
+              </Link>
+              <button
+                className={styles.mobileBtn}
+                onClick={() => setMobileOpen(true)}
+                aria-label="Menu"
+              >
+                <Menu size={22} />
+              </button>
+            </div>
+          </div>
 
-            <Link href="/cart" className={`${styles.iconButton} ${styles.cartButton}`} aria-label={t("cart")}>
-              <ShoppingCart size={20} />
-              {itemCount > 0 && (
-                <motion.span
-                  key={cartBounce}
-                  className={styles.cartBadge}
-                  initial={cartBounce > 0 ? { scale: 0.5 } : false}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", damping: 10, stiffness: 400 }}
+          {/* Mobile search row */}
+          <div className={styles.mobileSearchRow}>
+            <form className={styles.mobileSearchForm} onSubmit={handleSearch}>
+              <input
+                type="text"
+                className={styles.mobileSearchInput}
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button type="submit" className={styles.mobileSearchBtn} aria-label="Search">
+                <Search size={16} />
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* Level 3: Category navigation strip */}
+        <div className={styles.categoryStrip}>
+          <div className={styles.categoryStripContainer}>
+            {sortedCategories.map((cat) => {
+              const Icon = getIconForCategory(cat.name);
+              return (
+                <Link
+                  key={cat.id}
+                  href={`/catalog/${cat.slug}`}
+                  className={styles.categoryItem}
                 >
-                  {itemCount > 99 ? "99+" : itemCount}
-                </motion.span>
-              )}
-            </Link>
-
-            {user && (role === "ADMIN" || role === "SUPER_ADMIN") && (
-              <a href="/admin" className={styles.iconButton} aria-label="Admin">
-                <Shield size={20} />
-              </a>
-            )}
-
-            {user ? (
-              <Link href="/account" className={styles.iconButton} aria-label={t("account")}>
-                <User size={20} />
-              </Link>
-            ) : (
-              <Link href="/auth/login" className={styles.iconButton} aria-label={t("login")}>
-                <User size={20} />
-              </Link>
-            )}
-
-            <button
-              className={`${styles.iconButton} ${styles.mobileMenuButton}`}
-              onClick={() => setMobileOpen(true)}
-              aria-label="Menu"
-            >
-              <Menu size={22} />
-            </button>
+                  <Icon size={18} className={styles.categoryIcon} />
+                  <span className={styles.categoryName}>{cat.name}</span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </header>
 
-      {/* Mega Menu - full width, outside header */}
+      {/* Mega Menu */}
       <AnimatePresence>
         {megaOpen && (
           <>
@@ -248,30 +326,27 @@ export function Header() {
                   </div>
                 ) : (
                 <div className={styles.megaGrid}>
-                  {[...categories]
-                    .sort((a, b) => subtreeCount(b) - subtreeCount(a))
-                    .slice(0, 10)
-                    .map((cat) => {
-                      const Icon = getIconForCategory(cat.name);
-                      const count = subtreeCount(cat);
-                      return (
-                        <Link
-                          key={cat.id}
-                          href={`/catalog/${cat.slug}`}
-                          className={styles.megaCard}
-                          onClick={() => setMegaOpen(false)}
-                        >
-                          <div className={styles.megaCardIcon}>
-                            <Icon size={20} />
-                          </div>
-                          <div className={styles.megaCardText}>
-                            <span className={styles.megaCardName}>{cat.name}</span>
-                            <span className={styles.megaCardCount}>{count} products</span>
-                          </div>
-                          <ChevronRight size={14} className={styles.megaCardArrow} />
-                        </Link>
-                      );
-                    })}
+                  {sortedCategories.map((cat) => {
+                    const Icon = getIconForCategory(cat.name);
+                    const count = subtreeCount(cat);
+                    return (
+                      <Link
+                        key={cat.id}
+                        href={`/catalog/${cat.slug}`}
+                        className={styles.megaCard}
+                        onClick={() => setMegaOpen(false)}
+                      >
+                        <div className={styles.megaCardIcon}>
+                          <Icon size={20} />
+                        </div>
+                        <div className={styles.megaCardText}>
+                          <span className={styles.megaCardName}>{cat.name}</span>
+                          <span className={styles.megaCardCount}>{count} products</span>
+                        </div>
+                        <ChevronRight size={14} className={styles.megaCardArrow} />
+                      </Link>
+                    );
+                  })}
                 </div>
                 )}
                 <div className={styles.megaFooter}>
@@ -289,6 +364,7 @@ export function Header() {
         )}
       </AnimatePresence>
 
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -327,6 +403,25 @@ export function Header() {
                   <Link href="/catalog?onSale=true" className={styles.drawerNavLink} onClick={() => setMobileOpen(false)}>
                     Deals <ChevronRight size={18} />
                   </Link>
+
+                  <div className={styles.drawerDivider} />
+
+                  {sortedCategories.slice(0, 8).map((cat) => {
+                    const Icon = getIconForCategory(cat.name);
+                    return (
+                      <Link
+                        key={cat.id}
+                        href={`/catalog/${cat.slug}`}
+                        className={styles.drawerNavLink}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        <span style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                          <Icon size={16} /> {cat.name}
+                        </span>
+                        <ChevronRight size={18} />
+                      </Link>
+                    );
+                  })}
 
                   <div className={styles.drawerDivider} />
 

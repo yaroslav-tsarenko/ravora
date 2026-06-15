@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useCurrency, type Currency } from "@/providers/CurrencyProvider";
-import styles from "./Header.module.css";
 
 const CURRENCIES: { code: Currency; symbol: string; label: string }[] = [
   { code: "EUR", symbol: "€", label: "EUR (€)" },
@@ -28,12 +27,24 @@ export function CurrencySwitcher() {
   return (
     <div ref={ref} style={{ position: "relative" }}>
       <button
-        className={styles.iconButton}
         onClick={() => setOpen(!open)}
         aria-label="Currency"
-        style={{ fontSize: "0.8125rem", fontWeight: 700, width: "auto", padding: "0 0.5rem" }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "0.75rem",
+          fontWeight: 700,
+          color: "rgba(255,255,255,0.8)",
+          background: "transparent",
+          border: "1px solid rgba(255,255,255,0.2)",
+          borderRadius: "4px",
+          padding: "0.25rem 0.5rem",
+          cursor: "pointer",
+          transition: "background 0.15s",
+        }}
       >
-        {current.symbol}
+        {current.symbol} {current.code}
       </button>
       {open && (
         <div
@@ -42,9 +53,9 @@ export function CurrencySwitcher() {
             top: "100%",
             right: 0,
             marginTop: "0.375rem",
-            background: "var(--color-bg, #fff)",
-            border: "1px solid var(--color-border, #e5e5e5)",
-            borderRadius: "8px",
+            background: "#fff",
+            border: "1px solid #DADDE2",
+            borderRadius: "6px",
             boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
             zIndex: 60,
             minWidth: "120px",
@@ -62,10 +73,11 @@ export function CurrencySwitcher() {
                 fontSize: "0.8125rem",
                 fontWeight: c.code === currency ? 700 : 500,
                 textAlign: "left",
-                background: c.code === currency ? "var(--color-accent-light, #FFF0F0)" : "transparent",
-                color: c.code === currency ? "var(--color-accent, #E53935)" : "var(--color-text, #333)",
+                background: c.code === currency ? "#EBF5FF" : "transparent",
+                color: c.code === currency ? "#0072CE" : "#1F2933",
                 border: "none",
                 cursor: "pointer",
+                fontFamily: "inherit",
               }}
             >
               {c.label}

@@ -30,7 +30,7 @@ export function PriceDisplay({
           fontSize: sizes[size].price,
           fontWeight: 800,
           letterSpacing: "-0.02em",
-          color: isOnSale ? "var(--color-danger)" : "var(--color-text)",
+          color: isOnSale ? "#FF5A00" : "var(--color-text)",
         }}
       >
         {formatPrice(convert(price), currency)}

@@ -212,8 +212,8 @@
 }
 
 .input:focus {
-  border-color: #6C5CE7;
-  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+  border-color: #0072CE;
+  box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.15);
 }
 
 .input:focus ~ .inputIcon,

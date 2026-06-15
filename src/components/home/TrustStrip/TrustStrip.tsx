@@ -6,10 +6,10 @@ import { motion, useInView } from "framer-motion";
 import styles from "./TrustStrip.module.css";
 
 const items = [
-  { icon: Truck, label: "Free Shipping", desc: "On orders over €100", color: "#E8F5E9", iconColor: "#2E7D32" },
-  { icon: ShieldCheck, label: "Secure Payment", desc: "100% protected checkout", color: "#E3F2FD", iconColor: "#1565C0" },
-  { icon: RotateCcw, label: "Easy Returns", desc: "30-day return policy", color: "#FFF3E0", iconColor: "#E65100" },
-  { icon: Headphones, label: "24/7 Support", desc: "We're always here to help", color: "#F3E5F5", iconColor: "#6A1B9A" },
+  { icon: Truck, label: "Free Shipping", desc: "On orders over €100", color: "rgba(255, 255, 255, 0.12)", iconColor: "#fff" },
+  { icon: ShieldCheck, label: "Secure Payment", desc: "100% protected checkout", color: "rgba(255, 255, 255, 0.12)", iconColor: "#fff" },
+  { icon: RotateCcw, label: "Easy Returns", desc: "30-day return policy", color: "rgba(255, 255, 255, 0.12)", iconColor: "#fff" },
+  { icon: Headphones, label: "24/7 Support", desc: "We're always here to help", color: "rgba(255, 255, 255, 0.12)", iconColor: "#fff" },
 ];
 
 export function TrustStrip() {
@@ -29,7 +29,7 @@ export function TrustStrip() {
           <motion.div
             className={styles.iconWrap}
             style={{ background: item.color }}
-            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileHover={{ scale: 1.1 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
             <item.icon size={20} style={{ color: item.iconColor }} />

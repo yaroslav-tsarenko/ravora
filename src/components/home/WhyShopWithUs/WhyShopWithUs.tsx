@@ -9,37 +9,37 @@ const reasons = [
     icon: <Shield size={24} />,
     title: "Secure Shopping",
     desc: "Your data is protected with enterprise-grade encryption and secure payments.",
-    gradient: "linear-gradient(135deg, #6C5CE7 0%, #a855f7 100%)",
+    gradient: "linear-gradient(135deg, #073B66 0%, #0072CE 100%)",
   },
   {
     icon: <Zap size={24} />,
     title: "Fast Delivery",
     desc: "Free shipping on orders over €100 with express options available.",
-    gradient: "linear-gradient(135deg, #00CECE 0%, #6C5CE7 100%)",
+    gradient: "linear-gradient(135deg, #0072CE 0%, #073B66 100%)",
   },
   {
     icon: <Heart size={24} />,
     title: "Certified Products",
     desc: "Every electrical material is sourced from certified manufacturers and meets professional standards.",
-    gradient: "linear-gradient(135deg, #FF6B6B 0%, #FFB800 100%)",
+    gradient: "linear-gradient(135deg, #FF5A00 0%, #FFB800 100%)",
   },
   {
     icon: <RefreshCw size={24} />,
     title: "Easy Returns",
     desc: "Changed your mind? Return within 30 days — no questions asked.",
-    gradient: "linear-gradient(135deg, #22c55e 0%, #00CECE 100%)",
+    gradient: "linear-gradient(135deg, #22c55e 0%, #0072CE 100%)",
   },
   {
     icon: <Award size={24} />,
     title: "Best Prices",
     desc: "We guarantee competitive pricing. Found it cheaper? We'll match it.",
-    gradient: "linear-gradient(135deg, #FFB800 0%, #FF6B6B 100%)",
+    gradient: "linear-gradient(135deg, #FFB800 0%, #FF5A00 100%)",
   },
   {
     icon: <Headphones size={24} />,
     title: "24/7 Support",
     desc: "Our team is available around the clock to help with anything.",
-    gradient: "linear-gradient(135deg, #a855f7 0%, #ec4899 100%)",
+    gradient: "linear-gradient(135deg, #0072CE 0%, #FF5A00 100%)",
   },
 ];
 
@@ -48,7 +48,7 @@ export function WhyShopWithUs() {
     <section className={`section-padding ${styles.section}`}>
       <div className="section-container">
         <div className={styles.header}>
-          <h2 className="section-title">Why choose AvontShop</h2>
+          <h2 className="section-title">Why choose VoltMarket</h2>
           <p className="section-subtitle" style={{ margin: "0.5rem auto 0" }}>
             Professional-grade electrical materials with expert support and fast delivery
           </p>

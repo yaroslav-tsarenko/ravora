@@ -52,7 +52,7 @@ const defaultSlides: DefaultSlide[] = [
     subtitle: "Certified panels, circuit breakers, and modular enclosures for residential and commercial installations",
     ctaLabel: "Shop Now",
     linkUrl: "/catalog",
-    bgColor: "#1A1A2E",
+    bgColor: "#073B66",
     textColor: "#ffffff",
     bgImage: banner1,
   },
@@ -63,7 +63,7 @@ const defaultSlides: DefaultSlide[] = [
     subtitle: "From compact enclosures to full-size distribution cabinets — everything for your next project",
     ctaLabel: "Browse Equipment",
     linkUrl: "/catalog",
-    bgColor: "#F5F5F5",
+    bgColor: "#073B66",
     textColor: "#ffffff",
     bgImage: banner2,
   },
@@ -74,7 +74,7 @@ const defaultSlides: DefaultSlide[] = [
     subtitle: "Premium copper cables, flexible wiring, terminal blocks and accessories at wholesale prices",
     ctaLabel: "View Cables",
     linkUrl: "/catalog",
-    bgColor: "#0D1B2A",
+    bgColor: "#073B66",
     textColor: "#ffffff",
     bgImage: banner3,
   },
@@ -117,83 +117,85 @@ export function HeroCarousel({ slides, deals }: Props) {
 
   return (
     <div className={styles.heroArea}>
-      <div className={styles.carousel}>
-        <div
-          className={styles.slide}
-          style={bgImage ? { color: "#fff" } : { background: slide.bgColor, color: slide.textColor }}
-        >
-          {bgImage && (
+      <div className={styles.heroInner}>
+        <div className={styles.carousel}>
+          <div
+            className={styles.slide}
+            style={bgImage ? { color: "#fff" } : { background: slide.bgColor, color: slide.textColor }}
+          >
+            {bgImage && (
+              <>
+                <Image
+                  src={bgImage}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 75vw"
+                  className={styles.bgImg}
+                  priority={current === 0}
+                />
+                <div className={styles.overlay} />
+              </>
+            )}
+            <div className={styles.slideContent}>
+              {slide.badgeText && (
+                <span className={styles.badge}>{slide.badgeText}</span>
+              )}
+              <h2 className={styles.slideTitle}>{slide.title}</h2>
+              {slide.subtitle && <p className={styles.slideSubtitle}>{slide.subtitle}</p>}
+              {slide.linkUrl && (
+                <Link href={slide.linkUrl} className={styles.slideCta}>
+                  {slide.ctaLabel || "Shop Now"}
+                </Link>
+              )}
+            </div>
+          </div>
+
+          {activeSlides.length > 1 && (
             <>
-              <Image
-                src={bgImage}
-                alt=""
-                fill
-                sizes="(max-width: 1024px) 100vw, 75vw"
-                className={styles.bgImg}
-                priority={current === 0}
-              />
-              <div className={styles.overlay} />
+              <button className={`${styles.arrow} ${styles.arrowLeft}`} onClick={prev} aria-label="Previous slide">
+                <ChevronLeft size={20} />
+              </button>
+              <button className={`${styles.arrow} ${styles.arrowRight}`} onClick={next} aria-label="Next slide">
+                <ChevronRight size={20} />
+              </button>
+              <div className={styles.dots}>
+                {activeSlides.map((_, i) => (
+                  <button
+                    key={i}
+                    className={`${styles.dot} ${i === current ? styles.dotActive : ""}`}
+                    onClick={() => setCurrent(i)}
+                    aria-label={`Slide ${i + 1}`}
+                  />
+                ))}
+              </div>
             </>
           )}
-          <div className={styles.slideContent}>
-            {slide.badgeText && (
-              <span className={styles.badge}>{slide.badgeText}</span>
-            )}
-            <h2 className={styles.slideTitle}>{slide.title}</h2>
-            {slide.subtitle && <p className={styles.slideSubtitle}>{slide.subtitle}</p>}
-            {slide.linkUrl && (
-              <Link href={slide.linkUrl} className={styles.slideCta}>
-                {slide.ctaLabel || "Shop Now"}
-              </Link>
-            )}
-          </div>
         </div>
 
-        {activeSlides.length > 1 && (
-          <>
-            <button className={`${styles.arrow} ${styles.arrowLeft}`} onClick={prev} aria-label="Previous slide">
-              <ChevronLeft size={20} />
-            </button>
-            <button className={`${styles.arrow} ${styles.arrowRight}`} onClick={next} aria-label="Next slide">
-              <ChevronRight size={20} />
-            </button>
-            <div className={styles.dots}>
-              {activeSlides.map((_, i) => (
-                <button
-                  key={i}
-                  className={`${styles.dot} ${i === current ? styles.dotActive : ""}`}
-                  onClick={() => setCurrent(i)}
-                  aria-label={`Slide ${i + 1}`}
-                />
-              ))}
-            </div>
-          </>
+        {deals.length > 0 && (
+          <div className={styles.sideDeals}>
+            {deals.map((deal) => (
+              <Link key={deal.id} href={deal.linkUrl || "/catalog"} className={styles.dealCard}>
+                {deal.discountText && (
+                  <span className={styles.dealDiscount}>{deal.discountText}</span>
+                )}
+                <div className={styles.dealImage}>
+                  {deal.imageUrl ? (
+                    <img src={deal.imageUrl} alt={deal.title} className={styles.dealImg} />
+                  ) : (
+                    <div className={styles.dealImagePlaceholder} />
+                  )}
+                </div>
+                <h4 className={styles.dealTitle}>{deal.title}</h4>
+                <div className={styles.dealPrices}>
+                  {deal.oldPrice && <span className={styles.dealOld}>{deal.oldPrice}</span>}
+                  {deal.newPrice && <span className={styles.dealNew}>{deal.newPrice}</span>}
+                </div>
+              </Link>
+            ))}
+          </div>
         )}
       </div>
-
-      {deals.length > 0 && (
-        <div className={styles.sideDeals}>
-          {deals.map((deal) => (
-            <Link key={deal.id} href={deal.linkUrl || "/catalog"} className={styles.dealCard}>
-              {deal.discountText && (
-                <span className={styles.dealDiscount}>{deal.discountText}</span>
-              )}
-              <div className={styles.dealImage}>
-                {deal.imageUrl ? (
-                  <img src={deal.imageUrl} alt={deal.title} className={styles.dealImg} />
-                ) : (
-                  <div className={styles.dealImagePlaceholder} />
-                )}
-              </div>
-              <h4 className={styles.dealTitle}>{deal.title}</h4>
-              <div className={styles.dealPrices}>
-                {deal.oldPrice && <span className={styles.dealOld}>{deal.oldPrice}</span>}
-                {deal.newPrice && <span className={styles.dealNew}>{deal.newPrice}</span>}
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

@@ -37,7 +37,7 @@ export function ProductSection({
 }: Props) {
   const [activeTab, setActiveTab] = useState(0);
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-60px" });
+  const isInView = useInView(ref, { once: true, margin: "100px" });
 
   const filtered = useMemo(() => {
     if (!tabs || tabs.length === 0 || activeTab === 0) return products;
@@ -87,9 +87,9 @@ export function ProductSection({
         {filtered.map((p, i) => (
           <motion.div
             key={p.id}
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.4, delay: Math.min(i * 0.07, 0.5) }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.35, delay: Math.min(i * 0.04, 0.3) }}
           >
             <MarketplaceProductCard product={p} />
           </motion.div>

@@ -1,14 +1,10 @@
 "use client";
 
-import { TopBar } from "../TopBar/TopBar";
 import { PromoStrip } from "../PromoStrip/PromoStrip";
-import { CategorySidebar } from "../CategorySidebar/CategorySidebar";
-import { HorizontalTabs } from "../HorizontalTabs/HorizontalTabs";
 import { HeroCarousel } from "../HeroCarousel/HeroCarousel";
 import { PromoBannerGrid } from "../PromoBannerGrid/PromoBannerGrid";
 import { BrandStrip } from "../BrandStrip/BrandStrip";
 import { ProductSection } from "../ProductSection/ProductSection";
-import { CategoryShowcase } from "../CategoryShowcase/CategoryShowcase";
 import { SaleStrip } from "../SaleStrip/SaleStrip";
 import { DealOfTheDay } from "../DealOfTheDay/DealOfTheDay";
 import { NewsletterBanner } from "../NewsletterBanner/NewsletterBanner";
@@ -112,30 +108,26 @@ interface Props {
 export function MarketplaceHome({ data }: Props) {
   const {
     heroSlides, dealCards, promoSmall, promoWide,
-    brands, sections, tabs, utilityLinks, promoStripItems,
-    sectionProducts, featuredProducts, saleProducts, newProducts,
-    popularProducts, categorySections, brandSections, categoryShowcase,
+    brands, sections, promoStripItems,
+    sectionProducts, saleProducts, newProducts,
+    popularProducts, categorySections,
   } = data;
 
   return (
     <div className={styles.marketplace}>
-      <TopBar links={utilityLinks} />
       <PromoStrip items={promoStripItems} />
+
+      <HeroCarousel slides={heroSlides} deals={dealCards} />
 
       <div className={styles.container}>
         <div className={styles.mainLayout}>
-          <div className={styles.sidebarDesktop}>
-            <CategorySidebar />
-          </div>
-
           <div className={styles.content}>
-            <div className={styles.mobileCategories}>
-              <CategorySidebar />
-            </div>
-
-            {tabs.length > 0 && <HorizontalTabs tabs={tabs} />}
-            <HeroCarousel slides={heroSlides} deals={dealCards} />
             <PromoBannerGrid smallBanners={promoSmall} wideBanners={promoWide} />
+
+            {/* More Deals For You */}
+            {saleProducts.length > 0 && (
+              <SaleStrip products={saleProducts} />
+            )}
 
             {/* Most Popular Products */}
             {popularProducts.length > 0 && (
@@ -149,6 +141,9 @@ export function MarketplaceHome({ data }: Props) {
                 columns={5}
               />
             )}
+
+            {/* Trust / Guarantee Strip */}
+            <TrustStrip />
 
             {/* Top categories by product count */}
             {categorySections.slice(0, 3).map((cs, i) => (
@@ -165,16 +160,13 @@ export function MarketplaceHome({ data }: Props) {
               />
             ))}
 
-            {/* Hot Deals - horizontal scrollable strip */}
-            <SaleStrip products={saleProducts} />
-
-            {/* Trust / Guarantee Strip */}
-            <TrustStrip />
-
             {/* Deal of the Day */}
             {saleProducts.length > 0 && (
               <DealOfTheDay product={saleProducts[0]} />
             )}
+
+            {/* Newsletter */}
+            <NewsletterBanner />
 
             {/* 3 more top categories after deal */}
             {categorySections.slice(3, 6).map((cs, i) => (
@@ -211,9 +203,6 @@ export function MarketplaceHome({ data }: Props) {
                 />
               );
             })}
-
-            {/* Newsletter / Discount CTA */}
-            <NewsletterBanner />
 
             {/* New Arrivals */}
             {newProducts.length > 0 && (

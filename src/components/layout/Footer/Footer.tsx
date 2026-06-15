@@ -22,7 +22,7 @@ export function Footer() {
           <div className={styles.brandCol}>
             <Link href="/" className={styles.logo}>
               <AvontLogo size={28} />
-              <span>AvontShop</span>
+              <span>VoltMarket</span>
             </Link>
             <p className={styles.brandDesc}>
               Your trusted source for electrical materials, wiring, and installation supplies. Professional quality delivered to your door.
@@ -76,7 +76,7 @@ export function Footer() {
 
         <div className={styles.bottom}>
           <p className={styles.copyright}>
-            {t("copyright", { year: currentYear, storeName: "AvontShop" })}
+            {t("copyright", { year: currentYear, storeName: "VoltMarket" })}
           </p>
           <div className={styles.paymentMethods}>
             <span className={styles.paymentBadge}>

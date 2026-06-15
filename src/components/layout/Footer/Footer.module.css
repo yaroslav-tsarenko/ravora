@@ -1,13 +1,13 @@
 .footer {
-  background-color: var(--color-bg-secondary);
-  border-top: 1px solid var(--color-border);
+  background-color: #073B66;
+  color: rgba(255, 255, 255, 0.85);
   margin-top: auto;
 }
 
 .container {
-  max-width: var(--max-width);
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
 }
 
 @media (min-width: 1024px) {
@@ -16,7 +16,6 @@
   }
 }
 
-/* Top section with logo and description */
 .topSection {
   padding: 3rem 0 2.5rem;
   display: grid;
@@ -44,12 +43,13 @@
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.04em;
-  color: var(--color-accent);
+  color: #fff;
+  text-decoration: none;
 }
 
 .brandDesc {
   font-size: 0.875rem;
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.6);
   line-height: 1.6;
   max-width: 280px;
 }
@@ -63,30 +63,30 @@
 .socialIcon {
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: var(--radius-lg);
-  background: var(--color-bg-tertiary);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.7);
   transition: background-color 0.2s, color 0.2s, transform 0.15s;
   border: none;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .socialIcon:hover {
-  background: var(--color-accent);
+  background: #FF5A00;
   color: white;
   transform: translateY(-2px);
 }
 
-/* Link columns */
 .sectionTitle {
   font-size: 0.8125rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-text);
+  color: #fff;
   margin-bottom: 1rem;
 }
 
@@ -101,18 +101,18 @@
 
 .link {
   font-size: 0.875rem;
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.55);
   transition: color 0.2s, padding-left 0.2s;
+  text-decoration: none;
 }
 
 .link:hover {
-  color: var(--color-accent);
+  color: #FF5A00;
   padding-left: 0.25rem;
 }
 
-/* Bottom bar */
 .bottom {
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 1.5rem 0;
   display: flex;
   flex-direction: column;
@@ -129,7 +129,7 @@
 
 .copyright {
   font-size: 0.75rem;
-  color: var(--color-text-tertiary);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .paymentMethods {
@@ -142,10 +142,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
 }
 
 .paymentImg {
-  width: 60px !important;
+  width: 50px !important;
   height: auto !important;
   object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
 }
