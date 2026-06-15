@@ -8,6 +8,12 @@ const intlMiddleware = createMiddleware(routing);
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  if (pathname.endsWith("/avontshop.html")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/avontshop.html";
+    return NextResponse.rewrite(url);
+  }
+
   if (pathname.startsWith("/admin") || pathname.startsWith("/api")) {
     const token = request.cookies.get("session_token")?.value;
     const payload = token ? await verifyTokenEdge(token) : null;
