@@ -13,14 +13,26 @@ export interface HomepageProduct {
   createdAt?: string | Date;
 }
 
+export interface HomepageCategoryChild {
+  id: string;
+  name: string;
+  slug: string;
+  childSlugs?: string[];
+}
+
 export interface HomepageCategory {
   id: string;
   name: string;
   slug: string;
   description?: string | null;
   imageUrl?: string | null;
-  children?: { id: string; name: string; slug: string }[];
+  children?: HomepageCategoryChild[];
   _count?: { products: number };
+}
+
+export interface SubcategoryTab {
+  label: string;
+  slugs: string[];
 }
 
 export function getFeaturedProducts(products: HomepageProduct[], limit = 10): HomepageProduct[] {
@@ -73,7 +85,15 @@ export function getDiscountPercent(product: HomepageProduct): number {
 export interface CategorySection {
   category: HomepageCategory;
   products: HomepageProduct[];
-  subcategoryTabs: string[];
+  subcategoryTabs: SubcategoryTab[];
+}
+
+function hasProductInSlugs(products: HomepageProduct[], slugs: string[]): boolean {
+  if (slugs.length === 0) return false;
+  const slugSet = new Set(slugs);
+  return products.some((p) =>
+    p.categories?.some((c) => slugSet.has(c.category.slug))
+  );
 }
 
 export function getHomepageCategorySections(
@@ -84,18 +104,26 @@ export function getHomepageCategorySections(
 ): CategorySection[] {
   const sections = categories
     .map((cat) => {
-      const catProducts = getProductsByCategory(products, cat.slug);
-      const childSlugs = cat.children?.map((c) => c.slug) || [];
-      const fromChildren = childSlugs.length > 0
-        ? products.filter((p) =>
-            p.categories?.some((c) => childSlugs.includes(c.category.slug))
-          )
-        : [];
-      const merged = [...catProducts, ...fromChildren];
-      const unique = Array.from(new Map(merged.map((p) => [p.id, p])).values());
+      const allChildSlugs = (cat.children || []).flatMap((ch) => [
+        ch.slug,
+        ...(ch.childSlugs || []),
+      ]);
+      const allRelevantSlugs = [cat.slug, ...allChildSlugs];
+      const slugSet = new Set(allRelevantSlugs);
 
-      const subcategoryTabs = cat.children?.length
-        ? ["All", ...cat.children.map((c) => c.name)]
+      const unique = products.filter((p) =>
+        p.categories?.some((c) => slugSet.has(c.category.slug))
+      );
+
+      const childTabs: SubcategoryTab[] = (cat.children || [])
+        .map((child) => {
+          const childSlugs = [child.slug, ...(child.childSlugs || [])];
+          return { label: child.name, slugs: childSlugs };
+        })
+        .filter((tab) => hasProductInSlugs(unique, tab.slugs));
+
+      const subcategoryTabs: SubcategoryTab[] = childTabs.length > 0
+        ? [{ label: "All", slugs: allRelevantSlugs }, ...childTabs]
         : [];
 
       return {

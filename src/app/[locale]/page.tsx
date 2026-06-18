@@ -61,7 +61,15 @@ async function getHomeData() {
           children: {
             where: { isActive: true },
             orderBy: { sortOrder: "asc" },
-            select: { id: true, name: true, slug: true },
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              children: {
+                where: { isActive: true },
+                select: { id: true, slug: true },
+              },
+            },
           },
           _count: { select: { products: true } },
         },
@@ -116,7 +124,12 @@ async function getHomeData() {
         id: c.id,
         name: c.name,
         slug: c.slug,
-        children: c.children,
+        children: c.children.map((ch) => ({
+          id: ch.id,
+          name: ch.name,
+          slug: ch.slug,
+          childSlugs: ch.children.map((gc) => gc.slug),
+        })),
         _count: c._count,
       })),
       10,

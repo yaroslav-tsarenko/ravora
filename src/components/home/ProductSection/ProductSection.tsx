@@ -21,31 +21,54 @@ interface Product {
   brand?: string | null;
 }
 
+interface TabInput {
+  label: string;
+  slugs: string[];
+}
+
 interface Props {
   title: string;
   subtitle?: string;
   products: Product[];
   viewAllHref?: string;
   viewAllLabel?: string;
-  tabs?: string[];
+  tabs?: TabInput[] | string[];
   bg?: "white" | "gray";
   columns?: number;
+}
+
+function normalizeTabs(tabs: Props["tabs"]): TabInput[] {
+  if (!tabs || tabs.length === 0) return [];
+  if (typeof tabs[0] === "string") {
+    return (tabs as string[]).map((label) => ({ label, slugs: [] }));
+  }
+  return tabs as TabInput[];
 }
 
 export function ProductSection({
   title, subtitle, products, viewAllHref, viewAllLabel, tabs, bg = "white", columns = 5,
 }: Props) {
+  const normalizedTabs = useMemo(() => normalizeTabs(tabs), [tabs]);
   const [activeTab, setActiveTab] = useState(0);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
 
   const filtered = useMemo(() => {
-    if (!tabs || tabs.length === 0 || activeTab === 0) return products;
-    const tabName = tabs[activeTab];
-    return products.filter((p) =>
-      p.categories?.some((c) => c.category.name === tabName)
+    if (normalizedTabs.length === 0 || activeTab === 0) return products;
+    const tab = normalizedTabs[activeTab];
+    if (!tab) return products;
+    const slugSet = new Set(tab.slugs);
+    if (slugSet.size > 0) {
+      const matched = products.filter((p) =>
+        p.categories?.some((c) => slugSet.has(c.category.slug))
+      );
+      return matched.length > 0 ? matched : products;
+    }
+    const matched = products.filter((p) =>
+      p.categories?.some((c) => c.category.name === tab.label)
     );
-  }, [products, tabs, activeTab]);
+    return matched.length > 0 ? matched : products;
+  }, [products, normalizedTabs, activeTab]);
 
   if (!products.length) return null;
 
@@ -61,15 +84,15 @@ export function ProductSection({
           <h2 className={styles.title}>{title}</h2>
           {subtitle && <span className={styles.subtitle}>{subtitle}</span>}
         </div>
-        {tabs && tabs.length > 1 && (
+        {normalizedTabs.length > 1 && (
           <div className={styles.tabs}>
-            {tabs.map((tab, i) => (
+            {normalizedTabs.map((tab, i) => (
               <button
-                key={tab}
+                key={tab.label}
                 className={`${styles.tab} ${i === activeTab ? styles.tabActive : ""}`}
                 onClick={() => setActiveTab(i)}
               >
-                {tab}
+                {tab.label}
               </button>
             ))}
           </div>
