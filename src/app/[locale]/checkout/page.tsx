@@ -20,8 +20,15 @@ import { toast } from "sonner";
 import styles from "./checkout.module.css";
 import {
   Mail, Phone, MapPin, Truck, CreditCard,
-  ChevronRight, ShieldCheck, Lock, Check, ImageOff, UserPlus,
+  ChevronRight, ShieldCheck, Lock, Check, ImageOff, UserPlus, Tag, X as XIcon,
 } from "lucide-react";
+
+interface AppliedDiscount {
+  type: "welcome" | "newsletter";
+  percent: number;
+  code: string;
+  source: "auto" | "code";
+}
 
 const SHIPPING_METHODS = [
   { key: "standard", label: "Standard Shipping", time: "5-7 business days", price: 5.99, icon: Truck },
@@ -107,6 +114,10 @@ export default function CheckoutPage() {
   const { currency, convert } = useCurrency();
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const [discount, setDiscount] = useState<AppliedDiscount | null>(null);
+  const [promoInput, setPromoInput] = useState("");
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [applyingPromo, setApplyingPromo] = useState(false);
 
   const {
     register,
@@ -143,6 +154,51 @@ export default function CheckoutPage() {
   const countryData = COUNTRIES.find((c) => c.code === selectedCountry);
   const phoneHint = countryData ? `${countryData.phone} XX XXX XXXX` : "+44 XX XXX XXXX";
 
+  const discountAmount = discount ? +(cart.subtotal * (discount.percent / 100)).toFixed(2) : 0;
+  const discountedSubtotal = Math.max(cart.subtotal - discountAmount, 0);
+  const taxOnDiscounted = +(discountedSubtotal * 0.21).toFixed(2);
+  const finalShipping = discountedSubtotal >= 100 && selectedMethod === "free" ? 0 : shippingPrice;
+
+  useEffect(() => {
+    let cancelled = false;
+    if (user) {
+      fetch("/api/discounts")
+        .then((r) => r.json())
+        .then((d) => {
+          if (!cancelled && d?.discount) setDiscount(d.discount);
+        })
+        .catch(() => null);
+    }
+    return () => { cancelled = true; };
+  }, [user]);
+
+  const applyPromo = async () => {
+    const code = promoInput.trim();
+    if (!code) return;
+    setApplyingPromo(true);
+    setPromoError(null);
+    try {
+      const r = await fetch(`/api/discounts?code=${encodeURIComponent(code)}`);
+      const data = await r.json();
+      if (data?.discount) {
+        setDiscount(data.discount);
+        setPromoInput("");
+        toast.success(`${data.discount.percent}% discount applied!`);
+      } else {
+        setPromoError("Invalid or expired code");
+      }
+    } catch {
+      setPromoError("Failed to apply code");
+    } finally {
+      setApplyingPromo(false);
+    }
+  };
+
+  const removeDiscount = () => {
+    setDiscount(null);
+    setPromoError(null);
+  };
+
   const goNext = async () => {
     if (step === 0) {
       const valid = await trigger("contact");
@@ -162,6 +218,7 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
+          discountCode: discount?.source === "code" ? discount.code : undefined,
           items: cart.items.map((item) => ({
             productId: item.productId,
             quantity: item.quantity,
@@ -639,20 +696,94 @@ export default function CheckoutPage() {
             ))}
           </div>
 
+          {/* Promo / discount block */}
+          <div style={{ marginBottom: "1rem", paddingBottom: "1rem", borderBottom: "1px solid var(--color-border)" }}>
+            {discount ? (
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.625rem 0.75rem",
+                borderRadius: "10px",
+                background: "#ECFDF5",
+                border: "1px solid #A7F3D0",
+                fontSize: "0.8125rem",
+              }}>
+                <Tag size={14} style={{ color: "#15803d", flexShrink: 0 }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, color: "#166534" }}>
+                    {discount.percent}% OFF applied
+                  </div>
+                  <div style={{ color: "#15803d", fontSize: "0.6875rem" }}>
+                    {discount.type === "welcome" ? "Welcome discount" : `Code: ${discount.code}`}
+                  </div>
+                </div>
+                {discount.source === "code" && (
+                  <button
+                    type="button"
+                    onClick={removeDiscount}
+                    aria-label="Remove discount"
+                    style={{ background: "none", border: "none", cursor: "pointer", color: "#15803d", padding: 4, display: "flex" }}
+                  >
+                    <XIcon size={14} />
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div>
+                <label style={{ ...labelStyle, marginBottom: "0.375rem" }}>Promo code</label>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <input
+                    type="text"
+                    value={promoInput}
+                    onChange={(e) => { setPromoInput(e.target.value.toUpperCase()); setPromoError(null); }}
+                    placeholder="NEWS-XXXXXX"
+                    style={{ ...inputPlainStyle, fontSize: "0.8125rem", letterSpacing: "0.5px" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={applyPromo}
+                    disabled={!promoInput.trim() || applyingPromo}
+                    style={{
+                      padding: "0 0.875rem",
+                      borderRadius: "12px",
+                      border: "none",
+                      background: "var(--color-accent)",
+                      color: "#fff",
+                      fontWeight: 600,
+                      fontSize: "0.8125rem",
+                      cursor: promoInput.trim() && !applyingPromo ? "pointer" : "not-allowed",
+                      opacity: promoInput.trim() && !applyingPromo ? 1 : 0.5,
+                    }}
+                  >
+                    {applyingPromo ? "…" : "Apply"}
+                  </button>
+                </div>
+                {promoError && <span style={errorStyle}>{promoError}</span>}
+              </div>
+            )}
+          </div>
+
           <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem", fontSize: "0.875rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span style={{ color: "var(--color-text-secondary)" }}>Subtotal</span>
               <span style={{ fontWeight: 500 }}>{formatPrice(convert(cart.subtotal), currency)}</span>
             </div>
+            {discount && (
+              <div style={{ display: "flex", justifyContent: "space-between", color: "#15803d" }}>
+                <span>Discount ({discount.percent}%)</span>
+                <span style={{ fontWeight: 600 }}>−{formatPrice(convert(discountAmount), currency)}</span>
+              </div>
+            )}
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span style={{ color: "var(--color-text-secondary)" }}>Shipping</span>
-              <span style={{ fontWeight: 500, color: shippingPrice === 0 ? "#2E7D32" : undefined }}>
-                {shippingPrice > 0 ? formatPrice(convert(shippingPrice), currency) : "Free"}
+              <span style={{ fontWeight: 500, color: finalShipping === 0 ? "#2E7D32" : undefined }}>
+                {finalShipping > 0 ? formatPrice(convert(finalShipping), currency) : "Free"}
               </span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span style={{ color: "var(--color-text-secondary)" }}>Tax (21%)</span>
-              <span style={{ fontWeight: 500 }}>{formatPrice(convert(cart.taxAmount), currency)}</span>
+              <span style={{ fontWeight: 500 }}>{formatPrice(convert(taxOnDiscounted), currency)}</span>
             </div>
             <div style={{
               display: "flex",
@@ -664,7 +795,7 @@ export default function CheckoutPage() {
               marginTop: "0.375rem",
             }}>
               <span>Total</span>
-              <span>{formatPrice(convert(cart.subtotal + cart.taxAmount + shippingPrice), currency)}</span>
+              <span>{formatPrice(convert(discountedSubtotal + taxOnDiscounted + finalShipping), currency)}</span>
             </div>
           </div>
 

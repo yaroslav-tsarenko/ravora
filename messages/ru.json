@@ -50,7 +50,7 @@
     "promoFreeShipping": "Бесплатная доставка",
     "promoFreeShippingDesc": "При заказе от €50",
     "promoReturns": "Лёгкий возврат",
-    "promoReturnsDesc": "Возврат в течение 30 дней",
+    "promoReturnsDesc": "Возврат в течение 14 дней",
     "promoSupport": "Поддержка 24/7",
     "promoSupportDesc": "Мы всегда готовы помочь",
     "promoSecure": "Безопасная оплата",
@@ -101,7 +101,7 @@
     "freeShipping": "Бесплатная доставка",
     "freeShippingDesc": "при заказе от €50",
     "easyReturns": "Лёгкий возврат",
-    "easyReturnsDesc": "30 дней на возврат",
+    "easyReturnsDesc": "14 дней на возврат",
     "securePayment": "Безопасная оплата",
     "securePaymentDesc": "SSL шифрование"
   },

@@ -50,7 +50,7 @@
     "promoFreeShipping": "Bezmaksas piegāde",
     "promoFreeShippingDesc": "Pasūtījumiem virs €50",
     "promoReturns": "Vienkārša atgriešana",
-    "promoReturnsDesc": "30 dienu atgriešanas politika",
+    "promoReturnsDesc": "14 dienu atgriešanas politika",
     "promoSupport": "24/7 atbalsts",
     "promoSupportDesc": "Mēs esam šeit, lai palīdzētu",
     "promoSecure": "Droši maksājumi",
@@ -101,7 +101,7 @@
     "freeShipping": "Bezmaksas piegāde",
     "freeShippingDesc": "pasūtījumiem virs €50",
     "easyReturns": "Vienkārša atgriešana",
-    "easyReturnsDesc": "30 dienu atgriešana",
+    "easyReturnsDesc": "14 dienu atgriešana",
     "securePayment": "Droši maksājumi",
     "securePaymentDesc": "SSL šifrēta norēķināšanās"
   },

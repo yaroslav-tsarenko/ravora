@@ -13,6 +13,7 @@ import { SaleStrip } from "../SaleStrip/SaleStrip";
 import { DealOfTheDay } from "../DealOfTheDay/DealOfTheDay";
 import { NewsletterBanner } from "../NewsletterBanner/NewsletterBanner";
 import { TrustStrip } from "../TrustStrip/TrustStrip";
+import { HomeCTABanners } from "../HomeCTABanners/HomeCTABanners";
 import styles from "./MarketplaceHome.module.css";
 import type { HomepageProduct, CategorySection, BrandSection } from "@/lib/homepage-products";
 
@@ -135,7 +136,8 @@ export function MarketplaceHome({ data }: Props) {
 
             {tabs.length > 0 && <HorizontalTabs tabs={tabs} />}
             <HeroCarousel slides={heroSlides} deals={dealCards} />
-            <PromoBannerGrid smallBanners={promoSmall} wideBanners={promoWide} />
+            <HomeCTABanners />
+            <PromoBannerGrid smallBanners={[]} wideBanners={promoWide} />
 
             {/* Most Popular Products */}
             {popularProducts.length > 0 && (

@@ -50,7 +50,7 @@
     "promoFreeShipping": "Free Shipping",
     "promoFreeShippingDesc": "On orders over €50",
     "promoReturns": "Easy Returns",
-    "promoReturnsDesc": "30-day return policy",
+    "promoReturnsDesc": "14-day return policy",
     "promoSupport": "24/7 Support",
     "promoSupportDesc": "We're here to help",
     "promoSecure": "Secure Payment",
@@ -101,7 +101,7 @@
     "freeShipping": "Free Shipping",
     "freeShippingDesc": "on orders over €50",
     "easyReturns": "Easy Returns",
-    "easyReturnsDesc": "30-day return policy",
+    "easyReturnsDesc": "14-day return policy",
     "securePayment": "Secure Payment",
     "securePaymentDesc": "SSL encrypted checkout"
   },

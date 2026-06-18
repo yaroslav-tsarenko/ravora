@@ -193,6 +193,37 @@ export default function RegisterPage() {
           <p className={styles.authSubtitle}>{t("registerSubtitle")}</p>
         </div>
 
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0.75rem",
+          padding: "0.75rem 1rem",
+          borderRadius: "12px",
+          background: "linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)",
+          border: "1px solid #6EE7B7",
+          marginBottom: "1.5rem",
+          fontSize: "0.8125rem",
+        }}>
+          <div style={{
+            minWidth: "44px",
+            height: "44px",
+            borderRadius: "50%",
+            background: "#10B981",
+            color: "#fff",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontWeight: 800,
+            fontSize: "0.9375rem",
+          }}>
+            10%
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontWeight: 700, color: "#065F46" }}>Welcome gift: 10% off</div>
+            <div style={{ color: "#047857", fontSize: "0.75rem" }}>Auto-applied to your first order at checkout.</div>
+          </div>
+        </div>
+
         {/* Step indicator */}
         <div style={{
           display: "flex",

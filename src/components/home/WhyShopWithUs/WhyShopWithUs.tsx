@@ -26,7 +26,7 @@ const reasons = [
   {
     icon: <RefreshCw size={24} />,
     title: "Easy Returns",
-    desc: "Changed your mind? Return within 30 days — no questions asked.",
+    desc: "Changed your mind? Return within 14 days — no questions asked.",
     gradient: "linear-gradient(135deg, #22c55e 0%, #00CECE 100%)",
   },
   {

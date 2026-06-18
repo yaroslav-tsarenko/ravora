@@ -24,11 +24,10 @@ export async function POST() {
     // ── Promo Strip Items ──────────────────────────────
     const promoStripItems = [
       { icon: "Truck", title: "Free Delivery", subtitle: "On orders over €100", sortOrder: 0 },
-      { icon: "RotateCcw", title: "Easy Returns", subtitle: "30-day return policy", sortOrder: 1 },
+      { icon: "RotateCcw", title: "Easy Returns", subtitle: "14-day return policy", sortOrder: 1 },
       { icon: "Shield", title: "2-Year Warranty", subtitle: "Official guarantee", sortOrder: 2 },
-      { icon: "Gift", title: "Gift Cards", subtitle: "Perfect for any occasion", sortOrder: 3 },
-      { icon: "Award", title: "Premium Quality", subtitle: "Certified products", sortOrder: 4 },
-      { icon: "Headphones", title: "24/7 Support", subtitle: "Always here to help", sortOrder: 5 },
+      { icon: "Award", title: "Premium Quality", subtitle: "Certified products", sortOrder: 3 },
+      { icon: "Headphones", title: "24/7 Support", subtitle: "Always here to help", sortOrder: 4 },
     ];
 
     for (const item of promoStripItems) {

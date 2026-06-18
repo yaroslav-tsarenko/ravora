@@ -12,7 +12,7 @@ const faqs = [
   },
   {
     q: "What is your return policy?",
-    a: "We offer a 30-day return policy on all items. Products must be unused and in their original packaging. Contact our support team to initiate a return.",
+    a: "We offer a 14-day return policy on all items. Products must be unused and in their original packaging. Contact our support team to initiate a return.",
   },
   {
     q: "Do you ship internationally?",

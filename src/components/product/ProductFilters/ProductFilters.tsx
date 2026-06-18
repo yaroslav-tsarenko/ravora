@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import styles from "./ProductFilters.module.css";
@@ -101,6 +101,72 @@ function CategoryItem({
   );
 }
 
+function PriceSection({
+  title, minPrice, maxPrice, onMinPriceChange, onMaxPriceChange,
+}: {
+  title: string;
+  minPrice: string;
+  maxPrice: string;
+  onMinPriceChange: (v: string) => void;
+  onMaxPriceChange: (v: string) => void;
+}) {
+  const [localMin, setLocalMin] = useState(minPrice);
+  const [localMax, setLocalMax] = useState(maxPrice);
+  const minTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const maxTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => { setLocalMin(minPrice); }, [minPrice]);
+  useEffect(() => { setLocalMax(maxPrice); }, [maxPrice]);
+
+  const debouncedMin = (v: string) => {
+    setLocalMin(v);
+    if (minTimer.current) clearTimeout(minTimer.current);
+    minTimer.current = setTimeout(() => onMinPriceChange(v), 400);
+  };
+  const debouncedMax = (v: string) => {
+    setLocalMax(v);
+    if (maxTimer.current) clearTimeout(maxTimer.current);
+    maxTimer.current = setTimeout(() => onMaxPriceChange(v), 400);
+  };
+
+  const applyPreset = (min: string, max: string) => {
+    setLocalMin(min);
+    setLocalMax(max);
+    onMinPriceChange(min);
+    onMaxPriceChange(max);
+  };
+
+  return (
+    <FilterSection title={title}>
+      <div className={styles.priceInputs}>
+        <input
+          type="number"
+          placeholder="Min"
+          value={localMin}
+          onChange={(e) => debouncedMin(e.target.value)}
+          className={styles.priceInput}
+          min="0"
+        />
+        <span className={styles.priceSep}>–</span>
+        <input
+          type="number"
+          placeholder="Max"
+          value={localMax}
+          onChange={(e) => debouncedMax(e.target.value)}
+          className={styles.priceInput}
+          min="0"
+        />
+      </div>
+      <div className={styles.pricePresets}>
+        <button className={styles.presetBtn} onClick={() => applyPreset("", "25")}>Under €25</button>
+        <button className={styles.presetBtn} onClick={() => applyPreset("25", "50")}>€25–€50</button>
+        <button className={styles.presetBtn} onClick={() => applyPreset("50", "100")}>€50–€100</button>
+        <button className={styles.presetBtn} onClick={() => applyPreset("100", "")}>€100+</button>
+      </div>
+    </FilterSection>
+  );
+}
+
 export function ProductFilters({
   categories,
   selectedCategory,
@@ -153,31 +219,13 @@ export function ProductFilters({
         )}
       </FilterSection>
 
-      <FilterSection title={t("priceRange")}>
-        <div className={styles.priceInputs}>
-          <input
-            type="number"
-            placeholder="Min"
-            value={minPrice}
-            onChange={(e) => onMinPriceChange(e.target.value)}
-            className={styles.priceInput}
-          />
-          <span className={styles.priceSep}>–</span>
-          <input
-            type="number"
-            placeholder="Max"
-            value={maxPrice}
-            onChange={(e) => onMaxPriceChange(e.target.value)}
-            className={styles.priceInput}
-          />
-        </div>
-        <div className={styles.pricePresets}>
-          <button className={styles.presetBtn} onClick={() => { onMinPriceChange(""); onMaxPriceChange("25"); }}>Under €25</button>
-          <button className={styles.presetBtn} onClick={() => { onMinPriceChange("25"); onMaxPriceChange("50"); }}>€25–€50</button>
-          <button className={styles.presetBtn} onClick={() => { onMinPriceChange("50"); onMaxPriceChange("100"); }}>€50–€100</button>
-          <button className={styles.presetBtn} onClick={() => { onMinPriceChange("100"); onMaxPriceChange(""); }}>€100+</button>
-        </div>
-      </FilterSection>
+      <PriceSection
+        title={t("priceRange")}
+        minPrice={minPrice}
+        maxPrice={maxPrice}
+        onMinPriceChange={onMinPriceChange}
+        onMaxPriceChange={onMaxPriceChange}
+      />
 
       {brands.length > 0 && (
         <FilterSection title="Brand" defaultOpen={false}>

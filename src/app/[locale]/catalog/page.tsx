@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useSearchParams, useRouter } from "next/navigation";
-import { SlidersHorizontal, X } from "lucide-react";
+import { SlidersHorizontal, X, Search } from "lucide-react";
 import { ProductGrid } from "@/components/product/ProductGrid/ProductGrid";
 import { ProductFilters } from "@/components/product/ProductFilters/ProductFilters";
 import { ProductSort } from "@/components/product/ProductSort/ProductSort";
@@ -36,6 +36,10 @@ export default function CatalogPage() {
   const inStock = searchParams.get("inStock") === "true";
   const onSale = searchParams.get("onSale") === "true";
   const selectedBrand = searchParams.get("brand") || "";
+  const search = searchParams.get("search") || "";
+
+  const [searchInput, setSearchInput] = useState(search);
+  useEffect(() => { setSearchInput(search); }, [search]);
 
   const updateParams = useCallback(
     (updates: Record<string, string>) => {
@@ -44,11 +48,25 @@ export default function CatalogPage() {
         if (value) params.set(key, value);
         else params.delete(key);
       });
-      if (updates.page === undefined && !updates.page) params.set("page", "1");
+      if (!("page" in updates)) params.set("page", "1");
       router.push(`?${params.toString()}`);
     },
     [searchParams, router]
   );
+
+  const searchDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleSearchChange = (value: string) => {
+    setSearchInput(value);
+    if (searchDebounce.current) clearTimeout(searchDebounce.current);
+    searchDebounce.current = setTimeout(() => {
+      updateParams({ search: value, page: "1" });
+    }, 350);
+  };
+
+  const clearAll = () => {
+    setSearchInput("");
+    router.push("?");
+  };
 
   useEffect(() => {
     fetch("/api/categories")
@@ -72,6 +90,7 @@ export default function CatalogPage() {
     if (inStock) params.set("inStock", "true");
     if (onSale) params.set("onSale", "true");
     if (selectedBrand) params.set("brand", selectedBrand);
+    if (search) params.set("search", search);
 
     fetch(`/api/products?${params}`)
       .then((res) => res.json())
@@ -82,7 +101,7 @@ export default function CatalogPage() {
       })
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [page, sort, category, minPrice, maxPrice, inStock, onSale, selectedBrand]);
+  }, [page, sort, category, minPrice, maxPrice, inStock, onSale, selectedBrand, search]);
 
   useEffect(() => {
     if (mobileFiltersOpen) {
@@ -95,7 +114,7 @@ export default function CatalogPage() {
     };
   }, [mobileFiltersOpen]);
 
-  const activeFilterCount = [category, minPrice, maxPrice, inStock, onSale, selectedBrand].filter(Boolean).length;
+  const activeFilterCount = [category, minPrice, maxPrice, inStock, onSale, selectedBrand, search].filter(Boolean).length;
 
   return (
     <div className={styles.wrapper}>
@@ -114,6 +133,36 @@ export default function CatalogPage() {
           </p>
         </div>
         <div className={styles.headerActions}>
+          <div style={{ position: "relative", flex: "1 1 220px", minWidth: 0 }}>
+            <Search
+              size={14}
+              style={{
+                position: "absolute",
+                left: 12,
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "var(--color-text-tertiary)",
+                pointerEvents: "none",
+              }}
+            />
+            <input
+              type="search"
+              value={searchInput}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder="Search products…"
+              aria-label="Search products"
+              style={{
+                width: "100%",
+                padding: "0.5rem 0.75rem 0.5rem 2rem",
+                border: "1.5px solid var(--color-border)",
+                borderRadius: 10,
+                background: "var(--color-bg)",
+                color: "var(--color-text)",
+                fontSize: "0.8125rem",
+                outline: "none",
+              }}
+            />
+          </div>
           <button
             onClick={() => setMobileFiltersOpen(true)}
             className={styles.filtersBtn}
@@ -125,6 +174,27 @@ export default function CatalogPage() {
               <span className={styles.filterBadge}>{activeFilterCount}</span>
             )}
           </button>
+          {activeFilterCount > 0 && (
+            <button
+              onClick={clearAll}
+              type="button"
+              style={{
+                padding: "0.5rem 0.75rem",
+                border: "1.5px solid var(--color-border)",
+                borderRadius: 10,
+                background: "transparent",
+                color: "var(--color-text-secondary)",
+                fontSize: "0.8125rem",
+                fontWeight: 600,
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.25rem",
+              }}
+            >
+              <X size={14} /> Clear
+            </button>
+          )}
           <ProductSort value={sort} onChange={(v) => updateParams({ sort: v, page: "1" })} />
         </div>
       </div>
