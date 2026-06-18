@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (onSale === "true") {
-      where.comparePrice = { not: null };
+      andClauses.push({ comparePrice: { gt: 0 } });
     }
 
     if (andClauses.length) {

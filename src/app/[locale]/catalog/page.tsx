@@ -116,21 +116,30 @@ export default function CatalogPage() {
 
   const activeFilterCount = [category, minPrice, maxPrice, inStock, onSale, selectedBrand, search].filter(Boolean).length;
 
+  const view = (() => {
+    if (search) return { title: `Search: "${search}"`, subtitle: t("showing", { count: products.length, total }) };
+    if (onSale) return { title: "Sale", subtitle: "Discounted products across the catalog" };
+    if (sort === "popular") return { title: "Best Sellers", subtitle: "Most ordered products" };
+    if (selectedBrand) return { title: selectedBrand, subtitle: `Products by ${selectedBrand}` };
+    if (searchParams.has("sort") && sort === "newest") return { title: "New Arrivals", subtitle: "Just landed in store" };
+    return { title: nav("catalog"), subtitle: t("showing", { count: products.length, total }) };
+  })();
+
   return (
     <div className={styles.wrapper}>
       <Breadcrumbs
         items={[
           { label: nav("home"), href: "/" },
-          { label: nav("catalog") },
+          ...(view.title !== nav("catalog")
+            ? [{ label: nav("catalog"), href: "/catalog" }, { label: view.title }]
+            : [{ label: nav("catalog") }]),
         ]}
       />
 
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>{nav("catalog")}</h1>
-          <p className={styles.headerSub}>
-            {t("showing", { count: products.length, total })}
-          </p>
+          <h1 className={styles.title}>{view.title}</h1>
+          <p className={styles.headerSub}>{view.subtitle}</p>
         </div>
         <div className={styles.headerActions}>
           <div style={{ position: "relative", flex: "1 1 220px", minWidth: 0 }}>
