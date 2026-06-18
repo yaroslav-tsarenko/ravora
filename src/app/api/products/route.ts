@@ -101,7 +101,13 @@ export async function GET(request: NextRequest) {
         case "price-asc": return [{ price: "asc" }];
         case "price-desc": return [{ price: "desc" }];
         case "name-asc": return [{ name: "asc" }];
-        case "popular": return [{ isFeatured: "desc" }, { quantity: "desc" }, { createdAt: "desc" }];
+        case "popular":
+          return [
+            { orderItems: { _count: "desc" } },
+            { isFeatured: "desc" },
+            { quantity: "desc" },
+            { createdAt: "desc" },
+          ];
         default: return [{ createdAt: "desc" }];
       }
     })();
