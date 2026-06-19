@@ -55,7 +55,9 @@ interface Analytics {
     status: string;
     total: number;
     createdAt: string;
-    user: { name: string | null; email: string };
+    customerName: string;
+    customerEmail: string;
+    user: { name: string | null; email: string } | null;
     _count: { items: number };
   }[];
   lowStockProducts: {
@@ -433,7 +435,7 @@ export default function AdminDashboard() {
                       <td style={{ fontWeight: 600, fontFamily: "var(--font-mono)", color: "var(--admin-text)" }}>
                         #{o.orderNumber.slice(-6)}
                       </td>
-                      <td>{o.user.name || o.user.email}</td>
+                      <td>{o.user?.name || o.customerName || o.user?.email || o.customerEmail}</td>
                       <td>{o._count.items}</td>
                       <td>
                         <span className={`admin-badge ${STATUS_MAP[o.status] || "admin-badge-default"}`}>
