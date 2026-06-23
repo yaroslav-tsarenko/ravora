@@ -61,73 +61,68 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = useCallback(
     (newItem: Omit<CartItem, "id">) => {
-      setCart((prev) => {
-        const existingIndex = prev.items.findIndex(
-          (item) =>
-            item.productId === newItem.productId &&
-            item.variantId === newItem.variantId
+      const currentItems = cart.items;
+      const existingIndex = currentItems.findIndex(
+        (item) =>
+          item.productId === newItem.productId &&
+          item.variantId === newItem.variantId
+      );
+
+      let updatedItems: CartItem[];
+      if (existingIndex >= 0) {
+        updatedItems = [...currentItems];
+        const existing = updatedItems[existingIndex];
+        const newQty = Math.min(
+          existing.quantity + newItem.quantity,
+          newItem.maxQuantity
         );
+        updatedItems[existingIndex] = { ...existing, quantity: newQty };
+      } else {
+        updatedItems = [
+          ...currentItems,
+          { ...newItem, id: `${newItem.productId}-${newItem.variantId || "default"}` },
+        ];
+      }
 
-        let updatedItems: CartItem[];
-        if (existingIndex >= 0) {
-          updatedItems = [...prev.items];
-          const existing = updatedItems[existingIndex];
-          const newQty = Math.min(
-            existing.quantity + newItem.quantity,
-            newItem.maxQuantity
-          );
-          updatedItems[existingIndex] = { ...existing, quantity: newQty };
-        } else {
-          updatedItems = [
-            ...prev.items,
-            { ...newItem, id: `${newItem.productId}-${newItem.variantId || "default"}` },
-          ];
-        }
-
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updatedItems));
-        setCartBounce((b) => b + 1);
-        toast.custom(() => (
+      persistCart(updatedItems);
+      setCartBounce((b) => b + 1);
+      toast.custom(
+        () => (
           <CartToast
             name={newItem.name}
             imageUrl={newItem.imageUrl}
             quantity={newItem.quantity}
           />
-        ), { duration: 2500 });
-        return calculateTotals(updatedItems);
-      });
+        ),
+        { duration: 2500, id: `cart-add-${newItem.productId}-${newItem.variantId || "default"}` }
+      );
     },
-    []
+    [cart.items, persistCart]
   );
 
   const removeItem = useCallback(
     (productId: string, variantId?: string) => {
-      setCart((prev) => {
-        const updatedItems = prev.items.filter(
-          (item) =>
-            !(item.productId === productId && item.variantId === variantId)
-        );
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updatedItems));
-        toast.success("Removed from cart");
-        return calculateTotals(updatedItems);
-      });
+      const updatedItems = cart.items.filter(
+        (item) =>
+          !(item.productId === productId && item.variantId === variantId)
+      );
+      persistCart(updatedItems);
+      toast.success("Removed from cart", { id: `cart-remove-${productId}-${variantId || "default"}` });
     },
-    []
+    [cart.items, persistCart]
   );
 
   const updateQuantity = useCallback(
     (productId: string, quantity: number, variantId?: string) => {
-      setCart((prev) => {
-        const updatedItems = prev.items.map((item) => {
-          if (item.productId === productId && item.variantId === variantId) {
-            return { ...item, quantity: Math.max(1, Math.min(quantity, item.maxQuantity)) };
-          }
-          return item;
-        });
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updatedItems));
-        return calculateTotals(updatedItems);
+      const updatedItems = cart.items.map((item) => {
+        if (item.productId === productId && item.variantId === variantId) {
+          return { ...item, quantity: Math.max(1, Math.min(quantity, item.maxQuantity)) };
+        }
+        return item;
       });
+      persistCart(updatedItems);
     },
-    []
+    [cart.items, persistCart]
   );
 
   const clearCart = useCallback(() => {

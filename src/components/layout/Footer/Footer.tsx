@@ -20,9 +20,12 @@ export function Footer() {
       <div className={styles.container}>
         <div className={styles.topSection}>
           <div className={styles.brandCol}>
-            <Link href="/" className={styles.logo}>
-              <AvontLogo size={28} />
-              <span>VoltMarket</span>
+            <Link href="/" className={styles.logo} aria-label="NetimStore — netim.com">
+              <AvontLogo size={32} />
+              <span className={styles.logoBrand}>
+                <span className={styles.logoBrandPrimary}>Netim</span>
+                <span className={styles.logoBrandAccent}>Store</span>
+              </span>
             </Link>
             <p className={styles.brandDesc}>
               Your trusted source for electrical materials, wiring, and installation supplies. Professional quality delivered to your door.
@@ -76,7 +79,7 @@ export function Footer() {
 
         <div className={styles.bottom}>
           <p className={styles.copyright}>
-            {t("copyright", { year: currentYear, storeName: "VoltMarket" })}
+            {t("copyright", { year: currentYear, storeName: "netim.com" })}
           </p>
           <div className={styles.paymentMethods}>
             <span className={styles.paymentBadge}>

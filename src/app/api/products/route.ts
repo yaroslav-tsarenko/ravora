@@ -23,10 +23,18 @@ export async function GET(request: NextRequest) {
 
     const where: Prisma.ProductWhereInput = {};
 
+    const isPublicQuery = !status || (status !== "ALL" && status === "ACTIVE");
+
     if (status && status !== "ALL") {
       where.status = status as Prisma.EnumProductStatusFilter;
     } else if (!status) {
       where.status = "ACTIVE";
+    }
+
+    // Hide products without images on the public-facing catalog.
+    // Admin/all-status queries still see them so they can be fixed.
+    if (isPublicQuery) {
+      where.images = { some: {} };
     }
 
     if (search) {

@@ -14,15 +14,28 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "VoltMarket — Electrical Materials & Supplies",
-    template: "%s | VoltMarket",
+    default: "NetimStore — Electrical Materials & Supplies | netim.com",
+    template: "%s | NetimStore — netim.com",
   },
-  description: "Your trusted source for electrical materials, wiring, and installation supplies. Professional quality delivered to your door.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  description:
+    "NetimStore (netim.com) — your trusted source for electrical materials, wiring, lighting and installation supplies across Europe. Certified inventory, fast delivery.",
+  applicationName: "NetimStore",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://netim.com"),
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
-    siteName: "VoltMarket",
+    siteName: "NetimStore",
+    url: "https://netim.com",
+    title: "NetimStore — Electrical Materials & Supplies",
+    description:
+      "Certified electrical materials, wiring, lighting and installation supplies. Delivered across Europe.",
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@netimstore",
+    title: "NetimStore — netim.com",
+  },
+  icons: { icon: "/icon.svg", apple: "/icon.svg" },
 };
 
 export default function RootLayout({

@@ -2,8 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image, { type StaticImageData } from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "@/i18n/routing";
+import {
+  ChevronLeft, ChevronRight, ArrowRight, Truck, ShieldCheck,
+  RotateCcw, Zap, Headphones, Watch, BatteryCharging,
+  Sparkles,
+} from "lucide-react";
 import banner1 from "@/assets/banner1.png";
 import banner2 from "@/assets/banner2.png";
 import banner3 from "@/assets/banner3.png";
@@ -32,155 +37,294 @@ interface DealData {
   imageUrl?: string | null;
 }
 
-interface DefaultSlide {
+interface NetimSlide {
   id: string;
-  badgeText: string;
-  title: string;
+  eyebrow: string;
+  title: React.ReactNode;
   subtitle: string;
-  ctaLabel: string;
-  linkUrl: string;
-  bgColor: string;
-  textColor: string;
+  primaryCta: { label: string; href: string };
+  secondaryCta?: { label: string; href: string };
+  gradient: string;
+  accent: string;
   bgImage: StaticImageData;
+  thumbLabel: string;
+  thumbIcon: React.ElementType;
 }
 
-const defaultSlides: DefaultSlide[] = [
+const netimSlides: NetimSlide[] = [
   {
-    id: "1",
-    badgeText: "Professional Grade",
-    title: "Switchgear & Distribution Boards",
-    subtitle: "Certified panels, circuit breakers, and modular enclosures for residential and commercial installations",
-    ctaLabel: "Shop Now",
-    linkUrl: "/catalog",
-    bgColor: "#073B66",
-    textColor: "#ffffff",
+    id: "audio",
+    eyebrow: "Audio · This week's pick",
+    title: (
+      <>
+        Sound that goes
+        <br />
+        <span className="hero-highlight">where you go.</span>
+      </>
+    ),
+    subtitle:
+      "Wireless headphones, soundbars and Hi-Fi gear from T'NB, Belkin, Trust and more — shipped from our EU warehouse.",
+    primaryCta: { label: "Shop audio", href: "/catalog/audio-and-hi-fi-equipment" },
+    secondaryCta: { label: "Top headphones", href: "/catalog/headphones" },
+    gradient: "linear-gradient(135deg, #0B2447 0%, #1E3A6F 45%, #2563EB 100%)",
+    accent: "#F97316",
     bgImage: banner1,
+    thumbLabel: "Audio",
+    thumbIcon: Headphones,
   },
   {
-    id: "2",
-    badgeText: "Complete Range",
-    title: "Industrial Control & Automation",
-    subtitle: "From compact enclosures to full-size distribution cabinets — everything for your next project",
-    ctaLabel: "Browse Equipment",
-    linkUrl: "/catalog",
-    bgColor: "#073B66",
-    textColor: "#ffffff",
+    id: "power",
+    eyebrow: "Power & connectivity",
+    title: (
+      <>
+        Stay charged. Stay
+        <br />
+        <span className="hero-highlight">connected.</span>
+      </>
+    ),
+    subtitle:
+      "Chargers, batteries, multi-socket adapters and power strips you can rely on — engineered for daily use.",
+    primaryCta: { label: "Shop power", href: "/catalog/batteries-and-chargers" },
+    secondaryCta: { label: "Multi-socket adapters", href: "/catalog/power-strips" },
+    gradient: "linear-gradient(135deg, #0F172A 0%, #1F2937 50%, #064E3B 100%)",
+    accent: "#10B981",
     bgImage: banner2,
+    thumbLabel: "Power",
+    thumbIcon: BatteryCharging,
   },
   {
-    id: "3",
-    badgeText: "Top Quality",
-    title: "Cables, Wiring & Connectors",
-    subtitle: "Premium copper cables, flexible wiring, terminal blocks and accessories at wholesale prices",
-    ctaLabel: "View Cables",
-    linkUrl: "/catalog",
-    bgColor: "#073B66",
-    textColor: "#ffffff",
+    id: "smart",
+    eyebrow: "Smart gear · New arrivals",
+    title: (
+      <>
+        Smart tech for
+        <br />
+        <span className="hero-highlight">every day.</span>
+      </>
+    ),
+    subtitle:
+      "Smartwatches, GPS, action cameras and gaming accessories — curated for the way you actually live and work.",
+    primaryCta: { label: "Browse new arrivals", href: "/catalog?sort=newest" },
+    secondaryCta: { label: "Smart watches", href: "/catalog?search=watch" },
+    gradient: "linear-gradient(135deg, #1E1B4B 0%, #4C1D95 50%, #7C3AED 100%)",
+    accent: "#FACC15",
     bgImage: banner3,
+    thumbLabel: "Smart",
+    thumbIcon: Watch,
   },
 ];
 
-const bgImageMap: Record<string, StaticImageData> = {
-  "1": banner1,
-  "2": banner2,
-  "3": banner3,
-};
+const trustItems = [
+  { icon: Truck, label: "Free EU shipping", sub: "Over €100" },
+  { icon: RotateCcw, label: "30-day returns", sub: "No questions" },
+  { icon: ShieldCheck, label: "2-year warranty", sub: "Every product" },
+  { icon: Zap, label: "Same-day dispatch", sub: "Before 14:00 CET" },
+];
 
 interface Props {
   slides: SlideData[];
   deals: DealData[];
 }
 
-export function HeroCarousel({ slides, deals }: Props) {
-  const useDefaults = slides.length === 0;
-  const activeSlides = useDefaults ? defaultSlides : slides;
+export function HeroCarousel({ deals }: Props) {
+  // We always use NetimStore-tailored slides for the hero.
+  // Admin-configured slides (`slides` prop) are intentionally ignored here —
+  // they belong on dedicated marketing landing pages, not the brand hero.
   const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const slide = netimSlides[current];
 
-  const next = useCallback(() => {
-    setCurrent((p) => (p + 1) % activeSlides.length);
-  }, [activeSlides.length]);
+  const go = useCallback(
+    (idx: number) => {
+      setDirection(idx > current ? 1 : -1);
+      setCurrent(((idx % netimSlides.length) + netimSlides.length) % netimSlides.length);
+    },
+    [current]
+  );
 
-  const prev = useCallback(() => {
-    setCurrent((p) => (p - 1 + activeSlides.length) % activeSlides.length);
-  }, [activeSlides.length]);
+  const next = useCallback(() => go(current + 1), [current, go]);
+  const prev = useCallback(() => go(current - 1), [current, go]);
 
   useEffect(() => {
-    if (activeSlides.length <= 1) return;
-    const id = setInterval(next, 5000);
+    const id = setInterval(() => {
+      setDirection(1);
+      setCurrent((p) => (p + 1) % netimSlides.length);
+    }, 6500);
     return () => clearInterval(id);
-  }, [next, activeSlides.length]);
-
-  const slide = activeSlides[current];
-  const bgImage = useDefaults
-    ? (slide as DefaultSlide).bgImage
-    : bgImageMap[slide.id] || null;
+  }, []);
 
   return (
-    <div className={styles.heroArea}>
-      <div className={styles.heroInner}>
-        <div className={styles.carousel}>
-          <div
-            className={styles.slide}
-            style={bgImage ? { color: "#fff" } : { background: slide.bgColor, color: slide.textColor }}
-          >
-            {bgImage && (
-              <>
+    <section className={styles.hero} aria-label="Featured collections">
+      <div className={`${styles.heroContainer} ${deals.length > 0 ? styles.withDeals : ""}`}>
+        <div className={styles.heroMain}>
+          <div className={styles.stage} style={{ background: slide.gradient }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`${slide.id}-bg`}
+                className={styles.bgImageWrap}
+                initial={{ opacity: 0, scale: 1.04 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.02 }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                aria-hidden="true"
+              >
                 <Image
-                  src={bgImage}
+                  src={slide.bgImage}
                   alt=""
                   fill
-                  sizes="(max-width: 1024px) 100vw, 75vw"
-                  className={styles.bgImg}
-                  priority={current === 0}
+                  sizes="(max-width: 1024px) 100vw, 1280px"
+                  placeholder="blur"
+                  className={styles.bgImage}
+                  priority
                 />
-                <div className={styles.overlay} />
-              </>
-            )}
-            <div className={styles.slideContent}>
-              {slide.badgeText && (
-                <span className={styles.badge}>{slide.badgeText}</span>
-              )}
-              <h2 className={styles.slideTitle}>{slide.title}</h2>
-              {slide.subtitle && <p className={styles.slideSubtitle}>{slide.subtitle}</p>}
-              {slide.linkUrl && (
-                <Link href={slide.linkUrl} className={styles.slideCta}>
-                  {slide.ctaLabel || "Shop Now"}
-                </Link>
-              )}
-            </div>
-          </div>
+                <span className={styles.bgOverlay} />
+                <span className={styles.glow1} style={{ background: slide.accent }} />
+                <span className={styles.glow2} />
+                <span className={styles.gridDots} />
+              </motion.div>
+            </AnimatePresence>
 
-          {activeSlides.length > 1 && (
-            <>
-              <button className={`${styles.arrow} ${styles.arrowLeft}`} onClick={prev} aria-label="Previous slide">
-                <ChevronLeft size={20} />
-              </button>
-              <button className={`${styles.arrow} ${styles.arrowRight}`} onClick={next} aria-label="Next slide">
-                <ChevronRight size={20} />
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={slide.id}
+                className={styles.slide}
+                initial={{ opacity: 0, x: direction * 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: direction * -40 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className={styles.copy}>
+                  <span
+                    className={styles.eyebrow}
+                    style={{ borderColor: slide.accent + "55", color: slide.accent }}
+                  >
+                    <Sparkles size={14} />
+                    {slide.eyebrow}
+                  </span>
+                  <h1 className={styles.title}>{slide.title}</h1>
+                  <p className={styles.subtitle}>{slide.subtitle}</p>
+
+                  <div className={styles.actions}>
+                    <Link
+                      href={slide.primaryCta.href}
+                      className={styles.ctaPrimary}
+                      style={{
+                        background: slide.accent,
+                        boxShadow: `0 12px 28px -10px ${slide.accent}`,
+                      }}
+                    >
+                      {slide.primaryCta.label}
+                      <ArrowRight size={16} />
+                    </Link>
+                    {slide.secondaryCta && (
+                      <Link href={slide.secondaryCta.href} className={styles.ctaSecondary}>
+                        {slide.secondaryCta.label}
+                      </Link>
+                    )}
+                  </div>
+
+                  <ul className={styles.trust}>
+                    {trustItems.map((t) => (
+                      <li key={t.label} className={styles.trustItem}>
+                        <span className={styles.trustIcon}>
+                          <t.icon size={14} />
+                        </span>
+                        <span className={styles.trustText}>
+                          <span className={styles.trustLabel}>{t.label}</span>
+                          <span className={styles.trustSub}>{t.sub}</span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className={styles.visual} aria-hidden="true">
+                  <motion.div
+                    className={styles.priceTag}
+                    initial={{ opacity: 0, y: 16, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.55, delay: 0.25 }}
+                  >
+                    <span className={styles.priceTagFrom}>From</span>
+                    <span className={styles.priceTagPrice}>€8.29</span>
+                    <span className={styles.priceTagSub}>In stock today</span>
+                  </motion.div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            <div className={styles.controls}>
+              <button
+                type="button"
+                className={styles.arrow}
+                onClick={prev}
+                aria-label="Previous slide"
+              >
+                <ChevronLeft size={18} />
               </button>
               <div className={styles.dots}>
-                {activeSlides.map((_, i) => (
+                {netimSlides.map((s, i) => (
                   <button
-                    key={i}
+                    key={s.id}
+                    type="button"
                     className={`${styles.dot} ${i === current ? styles.dotActive : ""}`}
-                    onClick={() => setCurrent(i)}
-                    aria-label={`Slide ${i + 1}`}
+                    onClick={() => go(i)}
+                    aria-label={`Go to slide ${i + 1}`}
+                    style={i === current ? { background: slide.accent } : undefined}
                   />
                 ))}
               </div>
-            </>
-          )}
+              <button
+                type="button"
+                className={styles.arrow}
+                onClick={next}
+                aria-label="Next slide"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.thumbs}>
+            {netimSlides.map((s, i) => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => go(i)}
+                className={`${styles.thumb} ${i === current ? styles.thumbActive : ""}`}
+              >
+                <span className={styles.thumbIcon}>
+                  <s.thumbIcon size={16} />
+                </span>
+                <span className={styles.thumbMeta}>
+                  <span className={styles.thumbLabel}>{s.thumbLabel}</span>
+                  <span className={styles.thumbHint}>{s.eyebrow.split("·")[0].trim()}</span>
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {deals.length > 0 && (
-          <div className={styles.sideDeals}>
-            {deals.map((deal) => (
-              <Link key={deal.id} href={deal.linkUrl || "/catalog"} className={styles.dealCard}>
+          <aside className={styles.sideDeals} aria-label="Hot deals">
+            <div className={styles.sideHeading}>
+              <span className={styles.sideHeadingText}>Hot deals</span>
+              <Link href="/catalog?onSale=true" className={styles.sideHeadingLink}>
+                See all
+              </Link>
+            </div>
+            {deals.slice(0, 2).map((deal) => (
+              <Link
+                key={deal.id}
+                href={deal.linkUrl || "/catalog"}
+                className={styles.dealCard}
+              >
                 {deal.discountText && (
                   <span className={styles.dealDiscount}>{deal.discountText}</span>
                 )}
                 <div className={styles.dealImage}>
                   {deal.imageUrl ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
                     <img src={deal.imageUrl} alt={deal.title} className={styles.dealImg} />
                   ) : (
                     <div className={styles.dealImagePlaceholder} />
@@ -193,9 +337,9 @@ export function HeroCarousel({ slides, deals }: Props) {
                 </div>
               </Link>
             ))}
-          </div>
+          </aside>
         )}
       </div>
-    </div>
+    </section>
   );
 }

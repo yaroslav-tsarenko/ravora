@@ -1,14 +1,18 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/routing";
 import {
   ShoppingCart, Search, Menu, X, User, Shield,
-  ChevronRight, Heart, ChevronDown, Bell,
+  ChevronRight, Heart, Bell,
   Cable, LayoutGrid, Zap, Lightbulb, CircuitBoard, Plug,
   Box, Wrench, Shield as ShieldIcon, SquareStack,
+  Headphones, Watch, Smartphone, Tablet, Tv, Camera,
+  Speaker, Music, Gamepad2, Cpu, HardDrive, Mouse,
+  Keyboard, Battery, Phone, Radio, Printer, Mic, Car,
+  Navigation,
 } from "lucide-react";
 import { useCart } from "@/providers/CartProvider";
 import { useAuth } from "@/providers/AuthProvider";
@@ -16,6 +20,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { AnimatePresence, motion } from "framer-motion";
 import { AvontLogo } from "../AvontLogo";
 import { CurrencySwitcher } from "./CurrencySwitcher";
+import { CatalogMenu } from "../CatalogMenu/CatalogMenu";
 import styles from "./Header.module.css";
 
 interface Category {
@@ -31,33 +36,124 @@ function subtreeCount(cat: Category): number {
   return own + (cat.children || []).reduce((s, c) => s + subtreeCount(c), 0);
 }
 
-const ICON_MAP: Record<string, React.ElementType> = {
-  "wiring": Cable,
-  "cable": Cable,
-  "automation": CircuitBoard,
-  "control": CircuitBoard,
-  "distribution": LayoutGrid,
-  "energy": Zap,
-  "protection": ShieldIcon,
-  "protective": ShieldIcon,
-  "fuse": Zap,
-  "lighting": Lightbulb,
-  "light": Lightbulb,
-  "terminal": SquareStack,
-  "mounting": Box,
-  "box": Box,
-  "conduit": Wrench,
-  "connector": Plug,
-  "power": Zap,
-  "plug": Plug,
-};
+function collectSubcategories(cat: Category, limit = 30): Category[] {
+  const result: Category[] = [];
+  const walk = (c: Category) => {
+    for (const child of c.children || []) {
+      if (result.length >= limit) return;
+      result.push(child);
+      walk(child);
+    }
+  };
+  walk(cat);
+  return result
+    .sort((a, b) => subtreeCount(b) - subtreeCount(a))
+    .slice(0, limit);
+}
+
+// Ordered most-specific → most-generic so e.g. "home cinema" matches Tv
+// before "home" falls through to LayoutGrid.
+const ICON_RULES: { kw: string; icon: React.ElementType }[] = [
+  // Consumer electronics
+  { kw: "headphone", icon: Headphones },
+  { kw: "earphone", icon: Headphones },
+  { kw: "soundbar", icon: Speaker },
+  { kw: "speaker", icon: Speaker },
+  { kw: "microphone", icon: Mic },
+  { kw: "audio", icon: Music },
+  { kw: "hi-fi", icon: Music },
+  { kw: "hifi", icon: Music },
+  { kw: "stereo", icon: Music },
+  { kw: "record player", icon: Music },
+  { kw: "tv", icon: Tv },
+  { kw: "television", icon: Tv },
+  { kw: "video", icon: Tv },
+  { kw: "home cinema", icon: Tv },
+  { kw: "projector", icon: Tv },
+  { kw: "smartwatch", icon: Watch },
+  { kw: "watch", icon: Watch },
+  { kw: "mobile phone", icon: Smartphone },
+  { kw: "mobile communication", icon: Smartphone },
+  { kw: "smartphone", icon: Smartphone },
+  { kw: "phone", icon: Phone },
+  { kw: "landline", icon: Phone },
+  { kw: "tablet", icon: Tablet },
+  { kw: "camera", icon: Camera },
+  { kw: "photography", icon: Camera },
+  { kw: "console", icon: Gamepad2 },
+  { kw: "gaming", icon: Gamepad2 },
+  { kw: "game", icon: Gamepad2 },
+  { kw: "computer", icon: Cpu },
+  { kw: "laptop", icon: Cpu },
+  { kw: "storage", icon: HardDrive },
+  { kw: "memory", icon: HardDrive },
+  { kw: "mouse", icon: Mouse },
+  { kw: "keyboard", icon: Keyboard },
+  { kw: "printer", icon: Printer },
+  { kw: "scanner", icon: Printer },
+  { kw: "battery", icon: Battery },
+  { kw: "charger", icon: Battery },
+  { kw: "radio", icon: Radio },
+  { kw: "gps", icon: Navigation },
+  { kw: "navigation", icon: Navigation },
+  { kw: "vehicle", icon: Car },
+  { kw: "car ", icon: Car },
+  { kw: "automotive", icon: Car },
+  // Electrical / installation
+  { kw: "wiring", icon: Cable },
+  { kw: "cable", icon: Cable },
+  { kw: "automation", icon: CircuitBoard },
+  { kw: "control", icon: CircuitBoard },
+  { kw: "distribution", icon: LayoutGrid },
+  { kw: "energy", icon: Zap },
+  { kw: "power", icon: Zap },
+  { kw: "protection", icon: ShieldIcon },
+  { kw: "protective", icon: ShieldIcon },
+  { kw: "fuse", icon: Zap },
+  { kw: "lighting", icon: Lightbulb },
+  { kw: "light", icon: Lightbulb },
+  { kw: "lamp", icon: Lightbulb },
+  { kw: "terminal", icon: SquareStack },
+  { kw: "mounting", icon: Box },
+  { kw: "conduit", icon: Wrench },
+  { kw: "connector", icon: Plug },
+  { kw: "plug", icon: Plug },
+  { kw: "tool", icon: Wrench },
+  { kw: "box", icon: Box },
+];
 
 function getIconForCategory(name: string) {
   const lower = name.toLowerCase();
-  for (const [keyword, Icon] of Object.entries(ICON_MAP)) {
-    if (lower.includes(keyword)) return Icon;
+  for (const { kw, icon } of ICON_RULES) {
+    if (lower.includes(kw)) return icon;
   }
   return LayoutGrid;
+}
+
+// Many BigBuy category names are verbose ("Mobile communication and accessories").
+// Map these to compact strip-friendly labels.
+const LABEL_OVERRIDES: { pattern: RegExp; label: string }[] = [
+  { pattern: /^mobile communication.*/i, label: "Mobile & accessories" },
+  { pattern: /^mobile phones?$/i, label: "Mobile phones" },
+  { pattern: /^tv,? video and home cinema.*/i, label: "TV & video" },
+  { pattern: /^portable audio.*/i, label: "Portable audio" },
+  { pattern: /^audio and hi-fi.*/i, label: "Audio & Hi-Fi" },
+  { pattern: /^plug & play games consoles?.*/i, label: "Games consoles" },
+  { pattern: /^batteries and chargers?.*/i, label: "Batteries & chargers" },
+  { pattern: /^landline telephones?.*/i, label: "Landlines" },
+  { pattern: /^accessories for food preparation.*/i, label: "Kitchen accessories" },
+  { pattern: /^smartwatches?.*/i, label: "Smartwatches" },
+  { pattern: /^gps and accessories?.*/i, label: "GPS" },
+  { pattern: /^disposable batteries?.*/i, label: "Disposable batteries" },
+  { pattern: /^photography and accessories?.*/i, label: "Photography" },
+];
+
+function shortenCategoryLabel(name: string, max = 22): string {
+  for (const { pattern, label } of LABEL_OVERRIDES) {
+    if (pattern.test(name)) return label;
+  }
+  if (name.length <= max) return name;
+  return name.slice(0, max - 1).trimEnd() + "…";
 }
 
 export function Header() {
@@ -71,7 +167,6 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const megaRef = useRef<HTMLButtonElement>(null);
-  const megaTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -95,15 +190,6 @@ export function Header() {
       .catch(() => {});
   }, []);
 
-  const openMega = useCallback(() => {
-    clearTimeout(megaTimeout.current);
-    setMegaOpen(true);
-  }, []);
-
-  const closeMega = useCallback(() => {
-    megaTimeout.current = setTimeout(() => setMegaOpen(false), 200);
-  }, []);
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -112,8 +198,23 @@ export function Header() {
   };
 
   const sortedCategories = [...categories]
-    .sort((a, b) => subtreeCount(b) - subtreeCount(a))
-    .slice(0, 12);
+    .sort((a, b) => subtreeCount(b) - subtreeCount(a));
+
+  // When the catalog has a single dominant top-level (e.g., Electronics),
+  // promote its subcategories so the strip & mega menu feel rich.
+  const useSubcategoryDisplay =
+    sortedCategories.length <= 2 && sortedCategories[0]?.children?.length;
+  const featuredCategory = sortedCategories[0];
+  const displayCategories: Category[] = useSubcategoryDisplay
+    ? [...(featuredCategory!.children || [])].sort(
+        (a, b) => subtreeCount(b) - subtreeCount(a)
+      )
+    : sortedCategories;
+
+  const topStripCategories = displayCategories.slice(0, 14);
+  const featuredSubcategories = featuredCategory
+    ? collectSubcategories(featuredCategory, 18)
+    : [];
 
   return (
     <>
@@ -145,19 +246,22 @@ export function Header() {
         <div className={styles.mainBar}>
           <div className={styles.mainBarContainer}>
             <button
-              className={styles.catalogBtn}
-              onClick={() => setMegaOpen(!megaOpen)}
-              onMouseEnter={openMega}
-              onMouseLeave={closeMega}
+              className={`${styles.catalogBtn} ${megaOpen ? styles.catalogBtnOpen : ""}`}
+              onClick={() => setMegaOpen((v) => !v)}
+              aria-expanded={megaOpen}
+              aria-controls="catalog-dropdown"
               ref={megaRef}
             >
               <Menu size={18} />
               <span className={styles.catalogBtnText}>{t("catalog")}</span>
             </button>
 
-            <Link href="/" className={styles.logo}>
-              <AvontLogo size={26} />
-              <span className={styles.logoText}>VoltMarket</span>
+            <Link href="/" className={styles.logo} aria-label="NetimStore — netim.com">
+              <AvontLogo size={30} />
+              <span className={styles.logoText}>
+                <span className={styles.logoTextPrimary}>Netim</span>
+                <span className={styles.logoTextAccent}>Store</span>
+              </span>
             </Link>
 
             <form className={styles.searchBar} onSubmit={handleSearch}>
@@ -270,99 +374,59 @@ export function Header() {
           </div>
         </div>
 
-        {/* Level 3: Category navigation strip */}
+        {/* Level 3: Top-level category strip */}
         <div className={styles.categoryStrip}>
           <div className={styles.categoryStripContainer}>
-            {sortedCategories.map((cat) => {
+            {topStripCategories.map((cat) => {
               const Icon = getIconForCategory(cat.name);
+              const label = shortenCategoryLabel(cat.name);
               return (
                 <Link
                   key={cat.id}
                   href={`/catalog/${cat.slug}`}
                   className={styles.categoryItem}
+                  title={cat.name}
                 >
-                  <Icon size={18} className={styles.categoryIcon} />
-                  <span className={styles.categoryName}>{cat.name}</span>
+                  <Icon size={20} className={styles.categoryIcon} />
+                  <span className={styles.categoryName}>{label}</span>
                 </Link>
               );
             })}
           </div>
+          <span className={styles.categoryFadeRight} aria-hidden="true" />
         </div>
+
+        {/* Level 4: Featured subcategory strip — quick links to popular subcategories */}
+        {featuredSubcategories.length > 0 && (
+          <div className={styles.subCategoryStrip}>
+            <div className={styles.subCategoryStripContainer}>
+              <span className={styles.subCategoryHeading}>
+                Trending:
+              </span>
+              {featuredSubcategories.map((sub) => (
+                <Link
+                  key={sub.id}
+                  href={`/catalog/${sub.slug}`}
+                  className={styles.subCategoryChip}
+                  title={sub.name}
+                >
+                  {shortenCategoryLabel(sub.name, 28)}
+                </Link>
+              ))}
+              <Link href="/catalog" className={styles.subCategoryAll}>
+                All categories <ChevronRight size={12} />
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
-      {/* Mega Menu */}
-      <AnimatePresence>
-        {megaOpen && (
-          <>
-            <motion.div
-              className={styles.megaOverlay}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => setMegaOpen(false)}
-            />
-            <motion.div
-              className={styles.megaMenu}
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
-              onMouseEnter={openMega}
-              onMouseLeave={closeMega}
-            >
-              <div className={styles.megaInner}>
-                {categories.length === 0 ? (
-                  <div className={styles.megaSkeleton}>
-                    {Array.from({ length: 10 }).map((_, i) => (
-                      <div key={i} className={styles.megaSkeletonCard}>
-                        <div className={styles.megaSkeletonIcon} />
-                        <div className={styles.megaSkeletonText}>
-                          <div className={styles.megaSkeletonBar} style={{ width: `${55 + (i * 17) % 35}%` }} />
-                          <div className={styles.megaSkeletonBar} style={{ width: "40%" }} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                <div className={styles.megaGrid}>
-                  {sortedCategories.map((cat) => {
-                    const Icon = getIconForCategory(cat.name);
-                    const count = subtreeCount(cat);
-                    return (
-                      <Link
-                        key={cat.id}
-                        href={`/catalog/${cat.slug}`}
-                        className={styles.megaCard}
-                        onClick={() => setMegaOpen(false)}
-                      >
-                        <div className={styles.megaCardIcon}>
-                          <Icon size={20} />
-                        </div>
-                        <div className={styles.megaCardText}>
-                          <span className={styles.megaCardName}>{cat.name}</span>
-                          <span className={styles.megaCardCount}>{count} products</span>
-                        </div>
-                        <ChevronRight size={14} className={styles.megaCardArrow} />
-                      </Link>
-                    );
-                  })}
-                </div>
-                )}
-                <div className={styles.megaFooter}>
-                  <Link
-                    href="/catalog"
-                    className={styles.megaFooterLink}
-                    onClick={() => setMegaOpen(false)}
-                  >
-                    Browse all categories <ChevronRight size={14} />
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* Catalog dropdown — split-pane department menu */}
+      <CatalogMenu
+        open={megaOpen}
+        onClose={() => setMegaOpen(false)}
+        categories={categories}
+      />
 
       {/* Mobile Drawer */}
       <AnimatePresence>
@@ -406,7 +470,7 @@ export function Header() {
 
                   <div className={styles.drawerDivider} />
 
-                  {sortedCategories.slice(0, 8).map((cat) => {
+                  {displayCategories.slice(0, 8).map((cat) => {
                     const Icon = getIconForCategory(cat.name);
                     return (
                       <Link

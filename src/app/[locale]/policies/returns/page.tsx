@@ -1,6 +1,6 @@
 import { PolicyLayout, ContactBlock } from "@/components/layout/PolicyLayout/PolicyLayout";
 
-export const metadata = { title: "Returns, Refunds and Cancellation Policy — VoltMarket" };
+export const metadata = { title: "Returns, Refunds and Cancellation Policy — netim.com" };
 
 export default function ReturnsPolicyPage() {
   return (
@@ -13,7 +13,7 @@ export default function ReturnsPolicyPage() {
       <p>The Website is operated by:</p>
       <ContactBlock />
       <p>
-        In this Policy, &ldquo;VoltMarket&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo; or &ldquo;our&rdquo;
+        In this Policy, &ldquo;netim.com&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo; or &ldquo;our&rdquo;
         means AVONTRA LTD. &ldquo;Customer&rdquo;, &ldquo;you&rdquo; or &ldquo;your&rdquo; means any
         person or business placing an order through the Website.
       </p>
@@ -27,9 +27,9 @@ export default function ReturnsPolicyPage() {
       </p>
 
       <h2>1. Scope of This Policy</h2>
-      <p>1.1 This Policy applies to physical goods purchased through VoltMarket.</p>
+      <p>1.1 This Policy applies to physical goods purchased through netim.com.</p>
       <p>
-        1.2 VoltMarket supplies electrical products, electrical materials, wiring accessories,
+        1.2 netim.com supplies electrical products, electrical materials, wiring accessories,
         lighting-related products, installation components, distribution and circuit protection products,
         sockets, switches, cables, mounting accessories, and related goods.
       </p>
@@ -233,7 +233,7 @@ export default function ReturnsPolicyPage() {
         agree otherwise in writing.
       </p>
       <p>
-        9.2 For faulty, damaged, or incorrect goods, VoltMarket will cover reasonable return shipping costs
+        9.2 For faulty, damaged, or incorrect goods, netim.com will cover reasonable return shipping costs
         where the issue is confirmed or where we provide return instructions.
       </p>
       <p>9.3 You should not return goods without contacting us first.</p>
@@ -314,8 +314,8 @@ export default function ReturnsPolicyPage() {
       </p>
       <p>
         12.4 Customs duties, import VAT, brokerage fees, courier handling fees, local taxes, customs
-        clearance fees, and other local charges are not charged by VoltMarket and are not refundable by
-        VoltMarket.
+        clearance fees, and other local charges are not charged by netim.com and are not refundable by
+        netim.com.
       </p>
 
       <h2>13. International Returns</h2>
@@ -335,7 +335,7 @@ export default function ReturnsPolicyPage() {
         we agree otherwise in writing.
       </p>
       <p>
-        13.5 If customs or courier charges are incurred by VoltMarket because of an international return,
+        13.5 If customs or courier charges are incurred by netim.com because of an international return,
         these may be deducted from any refund where permitted by law.
       </p>
 
@@ -345,7 +345,7 @@ export default function ReturnsPolicyPage() {
         checkout.
       </p>
       <p>
-        14.2 VoltMarket is not responsible for delays, failed deliveries, lost parcels, return charges, or
+        14.2 netim.com is not responsible for delays, failed deliveries, lost parcels, return charges, or
         additional costs caused by incorrect, incomplete, outdated, or improperly formatted address
         information provided by you.
       </p>
@@ -387,7 +387,7 @@ export default function ReturnsPolicyPage() {
         specification, or no longer needing the goods.
       </p>
       <p>
-        16.2 Any non-faulty return accepted from a Business Customer is at VoltMarket&rsquo;s discretion.
+        16.2 Any non-faulty return accepted from a Business Customer is at netim.com&rsquo;s discretion.
       </p>
       <p>16.3 If we agree to a Business Customer return, we may apply conditions, including:</p>
       <ul>
@@ -405,7 +405,7 @@ export default function ReturnsPolicyPage() {
       </p>
       <p>
         16.5 Business Customer refunds, where approved, may be issued as a refund, replacement, account
-        credit, or other remedy agreed by VoltMarket.
+        credit, or other remedy agreed by netim.com.
       </p>
 
       <h2>17. Exchanges and Replacements</h2>

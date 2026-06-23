@@ -1,4 +1,9 @@
+/**
+ * Brand logo for NetimStore (display) — domain reads as netim.com in SEO metadata.
+ * Two-color refined wordmark + glyph: indigo gradient base with a warm orange bolt.
+ */
 export function AvontLogo({ size = 28 }: { size?: number }) {
+  const id = `netim-logo-${size}`;
   return (
     <svg
       width={size}
@@ -8,14 +13,26 @@ export function AvontLogo({ size = 28 }: { size?: number }) {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      <rect width="40" height="40" rx="10" fill="#0072CE" />
+      <defs>
+        <linearGradient id={`${id}-bg`} x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#1E3A6F" />
+          <stop offset="55%" stopColor="#2563EB" />
+          <stop offset="100%" stopColor="#3B82F6" />
+        </linearGradient>
+        <linearGradient id={`${id}-bolt`} x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FB923C" />
+          <stop offset="100%" stopColor="#F97316" />
+        </linearGradient>
+      </defs>
+      <rect width="40" height="40" rx="11" fill={`url(#${id}-bg)`} />
       <path
-        d="M22.5 6L12 22h7.5L17.5 34 28 18h-7.5L22.5 6Z"
-        fill="#FFD600"
-        stroke="#FFD600"
-        strokeWidth="0.5"
-        strokeLinejoin="round"
+        d="M23.5 5.5L11 22.4c-0.6 0.8 0 1.9 1 1.9h7.3l-2.5 10.6c-0.3 1.3 1.3 2.1 2.1 1.1L30.5 18.2c0.6-0.8 0-1.9-1-1.9h-7.1L24 6.8c0.3-1.3-1.3-2.1-2.1-1.1L23.5 5.5z"
+        fill={`url(#${id}-bolt)`}
       />
     </svg>
   );
+}
+
+export function NetimStoreLogo({ size = 28 }: { size?: number }) {
+  return <AvontLogo size={size} />;
 }

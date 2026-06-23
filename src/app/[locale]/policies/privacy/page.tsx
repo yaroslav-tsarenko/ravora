@@ -1,19 +1,19 @@
 import { PolicyLayout, ContactBlock } from "@/components/layout/PolicyLayout/PolicyLayout";
 
-export const metadata = { title: "Privacy Policy — VoltMarket" };
+export const metadata = { title: "Privacy Policy — netim.com" };
 
 export default function PrivacyPolicyPage() {
   return (
     <PolicyLayout title="Privacy Policy" lastUpdated="29 May 2026">
       <p>
-        This Privacy Policy explains how AVONTRA LTD, trading as VoltMarket, collects, uses, stores, shares,
+        This Privacy Policy explains how AVONTRA LTD, trading as netim.com, collects, uses, stores, shares,
         and protects personal data when you visit www.voltmarket.store, create an account, place an order,
         contact us, use our services, or otherwise interact with us.
       </p>
       <p>The Website is operated by:</p>
       <ContactBlock />
       <p>
-        In this Privacy Policy, &ldquo;VoltMarket&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo; or
+        In this Privacy Policy, &ldquo;netim.com&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo; or
         &ldquo;our&rdquo; means AVONTRA LTD. &ldquo;Customer&rdquo;, &ldquo;you&rdquo; or
         &ldquo;your&rdquo; means any person using the Website, placing an order, creating an account,
         contacting us, or interacting with our services.
@@ -59,7 +59,7 @@ export default function PrivacyPolicyPage() {
       </p>
 
       <h2>3. Personal Data We Collect</h2>
-      <p>3.1 The personal data we collect depends on how you interact with VoltMarket.</p>
+      <p>3.1 The personal data we collect depends on how you interact with netim.com.</p>
       <p>3.2 We may collect and process the following categories of personal data.</p>
 
       <h3>3.2.1 Identity and Contact Data</h3>
@@ -467,7 +467,7 @@ export default function PrivacyPolicyPage() {
 
       <h2>11. International Data Transfers</h2>
       <p>
-        11.1 Because VoltMarket sells internationally and uses third-party service providers, your personal
+        11.1 Because netim.com sells internationally and uses third-party service providers, your personal
         data may be processed outside the United Kingdom, the European Economic Area, or your country of
         residence.
       </p>

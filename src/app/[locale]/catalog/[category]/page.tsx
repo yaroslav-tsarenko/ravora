@@ -42,7 +42,20 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       if (p.status !== "ACTIVE" || seen.has(p.id)) return false;
       seen.add(p.id);
       return true;
-    });
+    })
+    .map((p) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      sku: p.sku,
+      price: Number(p.price),
+      comparePrice: p.comparePrice == null ? null : Number(p.comparePrice),
+      quantity: p.quantity,
+      images: p.images.map((i) => ({ url: i.url, alt: i.alt })),
+      categories: p.categories.map((pc) => ({
+        category: { name: pc.category.name },
+      })),
+    }));
 
   return (
     <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 3rem", overflowWrap: "anywhere" }}>
@@ -64,7 +77,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         </p>
       )}
 
-      <ProductGrid products={products as unknown as Parameters<typeof ProductGrid>[0]["products"]} />
+      <ProductGrid products={products} />
     </div>
   );
 }

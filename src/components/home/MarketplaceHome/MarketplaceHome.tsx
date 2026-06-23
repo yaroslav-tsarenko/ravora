@@ -9,6 +9,13 @@ import { SaleStrip } from "../SaleStrip/SaleStrip";
 import { DealOfTheDay } from "../DealOfTheDay/DealOfTheDay";
 import { NewsletterBanner } from "../NewsletterBanner/NewsletterBanner";
 import { TrustStrip } from "../TrustStrip/TrustStrip";
+import { StatsBand } from "../StatsBand/StatsBand";
+import { ShopByPurpose } from "../ShopByPurpose/ShopByPurpose";
+import { ServicePromise } from "../ServicePromise/ServicePromise";
+import { Testimonials } from "../Testimonials/Testimonials";
+import { KnowledgeHub } from "../KnowledgeHub/KnowledgeHub";
+import { CategoryShowcase } from "../CategoryShowcase/CategoryShowcase";
+import { WhyShopWithUs } from "../WhyShopWithUs/WhyShopWithUs";
 import styles from "./MarketplaceHome.module.css";
 import type { HomepageProduct, CategorySection, BrandSection } from "@/lib/homepage-products";
 
@@ -110,7 +117,7 @@ export function MarketplaceHome({ data }: Props) {
     heroSlides, dealCards, promoSmall, promoWide,
     brands, sections, promoStripItems,
     sectionProducts, saleProducts, newProducts,
-    popularProducts, categorySections,
+    popularProducts, categorySections, categoryShowcase,
   } = data;
 
   return (
@@ -122,18 +129,13 @@ export function MarketplaceHome({ data }: Props) {
       <div className={styles.container}>
         <div className={styles.mainLayout}>
           <div className={styles.content}>
-            <PromoBannerGrid smallBanners={promoSmall} wideBanners={promoWide} />
+            {/* === ABOVE THE FOLD — start selling immediately === */}
 
-            {/* More Deals For You */}
-            {saleProducts.length > 0 && (
-              <SaleStrip products={saleProducts} />
-            )}
-
-            {/* Most Popular Products */}
+            {/* Most Popular — visible right after hero */}
             {popularProducts.length > 0 && (
               <ProductSection
                 title="Most Popular"
-                subtitle="Top products by availability"
+                subtitle="Top products customers buy this week"
                 products={popularProducts}
                 viewAllHref="/catalog?sort=popular"
                 viewAllLabel="View all popular"
@@ -142,11 +144,26 @@ export function MarketplaceHome({ data }: Props) {
               />
             )}
 
-            {/* Trust / Guarantee Strip */}
-            <TrustStrip />
+            {/* New Arrivals — right after popular */}
+            {newProducts.length > 0 && (
+              <ProductSection
+                title="New Arrivals"
+                subtitle="Just landed in store"
+                products={newProducts}
+                viewAllHref="/catalog?sort=newest"
+                viewAllLabel="View all new"
+                bg="gray"
+                columns={5}
+              />
+            )}
 
-            {/* Top categories by product count */}
-            {categorySections.slice(0, 3).map((cs, i) => (
+            {/* Top deals strip — a tight horizontal product row */}
+            {saleProducts.length > 0 && (
+              <SaleStrip products={saleProducts} />
+            )}
+
+            {/* First category section, e.g. "Audio and Hi-Fi equipment" */}
+            {categorySections.slice(0, 1).map((cs) => (
               <ProductSection
                 key={cs.category.id}
                 title={cs.category.name}
@@ -155,21 +172,19 @@ export function MarketplaceHome({ data }: Props) {
                 tabs={cs.subcategoryTabs}
                 viewAllHref={`/catalog/${cs.category.slug}`}
                 viewAllLabel={`All ${cs.category.name}`}
-                bg={i % 2 === 1 ? "gray" : "white"}
+                bg="white"
                 columns={5}
               />
             ))}
 
-            {/* Deal of the Day */}
-            {saleProducts.length > 0 && (
-              <DealOfTheDay product={saleProducts[0]} />
-            )}
+            {/* === Light supporting blocks between product sections === */}
 
-            {/* Newsletter */}
-            <NewsletterBanner />
+            <StatsBand />
 
-            {/* 3 more top categories after deal */}
-            {categorySections.slice(3, 6).map((cs, i) => (
+            <PromoBannerGrid smallBanners={promoSmall} wideBanners={promoWide} />
+
+            {/* More category product sections */}
+            {categorySections.slice(1, 3).map((cs, i) => (
               <ProductSection
                 key={cs.category.id}
                 title={cs.category.name}
@@ -182,6 +197,46 @@ export function MarketplaceHome({ data }: Props) {
                 columns={5}
               />
             ))}
+
+            {/* Trust strip */}
+            <TrustStrip />
+
+            {/* Deal of the Day */}
+            {saleProducts.length > 0 && (
+              <DealOfTheDay product={saleProducts[0]} />
+            )}
+
+            {/* More categories */}
+            {categorySections.slice(3, 6).map((cs, i) => (
+              <ProductSection
+                key={cs.category.id}
+                title={cs.category.name}
+                subtitle={`${cs.products.length}+ products`}
+                products={cs.products}
+                tabs={cs.subcategoryTabs}
+                viewAllHref={`/catalog/${cs.category.slug}`}
+                viewAllLabel={`All ${cs.category.name}`}
+                bg={i % 2 === 0 ? "white" : "gray"}
+                columns={5}
+              />
+            ))}
+
+            {/* Curated entry points */}
+            <ShopByPurpose />
+
+            {/* Category showcase (colorful tiles) */}
+            {categoryShowcase.length > 0 && (
+              <CategoryShowcase categories={categoryShowcase} />
+            )}
+
+            {/* Service Promise — premium narrative block */}
+            <ServicePromise />
+
+            {/* Why shop with us */}
+            <WhyShopWithUs />
+
+            {/* Testimonials */}
+            <Testimonials />
 
             {/* Brand Strip */}
             {brands.length > 0 && <BrandStrip brands={brands} />}
@@ -204,18 +259,11 @@ export function MarketplaceHome({ data }: Props) {
               );
             })}
 
-            {/* New Arrivals */}
-            {newProducts.length > 0 && (
-              <ProductSection
-                title="New Arrivals"
-                subtitle="Just landed in store"
-                products={newProducts}
-                viewAllHref="/catalog?sort=newest"
-                viewAllLabel="View all new"
-                bg="gray"
-                columns={5}
-              />
-            )}
+            {/* Knowledge hub */}
+            <KnowledgeHub />
+
+            {/* Newsletter */}
+            <NewsletterBanner />
           </div>
         </div>
       </div>

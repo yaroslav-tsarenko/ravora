@@ -10,9 +10,12 @@ export function ToastProvider() {
     <Toaster
       theme={theme}
       position="bottom-right"
+      duration={2800}
+      visibleToasts={3}
+      gap={10}
+      offset={20}
       richColors
       closeButton
-      duration={3000}
     />
   );
 }

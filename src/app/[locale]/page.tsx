@@ -49,7 +49,11 @@ async function getHomeData() {
       prisma.utilityLink.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
       prisma.promoStripItem.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
       prisma.product.findMany({
-        where: { status: "ACTIVE" },
+        where: {
+          status: "ACTIVE",
+          // Only surface products that have at least one image on the homepage
+          images: { some: {} },
+        },
         include: productInclude,
         orderBy: { createdAt: "desc" },
         take: 500,
@@ -179,7 +183,6 @@ async function getHomeData() {
 
 export default async function HomePage() {
   const data = await getHomeData();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   return (
     <>
@@ -187,9 +190,13 @@ export default async function HomePage() {
         data={{
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "VoltMarket",
-          url: siteUrl,
-          description: "Your trusted source for electrical materials, wiring, and installation supplies.",
+          name: "NetimStore",
+          legalName: "AVONTRA LTD",
+          alternateName: ["netim.com", "Netim Store"],
+          url: "https://netim.com",
+          sameAs: ["https://netim.com"],
+          description:
+            "NetimStore (netim.com) — your trusted source for electrical materials, wiring, lighting and installation supplies across Europe.",
         }}
       />
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}

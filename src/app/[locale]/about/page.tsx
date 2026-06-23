@@ -17,7 +17,7 @@ export default function AboutPage() {
       <div className={styles.inner}>
         <div className={styles.hero}>
           <h1 className={styles.title}>
-            About <span className="gradient-text">VoltMarket</span>
+            About <span className="gradient-text">netim.com</span>
           </h1>
           <p className={styles.lead}>
             We&apos;re on a mission to make professional-grade electrical materials accessible to electricians, contractors, and DIY installers. Finding the right cables, switchgear, and installation accessories shouldn&apos;t be complicated.

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useSearchParams, useRouter } from "next/navigation";
-import { SlidersHorizontal, X } from "lucide-react";
+import { Link } from "@/i18n/routing";
+import { SlidersHorizontal, X, Sparkles, ChevronRight } from "lucide-react";
 import { ProductGrid } from "@/components/product/ProductGrid/ProductGrid";
 import { ProductFilters } from "@/components/product/ProductFilters/ProductFilters";
 import { ProductSort } from "@/components/product/ProductSort/ProductSort";
@@ -11,6 +12,30 @@ import { ProductSkeleton } from "@/components/product/ProductSkeleton/ProductSke
 import { EmptyState } from "@/components/shared/EmptyState/EmptyState";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
 import styles from "./catalog.module.css";
+
+interface CatalogCategory {
+  id: string;
+  name: string;
+  slug: string;
+  _count?: { products: number };
+  children?: CatalogCategory[];
+}
+
+function subtreeCount(cat: CatalogCategory): number {
+  const own = cat._count?.products || 0;
+  return own + (cat.children || []).reduce((s, c) => s + subtreeCount(c), 0);
+}
+
+function findCategoryName(cats: CatalogCategory[], slug: string): string | null {
+  for (const c of cats) {
+    if (c.slug === slug) return c.name;
+    if (c.children) {
+      const found = findCategoryName(c.children, slug);
+      if (found) return found;
+    }
+  }
+  return null;
+}
 
 export default function CatalogPage() {
   const t = useTranslations("product");
@@ -20,8 +45,7 @@ export default function CatalogPage() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [products, setProducts] = useState<any[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<CatalogCategory[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -97,6 +121,30 @@ export default function CatalogPage() {
 
   const activeFilterCount = [category, minPrice, maxPrice, inStock, onSale, selectedBrand].filter(Boolean).length;
 
+  const topCategories = useMemo(() => {
+    return [...categories]
+      .map((c) => ({ ...c, total: subtreeCount(c) }))
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 8);
+  }, [categories]);
+
+  const selectedCategoryName = useMemo(
+    () => (category ? findCategoryName(categories, category) : null),
+    [category, categories]
+  );
+
+  const activeChips: { label: string; onRemove: () => void }[] = [];
+  if (category) activeChips.push({ label: selectedCategoryName || category, onRemove: () => updateParams({ category: "", page: "1" }) });
+  if (selectedBrand) activeChips.push({ label: selectedBrand, onRemove: () => updateParams({ brand: "", page: "1" }) });
+  if (minPrice) activeChips.push({ label: `Min €${minPrice}`, onRemove: () => updateParams({ minPrice: "", page: "1" }) });
+  if (maxPrice) activeChips.push({ label: `Max €${maxPrice}`, onRemove: () => updateParams({ maxPrice: "", page: "1" }) });
+  if (inStock) activeChips.push({ label: "In stock", onRemove: () => updateParams({ inStock: "", page: "1" }) });
+  if (onSale) activeChips.push({ label: "On sale", onRemove: () => updateParams({ onSale: "", page: "1" }) });
+
+  const clearAll = () => {
+    router.push("?");
+  };
+
   return (
     <div className={styles.wrapper}>
       <Breadcrumbs
@@ -106,9 +154,53 @@ export default function CatalogPage() {
         ]}
       />
 
+      <div className={styles.hero}>
+        <div className={styles.heroInner}>
+          <span className={styles.heroEyebrow}>
+            <Sparkles size={14} /> Full catalog
+          </span>
+          <h1 className={styles.heroTitle}>
+            {selectedCategoryName ? selectedCategoryName : "Electrical materials & supplies"}
+          </h1>
+          <p className={styles.heroSub}>
+            {total > 0
+              ? `${total.toLocaleString("en-US")} certified products — filter by category, brand, price and availability.`
+              : "Browse our certified inventory of cables, breakers, lighting, distribution panels and more."}
+          </p>
+        </div>
+        <div className={styles.heroVisual} aria-hidden="true">
+          <div className={styles.heroBlob} style={{ background: "radial-gradient(circle, rgba(255,90,0,0.45), transparent 60%)" }} />
+          <div className={styles.heroBlob2} style={{ background: "radial-gradient(circle, rgba(0,163,255,0.5), transparent 60%)" }} />
+        </div>
+      </div>
+
+      {topCategories.length > 0 && (
+        <div className={styles.quickCats}>
+          <Link
+            href="/catalog"
+            className={`${styles.quickCat} ${!category ? styles.quickCatActive : ""}`}
+          >
+            All
+          </Link>
+          {topCategories.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/catalog/${cat.slug}`}
+              className={`${styles.quickCat} ${category === cat.slug ? styles.quickCatActive : ""}`}
+            >
+              {cat.name}
+              <span className={styles.quickCatCount}>{cat.total}</span>
+            </Link>
+          ))}
+          <Link href="/catalog" className={styles.quickCatMore}>
+            All categories <ChevronRight size={14} />
+          </Link>
+        </div>
+      )}
+
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>{nav("catalog")}</h1>
+          <h2 className={styles.title}>{selectedCategoryName || nav("catalog")}</h2>
           <p className={styles.headerSub}>
             {t("showing", { count: products.length, total })}
           </p>
@@ -128,6 +220,26 @@ export default function CatalogPage() {
           <ProductSort value={sort} onChange={(v) => updateParams({ sort: v, page: "1" })} />
         </div>
       </div>
+
+      {activeChips.length > 0 && (
+        <div className={styles.chipsRow}>
+          <span className={styles.chipsLabel}>Active filters:</span>
+          {activeChips.map((chip) => (
+            <button
+              key={chip.label}
+              type="button"
+              onClick={chip.onRemove}
+              className={styles.chip}
+            >
+              {chip.label}
+              <X size={12} />
+            </button>
+          ))}
+          <button type="button" onClick={clearAll} className={styles.clearAll}>
+            Clear all
+          </button>
+        </div>
+      )}
 
       <div className={styles.layout}>
         <aside className={styles.sidebar}>
