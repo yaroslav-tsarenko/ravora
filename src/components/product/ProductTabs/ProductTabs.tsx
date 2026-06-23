@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { sanitizeProductDescription } from "@/lib/utils/sanitize-html";
 import styles from "./ProductTabs.module.css";
 
 interface Review {
@@ -31,6 +32,11 @@ export function ProductTabs({ description, characteristics, reviews }: ProductTa
   const avgRating = reviews.length > 0
     ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
     : 0;
+
+  const safeDescription = useMemo(
+    () => (description ? sanitizeProductDescription(description) : ""),
+    [description]
+  );
 
   return (
     <div className={styles.container}>
@@ -66,12 +72,11 @@ export function ProductTabs({ description, characteristics, reviews }: ProductTa
 
       <div className={styles.tabContent} role="tabpanel">
         {activeTab === "description" && (
-          description ? (
-            <div className={styles.description}>
-              {description.split("\n").map((paragraph, i) => (
-                <p key={i}>{paragraph}</p>
-              ))}
-            </div>
+          safeDescription ? (
+            <div
+              className={styles.description}
+              dangerouslySetInnerHTML={{ __html: safeDescription }}
+            />
           ) : (
             <p className={styles.noContent}>-</p>
           )
