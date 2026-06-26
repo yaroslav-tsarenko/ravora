@@ -405,7 +405,7 @@
   overflow: hidden;
 }
 
-[data-theme="dark"] .subCategoryStrip {
+:global([data-theme="dark"]) .subCategoryStrip {
   background: #111827;
   border-color: #1F2937;
 }
@@ -435,7 +435,7 @@
   padding-right: 0.25rem;
 }
 
-[data-theme="dark"] .subCategoryHeading {
+:global([data-theme="dark"]) .subCategoryHeading {
   color: #94A3B8;
 }
 
@@ -462,7 +462,7 @@
   transform: translateY(-1px);
 }
 
-[data-theme="dark"] .subCategoryChip {
+:global([data-theme="dark"]) .subCategoryChip {
   background: #1F2937;
   border-color: #374151;
   color: #E2E8F0;
@@ -612,7 +612,7 @@
   }
 }
 
-[data-theme="dark"] .megaMenu {
+:global([data-theme="dark"]) .megaMenu {
   background: #111;
   border-color: #333;
 }
@@ -654,7 +654,7 @@
   background: #F8FAFC;
 }
 
-[data-theme="dark"] .megaColumn:hover {
+:global([data-theme="dark"]) .megaColumn:hover {
   background: rgba(255, 255, 255, 0.03);
 }
 
@@ -672,7 +672,7 @@
   margin-bottom: 0.25rem;
 }
 
-[data-theme="dark"] .megaColumnHeader {
+:global([data-theme="dark"]) .megaColumnHeader {
   color: #F1F5F9;
   border-color: #1F2937;
 }
@@ -706,7 +706,7 @@
   transition: background 0.18s, color 0.18s;
 }
 
-[data-theme="dark"] .megaCardIcon {
+:global([data-theme="dark"]) .megaCardIcon {
   background: #1F2937;
   color: #93C5FD;
 }
@@ -755,11 +755,11 @@
   background: #EFF6FF;
 }
 
-[data-theme="dark"] .megaSubLink {
+:global([data-theme="dark"]) .megaSubLink {
   color: #94A3B8;
 }
 
-[data-theme="dark"] .megaSubLink:hover {
+:global([data-theme="dark"]) .megaSubLink:hover {
   color: #93C5FD;
   background: rgba(37, 99, 235, 0.12);
 }
@@ -788,7 +788,7 @@
   align-items: center;
 }
 
-[data-theme="dark"] .megaFooter {
+:global([data-theme="dark"]) .megaFooter {
   border-color: #333;
 }
 
@@ -838,7 +838,7 @@
   flex-shrink: 0;
 }
 
-[data-theme="dark"] .megaSkeletonIcon {
+:global([data-theme="dark"]) .megaSkeletonIcon {
   background: linear-gradient(90deg, #1a1a2e 25%, #252540 50%, #1a1a2e 75%);
   background-size: 200% 100%;
   animation: megaShimmer 1.5s infinite;
@@ -859,7 +859,7 @@
   animation: megaShimmer 1.5s infinite;
 }
 
-[data-theme="dark"] .megaSkeletonBar {
+:global([data-theme="dark"]) .megaSkeletonBar {
   background: linear-gradient(90deg, #1a1a2e 25%, #252540 50%, #1a1a2e 75%);
   background-size: 200% 100%;
   animation: megaShimmer 1.5s infinite;
@@ -891,7 +891,7 @@
   box-shadow: -4px 0 20px rgba(0,0,0,0.08);
 }
 
-[data-theme="dark"] .mobileDrawer {
+:global([data-theme="dark"]) .mobileDrawer {
   background: #111;
 }
 
@@ -905,7 +905,7 @@
   color: #fff;
 }
 
-[data-theme="dark"] .drawerHeader {
+:global([data-theme="dark"]) .drawerHeader {
   border-color: #333;
 }
 
@@ -958,7 +958,7 @@
   text-decoration: none;
 }
 
-[data-theme="dark"] .drawerNavLink {
+:global([data-theme="dark"]) .drawerNavLink {
   color: #ddd;
 }
 
@@ -966,7 +966,7 @@
   background-color: #F3F4F6;
 }
 
-[data-theme="dark"] .drawerNavLink:hover {
+:global([data-theme="dark"]) .drawerNavLink:hover {
   background: #1a1a2e;
 }
 
@@ -976,7 +976,7 @@
   margin: 0.5rem 0;
 }
 
-[data-theme="dark"] .drawerDivider {
+:global([data-theme="dark"]) .drawerDivider {
   background: #333;
 }
 
@@ -988,7 +988,7 @@
   gap: 0.75rem;
 }
 
-[data-theme="dark"] .drawerFooter {
+:global([data-theme="dark"]) .drawerFooter {
   border-color: #333;
 }
 
@@ -1014,7 +1014,7 @@
   color: #1F2933;
 }
 
-[data-theme="dark"] .drawerBtnSecondary {
+:global([data-theme="dark"]) .drawerBtnSecondary {
   background: #1a1a2e;
   color: #ddd;
 }

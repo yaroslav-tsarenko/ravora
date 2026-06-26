@@ -240,14 +240,22 @@ function CategoryRow({
 }) {
   const hasChildren = cat.children && cat.children.length > 0;
   const productCount = cat._count?.products || 0;
+  const animate = index < 30;
+
+  const Wrapper = animate ? motion.div : "div";
+  const wrapperProps = animate
+    ? {
+        initial: { opacity: 0, x: -8 },
+        animate: { opacity: 1, x: 0 },
+        transition: { delay: Math.min(index * 0.02, 0.3), duration: 0.2 },
+      }
+    : {};
 
   return (
     <>
-      <motion.div
+      <Wrapper
         className="admin-item-card"
-        initial={{ opacity: 0, x: -8 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: index * 0.02, duration: 0.2 }}
+        {...wrapperProps}
         style={{ marginLeft: `${depth * 1.5}rem` }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flex: 1, minWidth: 0 }}>
@@ -294,7 +302,7 @@ function CategoryRow({
             <Trash2 size={14} />
           </Button>
         </div>
-      </motion.div>
+      </Wrapper>
       {hasChildren && cat.children!.map((child, i) => (
         <CategoryRow
           key={child.id}

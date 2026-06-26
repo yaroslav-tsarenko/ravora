@@ -69,7 +69,7 @@ model Address {
 
 model StoreSettings {
   id             String   @id @default("default")
-  name           String   @default("My Store")
+  name           String   @default("MisaElectro")
   description    String?
   logoUrl        String?
   faviconUrl     String?
@@ -107,6 +107,9 @@ model Category {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([parentId])
+  @@index([isActive])
 }
 
 model Product {
@@ -151,6 +154,10 @@ model Product {
   @@index([isFeatured])
   @@index([name])
   @@index([sku])
+  @@index([brand])
+  @@index([createdAt])
+  @@index([status, createdAt])
+  @@index([status, isFeatured])
 }
 
 enum ProductStatus {
@@ -166,6 +173,8 @@ model ProductImage {
   sortOrder Int     @default(0)
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, sortOrder])
 }
 
 model ProductCategory {
@@ -175,6 +184,7 @@ model ProductCategory {
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@id([productId, categoryId])
+  @@index([categoryId])
 }
 
 model ProductVariant {

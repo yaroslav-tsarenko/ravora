@@ -7,6 +7,11 @@ import { motion, useInView } from "framer-motion";
 import { MarketplaceProductCard } from "../MarketplaceProductCard/MarketplaceProductCard";
 import styles from "./ProductSection.module.css";
 
+interface ProductTab {
+  label: string;
+  slugs: string[];
+}
+
 interface Product {
   id: string;
   name: string;
@@ -27,7 +32,7 @@ interface Props {
   products: Product[];
   viewAllHref?: string;
   viewAllLabel?: string;
-  tabs?: string[];
+  tabs?: ProductTab[];
   bg?: "white" | "gray";
   columns?: number;
 }
@@ -41,9 +46,11 @@ export function ProductSection({
 
   const filtered = useMemo(() => {
     if (!tabs || tabs.length === 0 || activeTab === 0) return products;
-    const tabName = tabs[activeTab];
+    const tab = tabs[activeTab];
+    if (!tab) return products;
+    const tabSlugs = new Set(tab.slugs);
     return products.filter((p) =>
-      p.categories?.some((c) => c.category.name === tabName)
+      p.categories?.some((c) => tabSlugs.has(c.category.slug))
     );
   }, [products, tabs, activeTab]);
 
@@ -65,11 +72,11 @@ export function ProductSection({
           <div className={styles.tabs}>
             {tabs.map((tab, i) => (
               <button
-                key={tab}
+                key={`${tab.label}-${i}`}
                 className={`${styles.tab} ${i === activeTab ? styles.tabActive : ""}`}
                 onClick={() => setActiveTab(i)}
               >
-                {tab}
+                {tab.label}
               </button>
             ))}
           </div>

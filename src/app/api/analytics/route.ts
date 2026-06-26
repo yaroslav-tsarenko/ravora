@@ -83,12 +83,22 @@ export async function GET() {
         where: { paymentStatus: "PAID" },
         _sum: { total: true },
       }),
-      prisma.order.groupBy({
-        by: ["createdAt"],
-        where: { createdAt: { gte: last30Days }, paymentStatus: "PAID" },
-        _sum: { total: true },
-        _count: true,
-      }),
+      prisma.$queryRaw<{ day: Date; total: number; count: number }[]>`
+        SELECT date_trunc('day', "createdAt") AS day,
+               SUM("total")::float AS total,
+               COUNT(*)::int AS count
+        FROM "Order"
+        WHERE "createdAt" >= ${last30Days}
+          AND "paymentStatus" = 'PAID'
+        GROUP BY day
+        ORDER BY day ASC
+      `.then((rows) =>
+        rows.map((r) => ({
+          createdAt: r.day,
+          _sum: { total: r.total },
+          _count: r.count,
+        })),
+      ),
       prisma.orderItem.groupBy({
         by: ["productId", "productName"],
         _sum: { quantity: true, total: true },
@@ -144,15 +154,29 @@ export async function GET() {
       ? Number(totalRevenue._sum.total || 0) / totalOrders
       : 0;
 
-    const productsByStock = await prisma.product.groupBy({
-      by: ["status"],
-      _count: true,
-    });
+    const [productsByStock, stockBuckets] = await Promise.all([
+      prisma.product.groupBy({
+        by: ["status"],
+        _count: true,
+      }),
+      prisma.$queryRaw<{ bucket: string; count: number }[]>`
+        SELECT
+          CASE
+            WHEN "quantity" = 0 THEN 'out'
+            WHEN "quantity" <= 10 THEN 'low'
+            ELSE 'in'
+          END AS bucket,
+          COUNT(*)::int AS count
+        FROM "Product"
+        WHERE "status" = 'ACTIVE'
+        GROUP BY bucket
+      `,
+    ]);
 
     const stockDistribution = {
-      outOfStock: await prisma.product.count({ where: { status: "ACTIVE", quantity: 0 } }),
-      lowStock: await prisma.product.count({ where: { status: "ACTIVE", quantity: { gt: 0, lte: 10 } } }),
-      inStock: await prisma.product.count({ where: { status: "ACTIVE", quantity: { gt: 10 } } }),
+      outOfStock: stockBuckets.find((b) => b.bucket === "out")?.count || 0,
+      lowStock: stockBuckets.find((b) => b.bucket === "low")?.count || 0,
+      inStock: stockBuckets.find((b) => b.bucket === "in")?.count || 0,
     };
 
     return NextResponse.json({

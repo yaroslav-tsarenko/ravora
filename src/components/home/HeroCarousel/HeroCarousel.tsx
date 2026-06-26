@@ -37,7 +37,7 @@ interface DealData {
   imageUrl?: string | null;
 }
 
-interface NetimSlide {
+interface MisaElectroSlide {
   id: string;
   eyebrow: string;
   title: React.ReactNode;
@@ -51,7 +51,7 @@ interface NetimSlide {
   thumbIcon: React.ElementType;
 }
 
-const netimSlides: NetimSlide[] = [
+const misaElectroSlides: MisaElectroSlide[] = [
   {
     id: "audio",
     eyebrow: "Audio · This week's pick",
@@ -127,17 +127,17 @@ interface Props {
 }
 
 export function HeroCarousel({ deals }: Props) {
-  // We always use NetimStore-tailored slides for the hero.
+  // We always use MisaElectro-tailored slides for the hero.
   // Admin-configured slides (`slides` prop) are intentionally ignored here —
   // they belong on dedicated marketing landing pages, not the brand hero.
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
-  const slide = netimSlides[current];
+  const slide = misaElectroSlides[current];
 
   const go = useCallback(
     (idx: number) => {
       setDirection(idx > current ? 1 : -1);
-      setCurrent(((idx % netimSlides.length) + netimSlides.length) % netimSlides.length);
+      setCurrent(((idx % misaElectroSlides.length) + misaElectroSlides.length) % misaElectroSlides.length);
     },
     [current]
   );
@@ -148,7 +148,7 @@ export function HeroCarousel({ deals }: Props) {
   useEffect(() => {
     const id = setInterval(() => {
       setDirection(1);
-      setCurrent((p) => (p + 1) % netimSlides.length);
+      setCurrent((p) => (p + 1) % misaElectroSlides.length);
     }, 6500);
     return () => clearInterval(id);
   }, []);
@@ -263,7 +263,7 @@ export function HeroCarousel({ deals }: Props) {
                 <ChevronLeft size={18} />
               </button>
               <div className={styles.dots}>
-                {netimSlides.map((s, i) => (
+                {misaElectroSlides.map((s, i) => (
                   <button
                     key={s.id}
                     type="button"
@@ -286,7 +286,7 @@ export function HeroCarousel({ deals }: Props) {
           </div>
 
           <div className={styles.thumbs}>
-            {netimSlides.map((s, i) => (
+            {misaElectroSlides.map((s, i) => (
               <button
                 key={s.id}
                 type="button"

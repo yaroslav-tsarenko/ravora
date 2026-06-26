@@ -133,3 +133,41 @@
   font-size: 0.8125rem;
   color: #64748B;
 }
+
+:global([data-theme="dark"]) .title {
+  color: #F1F5F9;
+}
+
+:global([data-theme="dark"]) .subtitle {
+  color: #94A3B8;
+}
+
+:global([data-theme="dark"]) .card {
+  background: #111827;
+  border-color: #1F2937;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+:global([data-theme="dark"]) .card::before {
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.08), transparent 60%);
+}
+
+:global([data-theme="dark"]) .quote {
+  color: #E2E8F0;
+}
+
+:global([data-theme="dark"]) .author {
+  border-top-color: #1F2937;
+}
+
+:global([data-theme="dark"]) .name {
+  color: #F1F5F9;
+}
+
+:global([data-theme="dark"]) .role {
+  color: #94A3B8;
+}
+
+:global([data-theme="dark"]) .quoteIcon {
+  color: rgba(37, 99, 235, 0.25);
+}

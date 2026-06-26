@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { slugify } from "@/lib/utils/slugify";
@@ -12,56 +13,75 @@ const categorySchema = z.object({
   isActive: z.boolean().optional(),
 });
 
+type CategoryNode = Awaited<ReturnType<typeof getCategoriesFlat>>[number] & {
+  children: CategoryNode[];
+};
+
+const getCategoriesFlat = unstable_cache(
+  async () => {
+    return prisma.category.findMany({
+      orderBy: { name: "asc" },
+      include: { _count: { select: { products: true } } },
+    });
+  },
+  ["api-categories-flat-v1"],
+  { revalidate: 300, tags: ["categories"] },
+);
+
+function buildCategoryTree(categories: Awaited<ReturnType<typeof getCategoriesFlat>>): CategoryNode[] {
+  const nodeMap = new Map<string, CategoryNode>();
+  const roots: CategoryNode[] = [];
+
+  for (const category of categories) {
+    nodeMap.set(category.id, { ...category, children: [] });
+  }
+
+  for (const node of nodeMap.values()) {
+    if (node.parentId && nodeMap.has(node.parentId)) {
+      nodeMap.get(node.parentId)?.children.push(node);
+    } else {
+      roots.push(node);
+    }
+  }
+
+  const sortTree = (nodes: CategoryNode[]) => {
+    nodes.sort((a, b) => a.name.localeCompare(b.name));
+    for (const node of nodes) sortTree(node.children);
+  };
+
+  sortTree(roots);
+  return roots;
+}
+
+function subtreeCount(cat: CategoryNode): number {
+  const own = cat._count?.products || 0;
+  return own + cat.children.reduce((sum, child) => sum + subtreeCount(child), 0);
+}
+
+function pruneEmpty(categories: CategoryNode[]): CategoryNode[] {
+  return categories
+    .filter((category) => subtreeCount(category) > 0)
+    .map((category) => ({
+      ...category,
+      children: pruneEmpty(category.children),
+    }));
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const flat = searchParams.get("flat") === "true";
     const includeEmpty = searchParams.get("includeEmpty") === "true";
 
+    const categories = await getCategoriesFlat();
+
     if (flat) {
-      const categories = await prisma.category.findMany({
-        orderBy: { name: "asc" },
-        include: { _count: { select: { products: true } } },
-      });
       return NextResponse.json(categories);
     }
 
-    const categories = await prisma.category.findMany({
-      where: { parentId: null },
-      orderBy: { name: "asc" },
-      include: {
-        _count: { select: { products: true } },
-        children: {
-          orderBy: { name: "asc" },
-          include: {
-            _count: { select: { products: true } },
-            children: {
-              orderBy: { name: "asc" },
-              include: {
-                _count: { select: { products: true } },
-              },
-            },
-          },
-        },
-      },
-    });
+    const categoryTree = buildCategoryTree(categories);
 
-    function subtreeCount(cat: any): number {
-      const own = cat._count?.products || 0;
-      const childSum = (cat.children || []).reduce((s: number, c: any) => s + subtreeCount(c), 0);
-      return own + childSum;
-    }
-
-    function pruneEmpty(cats: any[]): any[] {
-      return cats
-        .filter((c) => subtreeCount(c) > 0)
-        .map((c) => ({
-          ...c,
-          children: c.children ? pruneEmpty(c.children) : [],
-        }));
-    }
-
-    return NextResponse.json(includeEmpty ? categories : pruneEmpty(categories));
+    return NextResponse.json(includeEmpty ? categoryTree : pruneEmpty(categoryTree));
   } catch (error) {
     console.error("Error fetching categories:", error);
     return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { checkoutSchema } from "@/lib/validators/checkout";
 import { getSessionUser } from "@/lib/auth";
 import { sendOrderConfirmationEmail, sendOrderInvoiceEmail } from "@/lib/email";
+import { scheduleEmail } from "@/lib/email-jobs";
 
 export async function POST(request: NextRequest) {
   try {
@@ -92,8 +93,8 @@ export async function POST(request: NextRequest) {
       createdAt: order.createdAt,
     };
 
-    sendOrderConfirmationEmail(emailPayload).catch(console.error);
-    sendOrderInvoiceEmail(emailPayload).catch(console.error);
+    scheduleEmail(`order confirmation ${order.orderNumber}`, () => sendOrderConfirmationEmail(emailPayload));
+    scheduleEmail(`order invoice ${order.orderNumber}`, () => sendOrderInvoiceEmail(emailPayload));
 
     return NextResponse.json(order, { status: 201 });
   } catch (error) {

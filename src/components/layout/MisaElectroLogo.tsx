@@ -1,9 +1,9 @@
 /**
- * Brand logo for NetimStore (display) — domain reads as netim.com in SEO metadata.
+ * Brand logo for MisaElectro (display) — domain reads as misaelectro.ro in SEO metadata.
  * Two-color refined wordmark + glyph: indigo gradient base with a warm orange bolt.
  */
-export function AvontLogo({ size = 28 }: { size?: number }) {
-  const id = `netim-logo-${size}`;
+export function MisaElectroMark({ size = 28 }: { size?: number }) {
+  const id = `misaelectro-logo-${size}`;
   return (
     <svg
       width={size}
@@ -33,6 +33,6 @@ export function AvontLogo({ size = 28 }: { size?: number }) {
   );
 }
 
-export function NetimStoreLogo({ size = 28 }: { size?: number }) {
-  return <AvontLogo size={size} />;
+export function MisaElectroLogo({ size = 28 }: { size?: number }) {
+  return <MisaElectroMark size={size} />;
 }

@@ -5,6 +5,7 @@ import {
   sendOrderShippedEmail,
   sendOrderStatusEmail,
 } from "@/lib/email";
+import { scheduleEmail } from "@/lib/email-jobs";
 
 const statusSchema = z.object({
   status: z.enum([
@@ -60,13 +61,16 @@ export async function PATCH(
       };
 
       if (order.status === "SHIPPED") {
-        sendOrderShippedEmail(payload).catch(console.error);
+        scheduleEmail(`order shipped ${order.orderNumber}`, () => sendOrderShippedEmail(payload));
       } else if (
         order.status === "DELIVERED" ||
         order.status === "CANCELLED" ||
         order.status === "REFUNDED"
       ) {
-        sendOrderStatusEmail(payload, order.status).catch(console.error);
+        const status = order.status;
+        scheduleEmail(`order ${status.toLowerCase()} ${order.orderNumber}`, () =>
+          sendOrderStatusEmail(payload, status)
+        );
       }
     }
 

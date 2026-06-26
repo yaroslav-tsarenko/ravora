@@ -45,7 +45,7 @@ export function Testimonials() {
         <span className={styles.eyebrow}>Customer voices</span>
         <h2 className={styles.title}>Trusted by professionals across Europe</h2>
         <p className={styles.subtitle}>
-          Real feedback from electricians, contractors, and procurement teams who buy from netim.com every week.
+          Real feedback from electricians, contractors, and procurement teams who buy from MisaElectro every week.
         </p>
       </div>
 

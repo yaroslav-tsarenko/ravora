@@ -11,7 +11,7 @@ export async function GET() {
       },
     });
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://misaelectro.ro";
 
     const feed = products.map((product) => ({
       id: product.id,

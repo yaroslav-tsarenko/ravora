@@ -88,3 +88,38 @@
   max-width: 80px;
   object-fit: contain;
 }
+
+:global([data-theme="dark"]) .wrapper {
+  background: #111827;
+  border-color: #1F2937;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+:global([data-theme="dark"]) .title {
+  color: #F1F5F9;
+}
+
+:global([data-theme="dark"]) .arrow {
+  background: #1F2937;
+  border-color: #374151;
+  color: #94A3B8;
+}
+
+:global([data-theme="dark"]) .arrow:hover {
+  border-color: #3B82F6;
+  color: #93C5FD;
+}
+
+:global([data-theme="dark"]) .brand {
+  background: #0F172A;
+  border-color: #1F2937;
+}
+
+:global([data-theme="dark"]) .brand:hover {
+  border-color: #3B82F6;
+  background: rgba(37, 99, 235, 0.12);
+}
+
+:global([data-theme="dark"]) .brandName {
+  color: #94A3B8;
+}

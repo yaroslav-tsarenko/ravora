@@ -167,9 +167,9 @@ export function MarketplaceHome({ data }: Props) {
               <ProductSection
                 key={cs.category.id}
                 title={cs.category.name}
-                subtitle={`${cs.products.length}+ products`}
+                subtitle={`${cs.totalCount ?? cs.products.length}+ products`}
                 products={cs.products}
-                tabs={cs.subcategoryTabs}
+                tabs={cs.tabs}
                 viewAllHref={`/catalog/${cs.category.slug}`}
                 viewAllLabel={`All ${cs.category.name}`}
                 bg="white"
@@ -188,9 +188,9 @@ export function MarketplaceHome({ data }: Props) {
               <ProductSection
                 key={cs.category.id}
                 title={cs.category.name}
-                subtitle={`${cs.products.length}+ products`}
+                subtitle={`${cs.totalCount ?? cs.products.length}+ products`}
                 products={cs.products}
-                tabs={cs.subcategoryTabs}
+                tabs={cs.tabs}
                 viewAllHref={`/catalog/${cs.category.slug}`}
                 viewAllLabel={`All ${cs.category.name}`}
                 bg={i % 2 === 0 ? "gray" : "white"}
@@ -211,9 +211,9 @@ export function MarketplaceHome({ data }: Props) {
               <ProductSection
                 key={cs.category.id}
                 title={cs.category.name}
-                subtitle={`${cs.products.length}+ products`}
+                subtitle={`${cs.totalCount ?? cs.products.length}+ products`}
                 products={cs.products}
-                tabs={cs.subcategoryTabs}
+                tabs={cs.tabs}
                 viewAllHref={`/catalog/${cs.category.slug}`}
                 viewAllLabel={`All ${cs.category.name}`}
                 bg={i % 2 === 0 ? "white" : "gray"}

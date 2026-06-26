@@ -128,3 +128,31 @@
 .card:hover .cardCta {
   gap: 0.625rem;
 }
+
+:global([data-theme="dark"]) .title,
+:global([data-theme="dark"]) .cardTitle {
+  color: #F1F5F9;
+}
+
+:global([data-theme="dark"]) .subtitle,
+:global([data-theme="dark"]) .cardDesc {
+  color: #94A3B8;
+}
+
+:global([data-theme="dark"]) .card {
+  background: #111827;
+  border-color: #1F2937;
+}
+
+:global([data-theme="dark"]) .card:hover {
+  border-color: rgba(37, 99, 235, 0.4);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.3);
+}
+
+:global([data-theme="dark"]) .card::after {
+  background: radial-gradient(120% 90% at 100% 0%, rgba(37, 99, 235, 0.10), transparent 50%);
+}
+
+:global([data-theme="dark"]) .cardCta {
+  color: #93C5FD;
+}

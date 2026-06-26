@@ -17,8 +17,8 @@ async function main() {
     update: {},
     create: {
       id: "default",
-      name: "My Store",
-      email: "store@example.com",
+      name: "MisaElectro",
+      email: "info@misaelectro.ro",
       currency: "EUR",
       taxRate: 21,
       freeShippingMin: 50,
@@ -79,7 +79,7 @@ async function main() {
       title: "About Us",
       slug: "about-us",
       content:
-        "<p>Welcome to My Store! We are dedicated to providing quality products at competitive prices.</p><p>Founded in 2024, we have been serving customers worldwide with a focus on sustainability and customer satisfaction.</p>",
+        "<p>Welcome to MisaElectro! We are dedicated to providing quality products at competitive prices.</p><p>Founded in 2024, we have been serving customers worldwide with a focus on sustainability and customer satisfaction.</p>",
       isActive: true,
     },
   });

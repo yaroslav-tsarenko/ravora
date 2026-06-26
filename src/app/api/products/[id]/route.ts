@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { productSchema } from "@/lib/validators/product";
 import { slugify } from "@/lib/utils/slugify";
@@ -71,6 +72,7 @@ export async function PATCH(
       });
     }
 
+    revalidateTag("products", "max");
     return NextResponse.json(product);
   } catch (error) {
     console.error("Error updating product:", error);
@@ -85,6 +87,7 @@ export async function DELETE(
   try {
     const { id } = await params;
     await prisma.product.delete({ where: { id } });
+    revalidateTag("products", "max");
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting product:", error);

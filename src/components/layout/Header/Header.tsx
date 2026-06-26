@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import NextLink from "next/link";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/routing";
@@ -18,7 +19,7 @@ import { useCart } from "@/providers/CartProvider";
 import { useAuth } from "@/providers/AuthProvider";
 import { ThemeToggle } from "./ThemeToggle";
 import { AnimatePresence, motion } from "framer-motion";
-import { AvontLogo } from "../AvontLogo";
+import { MisaElectroLogo } from "../MisaElectroLogo";
 import { CurrencySwitcher } from "./CurrencySwitcher";
 import { CatalogMenu } from "../CatalogMenu/CatalogMenu";
 import styles from "./Header.module.css";
@@ -256,11 +257,11 @@ export function Header() {
               <span className={styles.catalogBtnText}>{t("catalog")}</span>
             </button>
 
-            <Link href="/" className={styles.logo} aria-label="NetimStore — netim.com">
-              <AvontLogo size={30} />
+            <Link href="/" className={styles.logo} aria-label="MisaElectro — misaelectro.ro">
+              <MisaElectroLogo size={30} />
               <span className={styles.logoText}>
-                <span className={styles.logoTextPrimary}>Netim</span>
-                <span className={styles.logoTextAccent}>Store</span>
+                <span className={styles.logoTextPrimary}>Misa</span>
+                <span className={styles.logoTextAccent}>Electro</span>
               </span>
             </Link>
 
@@ -305,10 +306,10 @@ export function Header() {
               )}
 
               {user && (role === "ADMIN" || role === "SUPER_ADMIN") && (
-                <a href="/admin" className={styles.headerAction} aria-label="Admin">
+                <NextLink href="/admin" className={styles.headerAction} aria-label="Admin">
                   <Shield size={20} />
                   <span className={styles.headerActionLabel}>Admin</span>
-                </a>
+                </NextLink>
               )}
 
               <Link href="/cart" className={styles.headerAction} aria-label={t("cart")}>
@@ -493,9 +494,9 @@ export function Header() {
                     {t("contact")} <ChevronRight size={18} />
                   </Link>
                   {user && (role === "ADMIN" || role === "SUPER_ADMIN") && (
-                    <a href="/admin" className={styles.drawerNavLink} onClick={() => setMobileOpen(false)}>
+                    <NextLink href="/admin" className={styles.drawerNavLink} onClick={() => setMobileOpen(false)}>
                       Admin Panel <ChevronRight size={18} />
-                    </a>
+                    </NextLink>
                   )}
                 </nav>
               </div>

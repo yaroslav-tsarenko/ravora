@@ -253,25 +253,25 @@
   }
 }
 
-[data-theme="dark"] .card {
+:global([data-theme="dark"]) .card {
   background: #111827;
   border-color: #1F2937;
   color: #F1F5F9;
 }
 
-[data-theme="dark"] .card:hover {
+:global([data-theme="dark"]) .card:hover {
   border-color: rgba(37, 99, 235, 0.4);
 }
 
-[data-theme="dark"] .imageWrap {
+:global([data-theme="dark"]) .imageWrap {
   background: #ffffff;
 }
 
-[data-theme="dark"] .content {
+:global([data-theme="dark"]) .content {
   background: #111827;
   border-top-color: #1F2937;
 }
 
-[data-theme="dark"] .name {
+:global([data-theme="dark"]) .name {
   color: #F1F5F9;
 }

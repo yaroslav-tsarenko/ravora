@@ -19,7 +19,7 @@ export interface HomepageCategory {
   slug: string;
   description?: string | null;
   imageUrl?: string | null;
-  children?: { id: string; name: string; slug: string }[];
+  children?: HomepageCategory[];
   _count?: { products: number };
 }
 
@@ -73,7 +73,20 @@ export function getDiscountPercent(product: HomepageProduct): number {
 export interface CategorySection {
   category: HomepageCategory;
   products: HomepageProduct[];
-  subcategoryTabs: string[];
+  tabs: CategoryTab[];
+  totalCount?: number;
+}
+
+export interface CategoryTab {
+  label: string;
+  slugs: string[];
+}
+
+function collectCategorySlugs(category: HomepageCategory): string[] {
+  return [
+    category.slug,
+    ...(category.children || []).flatMap((child) => collectCategorySlugs(child)),
+  ];
 }
 
 export function getHomepageCategorySections(
@@ -85,7 +98,7 @@ export function getHomepageCategorySections(
   const sections = categories
     .map((cat) => {
       const catProducts = getProductsByCategory(products, cat.slug);
-      const childSlugs = cat.children?.map((c) => c.slug) || [];
+      const childSlugs = (cat.children || []).flatMap((c) => collectCategorySlugs(c));
       const fromChildren = childSlugs.length > 0
         ? products.filter((p) =>
             p.categories?.some((c) => childSlugs.includes(c.category.slug))
@@ -94,14 +107,17 @@ export function getHomepageCategorySections(
       const merged = [...catProducts, ...fromChildren];
       const unique = Array.from(new Map(merged.map((p) => [p.id, p])).values());
 
-      const subcategoryTabs = cat.children?.length
-        ? ["All", ...cat.children.map((c) => c.name)]
+      const tabs = cat.children?.length
+        ? [
+            { label: "All", slugs: collectCategorySlugs(cat) },
+            ...cat.children.map((c) => ({ label: c.name, slugs: collectCategorySlugs(c) })),
+          ]
         : [];
 
       return {
         category: cat,
         products: unique.slice(0, maxPerCategory),
-        subcategoryTabs,
+        tabs,
         totalCount: unique.length,
       };
     })
@@ -109,7 +125,12 @@ export function getHomepageCategorySections(
     .sort((a, b) => b.totalCount - a.totalCount);
 
   const limited = maxSections ? sections.slice(0, maxSections) : sections;
-  return limited.map(({ totalCount: _, ...rest }) => rest);
+  return limited.map((section) => ({
+    category: section.category,
+    products: section.products,
+    tabs: section.tabs,
+    totalCount: section.totalCount,
+  }));
 }
 
 export interface BrandSection {

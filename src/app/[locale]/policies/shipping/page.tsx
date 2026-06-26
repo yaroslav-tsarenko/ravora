@@ -1,19 +1,19 @@
 import { PolicyLayout, ContactBlock } from "@/components/layout/PolicyLayout/PolicyLayout";
 
-export const metadata = { title: "Shipping Policy — netim.com" };
+export const metadata = { title: "Shipping Policy — MisaElectro" };
 
 export default function ShippingPolicyPage() {
   return (
     <PolicyLayout title="Shipping Policy" lastUpdated="29 May 2026">
       <p>
-        This Shipping Policy explains how orders placed through www.voltmarket.store are processed,
+        This Shipping Policy explains how orders placed through www.misaelectro.ro are processed,
         dispatched, delivered, and handled in the event of delivery issues.
       </p>
       <p>The Website is operated by:</p>
       <ContactBlock />
       <p>
-        In this Policy, &ldquo;netim.com&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo; or &ldquo;our&rdquo;
-        means AVONTRA LTD. &ldquo;Customer&rdquo;, &ldquo;you&rdquo; or &ldquo;your&rdquo; means the
+        In this Policy, &ldquo;MisaElectro&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo; or &ldquo;our&rdquo;
+        means MISARELIANA S.R.L.. &ldquo;Customer&rdquo;, &ldquo;you&rdquo; or &ldquo;your&rdquo; means the
         person or business placing an order through the Website.
       </p>
       <p>
@@ -22,9 +22,9 @@ export default function ShippingPolicyPage() {
       </p>
 
       <h2>1. Scope of This Policy</h2>
-      <p>1.1 This Policy applies to the delivery of physical goods purchased through netim.com.</p>
+      <p>1.1 This Policy applies to the delivery of physical goods purchased through MisaElectro.</p>
       <p>
-        1.2 netim.com supplies electrical products, electrical materials, wiring accessories,
+        1.2 MisaElectro supplies electrical products, electrical materials, wiring accessories,
         lighting-related products, installation components, distribution and circuit protection products,
         sockets, switches, cables, mounting accessories, and other related goods.
       </p>
@@ -35,7 +35,7 @@ export default function ShippingPolicyPage() {
       </p>
       <p>
         1.4 Delivery estimates are not guaranteed delivery dates unless expressly stated otherwise in writing
-        by netim.com.
+        by MisaElectro.
       </p>
 
       <h2>2. Order Processing Time</h2>
@@ -63,7 +63,7 @@ export default function ShippingPolicyPage() {
       </p>
 
       <h2>3. Dispatch Location</h2>
-      <p>3.1 netim.com dispatches orders from the United Kingdom.</p>
+      <p>3.1 MisaElectro dispatches orders from the United Kingdom.</p>
       <p>
         3.2 Delivery times shown in this Policy are calculated from the date of dispatch, not from the date
         the order is placed.
@@ -124,7 +124,7 @@ export default function ShippingPolicyPage() {
         longer.
       </p>
       <p>
-        5.4 netim.com is not responsible for delays caused by customs authorities, local postal operators,
+        5.4 MisaElectro is not responsible for delays caused by customs authorities, local postal operators,
         courier networks, incorrect delivery information, failed delivery attempts, unpaid import charges,
         or events outside our reasonable control.
       </p>
@@ -171,7 +171,7 @@ export default function ShippingPolicyPage() {
         country, phone number, and any access instructions required for delivery.
       </p>
       <p>
-        7.3 netim.com is not responsible for delays, failed deliveries, lost parcels, return charges, or
+        7.3 MisaElectro is not responsible for delays, failed deliveries, lost parcels, return charges, or
         additional costs caused by incorrect, incomplete, outdated, or improperly formatted address
         information provided by you.
       </p>
@@ -184,7 +184,7 @@ export default function ShippingPolicyPage() {
 
       <h2>8. International Shipping</h2>
       <p>
-        8.1 netim.com may accept international orders to supported delivery destinations shown on the
+        8.1 MisaElectro may accept international orders to supported delivery destinations shown on the
         Website or at checkout.
       </p>
       <p>
@@ -217,7 +217,7 @@ export default function ShippingPolicyPage() {
         customer.
       </p>
       <p>
-        9.3 netim.com does not control customs authorities, import tax assessments, duty rates, customs
+        9.3 MisaElectro does not control customs authorities, import tax assessments, duty rates, customs
         inspections, courier customs procedures, or local government charges.
       </p>
       <p>
@@ -297,7 +297,7 @@ export default function ShippingPolicyPage() {
         instructions to rearrange delivery or collect the parcel within the stated timeframe.
       </p>
       <p>
-        12.4 netim.com is not responsible for failed delivery where you do not respond to courier notices, do
+        12.4 MisaElectro is not responsible for failed delivery where you do not respond to courier notices, do
         not collect the parcel, refuse the parcel, provide an inaccessible address, or fail to pay customs
         or local charges.
       </p>
@@ -314,7 +314,7 @@ export default function ShippingPolicyPage() {
       </p>
       <p>
         13.3 If goods arrive damaged, missing, incomplete, or incorrect, please contact us as soon as
-        possible at info@voltmarket.store.
+        possible at info@misaelectro.ro.
       </p>
       <p>
         13.4 Please include your order number, a description of the issue, and clear photos or videos of the
@@ -341,7 +341,7 @@ export default function ShippingPolicyPage() {
       </p>
       <p>
         14.2 If tracking shows an unusual delay, failed delivery, customs hold, or no movement for an
-        extended period, please contact us at info@voltmarket.store.
+        extended period, please contact us at info@misaelectro.ro.
       </p>
       <p>
         14.3 We may need to open an investigation with the courier before confirming that a parcel is lost.
@@ -387,7 +387,7 @@ export default function ShippingPolicyPage() {
         completed when the carrier delivers the parcel to that address or authorised recipient.
       </p>
       <p>
-        16.2 netim.com is not responsible for loss, damage, delay, customs issues, onward shipping problems,
+        16.2 MisaElectro is not responsible for loss, damage, delay, customs issues, onward shipping problems,
         or failed delivery after the parcel has been delivered to a third party, forwarding service,
         collection point, or authorised recipient chosen by you.
       </p>
@@ -404,7 +404,7 @@ export default function ShippingPolicyPage() {
       </p>
       <p>17.2 Delivery estimates should not be treated as guaranteed project deadlines.</p>
       <p>
-        17.3 netim.com is not responsible for labour costs, electrician costs, contractor costs, installation
+        17.3 MisaElectro is not responsible for labour costs, electrician costs, contractor costs, installation
         costs, project delay, missed appointments, downtime, loss of profit, loss of contract, or other
         indirect losses caused by delivery delay, customs delay, courier issue, or product unavailability,
         except where liability cannot lawfully be excluded.

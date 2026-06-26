@@ -1,5 +1,5 @@
 /* ============================================================
-   NetimStore Hero Carousel
+   MisaElectro Hero Carousel
    Modern editorial layout — left copy, right floating visuals
    Slide gradient + accent color shift per slide
    ============================================================ */
@@ -17,7 +17,7 @@
   background: #F8FAFC;
 }
 
-[data-theme="dark"] .hero {
+:global([data-theme="dark"]) .hero {
   background: #0A0F1C;
 }
 
@@ -457,13 +457,13 @@
   box-shadow: 0 10px 24px -10px rgba(37, 99, 235, 0.35);
 }
 
-[data-theme="dark"] .thumb {
+:global([data-theme="dark"]) .thumb {
   background: #111827;
   border-color: #1F2937;
   color: #F1F5F9;
 }
 
-[data-theme="dark"] .thumbActive {
+:global([data-theme="dark"]) .thumbActive {
   background: linear-gradient(135deg, rgba(37, 99, 235, 0.18) 0%, #111827 60%);
   border-color: rgba(37, 99, 235, 0.6);
 }
@@ -506,7 +506,7 @@
   font-weight: 600;
 }
 
-[data-theme="dark"] .thumbHint {
+:global([data-theme="dark"]) .thumbHint {
   color: #94A3B8;
 }
 
@@ -554,7 +554,7 @@
   color: #0F172A;
 }
 
-[data-theme="dark"] .sideHeadingText { color: #F1F5F9; }
+:global([data-theme="dark"]) .sideHeadingText { color: #F1F5F9; }
 
 .sideHeadingLink {
   font-size: 0.78rem;
@@ -584,7 +584,7 @@
   box-shadow: 0 16px 30px -16px rgba(15, 23, 42, 0.22);
 }
 
-[data-theme="dark"] .dealCard {
+:global([data-theme="dark"]) .dealCard {
   background: #111827;
   border-color: #1F2937;
   color: #F1F5F9;

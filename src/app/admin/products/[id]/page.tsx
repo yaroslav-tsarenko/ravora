@@ -391,12 +391,23 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                 background: "var(--admin-bg-input)",
                 padding: "0.5rem",
               }}>
-                {flatCats
-                  .filter((cat) => !categorySearch || cat.name.toLowerCase().includes(categorySearch.toLowerCase()))
-                  .map((cat) => {
-                    const selected = watch("categoryIds") || [];
-                    const isChecked = selected.includes(cat.id);
-                    return (
+                {(() => {
+                  const selectedIds = new Set(watch("categoryIds") || []);
+                  const matches = flatCats.filter(
+                    (cat) =>
+                      selectedIds.has(cat.id) ||
+                      !categorySearch ||
+                      cat.name.toLowerCase().includes(categorySearch.toLowerCase()),
+                  );
+                  const VISIBLE_LIMIT = 200;
+                  const visible = matches.slice(0, VISIBLE_LIMIT);
+                  const hiddenCount = matches.length - visible.length;
+                  return (
+                    <>
+                      {visible.map((cat) => {
+                        const selected = watch("categoryIds") || [];
+                        const isChecked = selected.includes(cat.id);
+                        return (
                       <label
                         key={cat.id}
                         style={{
@@ -429,6 +440,19 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                       </label>
                     );
                   })}
+                      {hiddenCount > 0 && (
+                        <div style={{
+                          padding: "0.5rem",
+                          fontSize: "0.75rem",
+                          color: "var(--admin-text-muted)",
+                          textAlign: "center",
+                        }}>
+                          + {hiddenCount.toLocaleString()} more — refine your search to see them
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             </div>
             <div style={{ display: "flex", gap: "2rem" }}>

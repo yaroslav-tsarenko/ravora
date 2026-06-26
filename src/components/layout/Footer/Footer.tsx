@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { FaLinkedinIn, FaInstagram } from "react-icons/fa6";
-import { AvontLogo } from "../AvontLogo";
+import { MisaElectroLogo } from "../MisaElectroLogo";
 import visaLogo from "@/assets/visa-logo.svg";
 import mastercardLogo from "@/assets/mastercard-logo.svg";
 import pciDssLogo from "@/assets/pci-dss-compliant-logo-vector.svg";
@@ -20,11 +20,11 @@ export function Footer() {
       <div className={styles.container}>
         <div className={styles.topSection}>
           <div className={styles.brandCol}>
-            <Link href="/" className={styles.logo} aria-label="NetimStore — netim.com">
-              <AvontLogo size={32} />
+            <Link href="/" className={styles.logo} aria-label="MisaElectro — misaelectro.ro">
+              <MisaElectroLogo size={32} />
               <span className={styles.logoBrand}>
-                <span className={styles.logoBrandPrimary}>Netim</span>
-                <span className={styles.logoBrandAccent}>Store</span>
+                <span className={styles.logoBrandPrimary}>Misa</span>
+                <span className={styles.logoBrandAccent}>Electro</span>
               </span>
             </Link>
             <p className={styles.brandDesc}>
@@ -78,9 +78,17 @@ export function Footer() {
         </div>
 
         <div className={styles.bottom}>
-          <p className={styles.copyright}>
-            {t("copyright", { year: currentYear, storeName: "netim.com" })}
-          </p>
+          <div className={styles.legal}>
+            <p className={styles.copyright}>
+              {t("copyright", { year: currentYear, storeName: "MisaElectro" })}
+            </p>
+            <p className={styles.legalEntity}>
+              MISARELIANA S.R.L. · Reg. No. 54316682 · Str. Fântânilor 43, IAŞI, Mun. Iaşi
+            </p>
+            <p className={styles.legalEntity}>
+              info@misaelectro.ro · b2b@misaelectro.ro
+            </p>
+          </div>
           <div className={styles.paymentMethods}>
             <span className={styles.paymentBadge}>
               <Image src={visaLogo} alt="Visa" height={100} width={100} className={styles.paymentImg} />

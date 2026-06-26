@@ -145,9 +145,23 @@
   }
 }
 
+.legal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
 .copyright {
   font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+}
+
+.legalEntity {
+  font-size: 0.6875rem;
   color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+  line-height: 1.5;
 }
 
 .paymentMethods {

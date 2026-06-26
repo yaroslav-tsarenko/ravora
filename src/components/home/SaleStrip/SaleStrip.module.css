@@ -189,3 +189,41 @@
     height: 90px;
   }
 }
+
+:global([data-theme="dark"]) .section {
+  background: #111827;
+  border-color: #1F2937;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+:global([data-theme="dark"]) .title,
+:global([data-theme="dark"]) .cardName {
+  color: #F1F5F9;
+}
+
+:global([data-theme="dark"]) .card {
+  background: #0F172A;
+  border-color: #1F2937;
+  color: #F1F5F9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+:global([data-theme="dark"]) .card:hover {
+  border-color: rgba(37, 99, 235, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+:global([data-theme="dark"]) .imageWrap {
+  background: #ffffff;
+}
+
+:global([data-theme="dark"]) .arrow {
+  background: #1F2937;
+  border-color: #374151;
+  color: #94A3B8;
+}
+
+:global([data-theme="dark"]) .arrow:hover {
+  border-color: #3B82F6;
+  color: #93C5FD;
+}

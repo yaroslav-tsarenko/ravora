@@ -32,7 +32,7 @@ export function ServicePromise() {
             Built for professionals who can&apos;t afford to wait.
           </h2>
           <p className={styles.lead}>
-            Every order at netim.com is handled by a team that knows what an
+            Every order at MisaElectro is handled by a team that knows what an
             installer needs on a Monday morning. Spec-correct, certified, and out
             the door fast.
           </p>

@@ -72,3 +72,20 @@
   color: #475569;
   line-height: 1.25;
 }
+
+:global([data-theme="dark"]) .inner {
+  background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
+  border-color: #1F2937;
+}
+
+:global([data-theme="dark"]) .card:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+:global([data-theme="dark"]) .value {
+  color: #F1F5F9;
+}
+
+:global([data-theme="dark"]) .label {
+  color: #94A3B8;
+}

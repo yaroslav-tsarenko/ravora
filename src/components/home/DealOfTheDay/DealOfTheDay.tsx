@@ -26,13 +26,18 @@ function getTimeUntilMidnight() {
 }
 
 export function DealOfTheDay({ product }: Props) {
-  const [time, setTime] = useState(getTimeUntilMidnight);
+  const [time, setTime] = useState<ReturnType<typeof getTimeUntilMidnight> | null>(null);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
 
   useEffect(() => {
-    const id = setInterval(() => setTime(getTimeUntilMidnight()), 1000);
-    return () => clearInterval(id);
+    const update = () => setTime(getTimeUntilMidnight());
+    const initialId = window.setTimeout(update, 0);
+    const intervalId = window.setInterval(update, 1000);
+    return () => {
+      window.clearTimeout(initialId);
+      window.clearInterval(intervalId);
+    };
   }, []);
 
   const discount = getDiscountPercent(product);
@@ -62,11 +67,11 @@ export function DealOfTheDay({ product }: Props) {
             Deal of the Day
           </motion.span>
           <div className={styles.timer}>
-            <span className={styles.timeBlock}>{pad(time.h)}</span>
+            <span className={styles.timeBlock}>{time ? pad(time.h) : "--"}</span>
             <span className={styles.timeSep}>:</span>
-            <span className={styles.timeBlock}>{pad(time.m)}</span>
+            <span className={styles.timeBlock}>{time ? pad(time.m) : "--"}</span>
             <span className={styles.timeSep}>:</span>
-            <span className={styles.timeBlock}>{pad(time.s)}</span>
+            <span className={styles.timeBlock}>{time ? pad(time.s) : "--"}</span>
           </div>
         </div>
         <h2 className={styles.title}>{product.name}</h2>

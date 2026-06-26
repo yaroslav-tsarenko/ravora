@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { randomBytes } from "crypto";
 import { sendPasswordResetEmail } from "@/lib/email";
+import { scheduleEmail } from "@/lib/email-jobs";
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,10 +36,10 @@ export async function POST(request: NextRequest) {
       process.env.NEXT_PUBLIC_SITE_URL ||
       process.env.NEXT_PUBLIC_BASE_URL ||
       request.headers.get("origin") ||
-      "http://localhost:3000";
+      "https://misaelectro.ro";
     const resetUrl = `${baseUrl.replace(/\/+$/, "")}/en/auth/reset-password?token=${token}`;
 
-    sendPasswordResetEmail(email, resetUrl, user.name).catch(console.error);
+    scheduleEmail("password reset", () => sendPasswordResetEmail(email, resetUrl, user.name));
 
     return NextResponse.json({ success: true });
   } catch (error) {

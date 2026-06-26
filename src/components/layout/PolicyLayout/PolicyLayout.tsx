@@ -31,15 +31,15 @@ export function ContactBlock() {
   return (
     <div className={styles.contactBlock}>
       <p>
-        <strong>AVONTRA LTD</strong>
+        <strong>MISARELIANA S.R.L.</strong>
         <br />
-        Company number: 17245887
+        Registration number: 54316682
         <br />
-        Registered office: Dept 6735, 196 High Road, Wood Green, London, United Kingdom, N22 8HH
+        Registered office: IAŞI, Mun. Iaşi, Str. Fântânilor 43
         <br />
-        Phone: +44 7360 545980
+        General email: info@misaelectro.ro
         <br />
-        Email: info@voltmarket.store
+        Wholesale (B2B): b2b@misaelectro.ro
       </p>
     </div>
   );

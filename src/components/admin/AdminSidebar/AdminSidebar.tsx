@@ -47,7 +47,7 @@ export function AdminSidebar() {
           <Store size={16} />
         </div>
         <div>
-          <div className="admin-sidebar-brand">My Store</div>
+          <div className="admin-sidebar-brand">MisaElectro</div>
           <div className="admin-sidebar-brand-sub">Admin Panel</div>
         </div>
       </div>

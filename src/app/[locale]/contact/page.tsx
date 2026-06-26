@@ -10,7 +10,7 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Mail, Phone, MapPin, Clock, Send,
+  Mail, MapPin, Clock, Send,
   CheckCircle, MessageSquare, HelpCircle, ShieldCheck,
 } from "lucide-react";
 import styles from "./contact.module.css";
@@ -48,9 +48,9 @@ const errorStyle: React.CSSProperties = {
 };
 
 const CONTACT_INFO = [
-  { icon: Mail, title: "Email Us", detail: "info@voltmarket.store", sub: "We reply within 24 hours" },
-  { icon: Phone, title: "Call Us", detail: "+44 7360 545980", sub: "Mon-Fri 9:00-18:00 GMT" },
-  { icon: MapPin, title: "Our Office", detail: "London, United Kingdom", sub: "AVONTRA LTD", tooltip: "Dept 6735, 196 High Road, Wood Green, London, N22 8HH, UK\nCompany No. 17245887" },
+  { icon: Mail, title: "Email Us", detail: "info@misaelectro.ro", sub: "General inquiries — reply within 24h" },
+  { icon: Mail, title: "Wholesale (B2B)", detail: "b2b@misaelectro.ro", sub: "Bulk and trade orders" },
+  { icon: MapPin, title: "Our Office", detail: "IAŞI, Mun. Iaşi", sub: "MISARELIANA S.R.L.", tooltip: "Str. Fântânilor 43, IAŞI, Mun. Iaşi, Romania\nReg. No. 54316682" },
   { icon: Clock, title: "Working Hours", detail: "Mon-Fri 9:00-18:00", sub: "Sat 10:00-14:00" },
 ];
 
@@ -353,15 +353,11 @@ export default function ContactPage() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem" }}>
-                <span style={{ color: "rgba(255,255,255,0.7)" }}>Email</span>
+                <span style={{ color: "rgba(255,255,255,0.7)" }}>General email</span>
                 <span style={{ fontWeight: 600 }}>Within 24h</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem" }}>
-                <span style={{ color: "rgba(255,255,255,0.7)" }}>Phone</span>
-                <span style={{ fontWeight: 600 }}>Immediate</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem" }}>
-                <span style={{ color: "rgba(255,255,255,0.7)" }}>Wholesale</span>
+                <span style={{ color: "rgba(255,255,255,0.7)" }}>Wholesale (B2B)</span>
                 <span style={{ fontWeight: 600 }}>Within 48h</span>
               </div>
             </div>

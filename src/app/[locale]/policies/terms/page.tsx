@@ -1,32 +1,32 @@
 import { PolicyLayout, ContactBlock } from "@/components/layout/PolicyLayout/PolicyLayout";
 
-export const metadata = { title: "Terms and Conditions — netim.com" };
+export const metadata = { title: "Terms and Conditions — MisaElectro" };
 
 export default function TermsPage() {
   return (
     <PolicyLayout title="Terms and Conditions" lastUpdated="29 May 2026">
       <p>
         These Terms and Conditions (&ldquo;Terms&rdquo;) govern your access to and use of the website
-        www.voltmarket.store and any related pages, services, orders, purchases, communications, and
-        transactions operated under the netim.com brand.
+        www.misaelectro.ro and any related pages, services, orders, purchases, communications, and
+        transactions operated under the MisaElectro brand.
       </p>
       <p>The Website is operated by:</p>
       <ContactBlock />
       <p>
-        In these Terms, &ldquo;netim.com&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo; or &ldquo;our&rdquo; means AVONTRA LTD.
+        In these Terms, &ldquo;MisaElectro&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo; or &ldquo;our&rdquo; means MISARELIANA S.R.L..
         &ldquo;Customer&rdquo;, &ldquo;you&rdquo; or &ldquo;your&rdquo; means any person or business accessing the
         Website, placing an order, purchasing goods, or otherwise using our services.
       </p>
       <p>
         Please read these Terms carefully before placing an order. By accessing the Website, creating an
-        account, submitting an order, or purchasing goods from netim.com, you agree to be bound by these
+        account, submitting an order, or purchasing goods from MisaElectro, you agree to be bound by these
         Terms.
       </p>
 
       <h2>1. Scope of These Terms</h2>
-      <p>1.1 These Terms apply to all use of the Website and all purchases of goods made through netim.com.</p>
+      <p>1.1 These Terms apply to all use of the Website and all purchases of goods made through MisaElectro.</p>
       <p>
-        1.2 netim.com sells physical electrical products, electrical materials, wiring accessories,
+        1.2 MisaElectro sells physical electrical products, electrical materials, wiring accessories,
         lighting-related products, installation components, distribution and circuit protection products,
         sockets, switches, cables, mounting accessories, and other related goods for domestic, commercial,
         trade, and professional use.
@@ -58,12 +58,12 @@ export default function TermsPage() {
         details, and any other information required to process your order.
       </p>
       <p>
-        2.4 You must not use the Website or purchase goods from netim.com for any unlawful, unsafe,
+        2.4 You must not use the Website or purchase goods from MisaElectro for any unlawful, unsafe,
         fraudulent, or unauthorised purpose.
       </p>
 
       <h2>3. Consumer and Business Customers</h2>
-      <p>3.1 netim.com sells to both consumers and business customers.</p>
+      <p>3.1 MisaElectro sells to both consumers and business customers.</p>
       <p>
         3.2 A &ldquo;Consumer&rdquo; means an individual acting wholly or mainly outside their trade, business,
         craft, or profession.
@@ -139,12 +139,12 @@ export default function TermsPage() {
         professional where required or appropriate.
       </p>
       <p>
-        5.4 netim.com does not provide electrical engineering, installation, compliance, inspection,
+        5.4 MisaElectro does not provide electrical engineering, installation, compliance, inspection,
         certification, or safety approval services through the Website.
       </p>
       <p>
         5.5 Any guidance, product description, compatibility note, or customer support response provided by
-        netim.com is general information only and must not be treated as a substitute for professional
+        MisaElectro is general information only and must not be treated as a substitute for professional
         advice, electrical inspection, or compliance assessment.
       </p>
       <p>
@@ -186,7 +186,7 @@ export default function TermsPage() {
         does not automatically mean that your order has been accepted.
       </p>
       <p>
-        7.3 A contract between you and netim.com is formed only when we accept your order, process it for
+        7.3 A contract between you and MisaElectro is formed only when we accept your order, process it for
         fulfilment, or dispatch the goods, whichever occurs first.
       </p>
       <p>7.4 We may refuse, cancel, or limit any order before acceptance where:</p>
@@ -225,14 +225,14 @@ export default function TermsPage() {
       </p>
       <p>
         8.6 Currency conversion, bank fees, foreign transaction fees, card issuer fees, or exchange rate
-        differences are the responsibility of the customer and are not controlled by netim.com.
+        differences are the responsibility of the customer and are not controlled by MisaElectro.
       </p>
 
       <h2>9. Payment Terms</h2>
       <p>9.1 Payment must be made at checkout.</p>
       <p>9.2 We accept secure card payments, including Visa and Mastercard.</p>
       <p>
-        9.3 Payments are processed by secure third-party payment providers. netim.com does not store your
+        9.3 Payments are processed by secure third-party payment providers. MisaElectro does not store your
         full card number or full card security details.
       </p>
       <p>
@@ -253,7 +253,7 @@ export default function TermsPage() {
 
       <h2>10. Discounts, Promotions, and Free Delivery</h2>
       <p>
-        10.1 From time to time, netim.com may offer discounts, promotional codes, special prices, free
+        10.1 From time to time, MisaElectro may offer discounts, promotional codes, special prices, free
         delivery thresholds, or trade pricing.
       </p>
       <p>
@@ -277,7 +277,7 @@ export default function TermsPage() {
       </p>
 
       <h2>11. Delivery and Dispatch</h2>
-      <p>11.1 netim.com dispatches orders from the United Kingdom.</p>
+      <p>11.1 MisaElectro dispatches orders from the United Kingdom.</p>
       <p>
         11.2 Delivery is available to supported delivery destinations shown on the Website or at checkout.
       </p>
@@ -339,7 +339,7 @@ export default function TermsPage() {
         import VAT, taxes, brokerage fees, and local charges payable in the destination country.
       </p>
       <p>
-        12.3 netim.com has no control over customs processing times, customs decisions, import restrictions,
+        12.3 MisaElectro has no control over customs processing times, customs decisions, import restrictions,
         local tax assessments, or charges imposed by authorities, couriers, or customs brokers.
       </p>
       <p>
@@ -349,7 +349,7 @@ export default function TermsPage() {
       <p>
         12.5 If an order is delayed, returned, seized, rejected, or destroyed by customs or local
         authorities due to import restrictions, unpaid charges, incorrect information provided by you, or
-        failure to comply with local requirements, netim.com will not be responsible for the resulting loss,
+        failure to comply with local requirements, MisaElectro will not be responsible for the resulting loss,
         delay, or costs except where required by law.
       </p>
 
@@ -385,7 +385,7 @@ export default function TermsPage() {
         days after the day on which you receive the last parcel.
       </p>
       <p>
-        14.4 To exercise your cancellation right, you must inform us clearly by email at info@voltmarket.store
+        14.4 To exercise your cancellation right, you must inform us clearly by email at info@misaelectro.ro
         before the cancellation period expires.
       </p>
       <p>
@@ -438,7 +438,7 @@ export default function TermsPage() {
       <h2>16. Faulty, Damaged, or Incorrect Goods</h2>
       <p>
         16.1 If goods arrive damaged, faulty, incomplete, or incorrect, you should contact us as soon as
-        possible at info@voltmarket.store.
+        possible at info@misaelectro.ro.
       </p>
       <p>
         16.2 Please provide your order number, a description of the issue, and clear photos or videos
@@ -489,7 +489,7 @@ export default function TermsPage() {
       </p>
       <p>
         17.4 These statutory rights are separate from, and are not limited by, any manufacturer warranty,
-        commercial warranty, additional warranty, or return policy offered by netim.com.
+        commercial warranty, additional warranty, or return policy offered by MisaElectro.
       </p>
       <p>
         17.5 Business Customers do not receive consumer statutory cancellation rights and may have more
@@ -497,7 +497,7 @@ export default function TermsPage() {
       </p>
 
       <h2>18. Additional Warranty</h2>
-      <p>18.1 netim.com may offer paid additional warranty options for selected products.</p>
+      <p>18.1 MisaElectro may offer paid additional warranty options for selected products.</p>
       <p>18.2 Additional Warranty is optional and may be purchased at checkout where available.</p>
       <p>
         18.3 Unless otherwise stated on the product page or at checkout, Additional Warranty pricing is
@@ -550,7 +550,7 @@ export default function TermsPage() {
         <li>loss of profits, labour costs, electrician costs, removal costs, reinstallation costs, downtime, or indirect losses.</li>
       </ul>
       <p>
-        18.9 To make an Additional Warranty claim, you must contact us at info@voltmarket.store with your order
+        18.9 To make an Additional Warranty claim, you must contact us at info@misaelectro.ro with your order
         number, proof of purchase, description of the defect, and supporting photos, videos, or diagnostic
         information where reasonably requested.
       </p>
@@ -604,7 +604,7 @@ export default function TermsPage() {
 
       <h2>20. Product Compliance and Local Regulations</h2>
       <p>
-        20.1 Products sold by netim.com may be designed for specific markets, standards, voltage systems,
+        20.1 Products sold by MisaElectro may be designed for specific markets, standards, voltage systems,
         fittings, or installation environments.
       </p>
       <p>
@@ -612,7 +612,7 @@ export default function TermsPage() {
         resale, import, or use in your country, region, property, project, or electrical system.
       </p>
       <p>
-        20.3 We do not guarantee that products purchased from netim.com will meet every local building code,
+        20.3 We do not guarantee that products purchased from MisaElectro will meet every local building code,
         electrical code, certification requirement, insurance requirement, workplace requirement, or project
         specification outside the information expressly stated on the product page.
       </p>
@@ -625,8 +625,8 @@ export default function TermsPage() {
       <h2>21. Intellectual Property</h2>
       <p>
         21.1 All content on the Website, including text, layout, branding, logos, graphics, icons, product
-        descriptions, photographs, videos, design elements, and other materials, belongs to netim.com,
-        AVONTRA LTD, suppliers, manufacturers, licensors, or other rights holders.
+        descriptions, photographs, videos, design elements, and other materials, belongs to MisaElectro,
+        MISARELIANA S.R.L., suppliers, manufacturers, licensors, or other rights holders.
       </p>
       <p>
         21.2 You may use the Website only for personal, business, or purchasing purposes in accordance with
@@ -704,7 +704,7 @@ export default function TermsPage() {
         misrepresentation, or any liability that cannot be excluded under applicable law.
       </p>
       <p>25.2 Nothing in these Terms limits your mandatory statutory rights as a Consumer.</p>
-      <p>25.3 Subject to sections 25.1 and 25.2, netim.com will not be liable for:</p>
+      <p>25.3 Subject to sections 25.1 and 25.2, MisaElectro will not be liable for:</p>
       <ul>
         <li>indirect, incidental, special, consequential, or punitive losses;</li>
         <li>loss of profit, revenue, business, opportunity, contract, goodwill, or anticipated savings;</li>
