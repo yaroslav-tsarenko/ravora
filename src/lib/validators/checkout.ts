@@ -21,6 +21,7 @@ export const checkoutSchema = z.object({
   shipping: checkoutShippingSchema,
   shippingMethod: z.string().min(1, "Shipping method is required"),
   notes: z.string().optional(),
+  discountCode: z.string().optional(),
 });
 
 export type CheckoutFormData = z.infer<typeof checkoutSchema>;

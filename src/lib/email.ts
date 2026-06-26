@@ -135,6 +135,10 @@ export async function sendWelcomeEmail(email: string, name?: string | null): Pro
       <p style="color:${MUTED_COLOR};line-height:1.6;margin:0 0 16px;">
         Your account has been created successfully. You now have access to thousands of electrical materials and supplies at competitive prices.
       </p>
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px;margin:0 0 16px;text-align:center;">
+        <p style="margin:0 0 4px;font-weight:700;color:#166534;font-size:18px;">🎉 10% OFF your first order</p>
+        <p style="margin:0;color:#15803d;font-size:13px;">Discount applies automatically at checkout.</p>
+      </div>
       <div style="background:#f9f9f9;border-radius:8px;padding:16px;margin:0 0 24px;">
         <p style="margin:0 0 8px;font-weight:600;color:${TEXT_COLOR};">What you can do now:</p>
         <ul style="margin:0;padding:0 0 0 20px;color:${MUTED_COLOR};line-height:1.8;">

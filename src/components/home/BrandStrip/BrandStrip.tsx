@@ -38,15 +38,20 @@ export function BrandStrip({ brands }: Props) {
         </div>
       </div>
       <div className={styles.track} ref={scrollRef}>
-        {brands.map((brand) => (
-          <a key={brand.id} href={brand.linkUrl || "#"} className={styles.brand}>
-            {brand.logoUrl ? (
-              <img src={brand.logoUrl} alt={brand.name} className={styles.brandLogo} />
-            ) : (
-              <span className={styles.brandName}>{brand.name}</span>
-            )}
-          </a>
-        ))}
+        {brands.map((brand) => {
+          const href = brand.linkUrl && brand.linkUrl.trim() !== "" && brand.linkUrl !== "#"
+            ? brand.linkUrl
+            : `/catalog?brand=${encodeURIComponent(brand.name)}`;
+          return (
+            <a key={brand.id} href={href} className={styles.brand} aria-label={`Shop ${brand.name}`}>
+              {brand.logoUrl ? (
+                <img src={brand.logoUrl} alt={brand.name} className={styles.brandLogo} />
+              ) : (
+                <span className={styles.brandName}>{brand.name}</span>
+              )}
+            </a>
+          );
+        })}
       </div>
     </div>
   );

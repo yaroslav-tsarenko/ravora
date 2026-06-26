@@ -16,6 +16,7 @@ import { Testimonials } from "../Testimonials/Testimonials";
 import { KnowledgeHub } from "../KnowledgeHub/KnowledgeHub";
 import { CategoryShowcase } from "../CategoryShowcase/CategoryShowcase";
 import { WhyShopWithUs } from "../WhyShopWithUs/WhyShopWithUs";
+import { HomeCTABanners } from "../HomeCTABanners/HomeCTABanners";
 import styles from "./MarketplaceHome.module.css";
 import type { HomepageProduct, CategorySection, BrandSection } from "@/lib/homepage-products";
 
@@ -130,6 +131,8 @@ export function MarketplaceHome({ data }: Props) {
         <div className={styles.mainLayout}>
           <div className={styles.content}>
             {/* === ABOVE THE FOLD — start selling immediately === */}
+
+            <HomeCTABanners />
 
             {/* Most Popular — visible right after hero */}
             {popularProducts.length > 0 && (

@@ -4,6 +4,7 @@ import { checkoutSchema } from "@/lib/validators/checkout";
 import { getSessionUser } from "@/lib/auth";
 import { sendOrderConfirmationEmail, sendOrderInvoiceEmail } from "@/lib/email";
 import { scheduleEmail } from "@/lib/email-jobs";
+import { resolveDiscount, markDiscountUsed } from "@/lib/discounts";
 
 export async function POST(request: NextRequest) {
   try {
@@ -47,10 +48,19 @@ export async function POST(request: NextRequest) {
       };
     });
 
+    const discount = await resolveDiscount({
+      userId: user?.id ?? null,
+      email: validated.contact.email,
+      code: validated.discountCode ?? null,
+    });
+
+    const discountAmount = discount ? +(subtotal * (discount.percent / 100)).toFixed(2) : 0;
+    const discountedSubtotal = subtotal - discountAmount;
+
     const taxRate = 21;
-    const taxAmount = subtotal * (taxRate / 100);
-    const shippingCost = subtotal >= 100 ? 0 : 5.99;
-    const total = subtotal + taxAmount + shippingCost;
+    const taxAmount = +(discountedSubtotal * (taxRate / 100)).toFixed(2);
+    const shippingCost = discountedSubtotal >= 100 ? 0 : 5.99;
+    const total = +(discountedSubtotal + taxAmount + shippingCost).toFixed(2);
 
     const order = await prisma.order.create({
       data: {
@@ -63,12 +73,19 @@ export async function POST(request: NextRequest) {
         shippingCost,
         subtotal,
         taxAmount,
+        discountAmount,
+        discountCode: discount?.code ?? null,
+        discountPercent: discount?.percent ?? null,
         total,
         paymentMethod: "manual",
         items: { create: orderItems },
       },
       include: { items: true },
     });
+
+    if (discount) {
+      await markDiscountUsed(discount, user?.id ?? null);
+    }
 
     for (const item of items) {
       await prisma.product.update({

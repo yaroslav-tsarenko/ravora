@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 // ── Auth ────────────────────────────────────────
@@ -20,11 +20,16 @@ model User {
   role         UserRole  @default(CUSTOMER)
   phone        String?
 
-  addresses          Address[]
-  orders             Order[]
-  reviews            Review[]
-  wishlist           WishlistItem[]
+  welcomeDiscountUsed    Boolean @default(false)
+  newsletterDiscountUsed Boolean @default(false)
+  newsletterSubscribed   Boolean @default(false)
+
+  addresses           Address[]
+  orders              Order[]
+  reviews             Review[]
+  wishlist            WishlistItem[]
   passwordResetTokens PasswordResetToken[]
+  newsletter          Newsletter?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -37,13 +42,13 @@ enum UserRole {
 }
 
 model PasswordResetToken {
-  id        String   @id @default(cuid())
-  token     String   @unique
+  id        String    @id @default(cuid())
+  token     String    @unique
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   usedAt    DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 }
 
 model Address {
@@ -68,24 +73,24 @@ model Address {
 // ── Store Settings ───────────────────────────────
 
 model StoreSettings {
-  id             String   @id @default("default")
-  name           String   @default("MisaElectro")
-  description    String?
-  logoUrl        String?
-  faviconUrl     String?
-  primaryColor   String   @default("#000000")
-  secondaryColor String   @default("#ffffff")
-  email          String?
-  phone          String?
-  address        String?
-  currency       String   @default("EUR")
-  taxRate        Decimal  @default(21)
+  id              String   @id @default("default")
+  name            String   @default("MisaElectro")
+  description     String?
+  logoUrl         String?
+  faviconUrl      String?
+  primaryColor    String   @default("#000000")
+  secondaryColor  String   @default("#ffffff")
+  email           String?
+  phone           String?
+  address         String?
+  currency        String   @default("EUR")
+  taxRate         Decimal  @default(21)
   freeShippingMin Decimal?
-  metaTitle      String?
+  metaTitle       String?
   metaDescription String?
-  facebook       String?
-  instagram      String?
-  tiktok         String?
+  facebook        String?
+  instagram       String?
+  tiktok          String?
 
   updatedAt DateTime @updatedAt
 }
@@ -113,32 +118,32 @@ model Category {
 }
 
 model Product {
-  id               String            @id @default(cuid())
+  id               String        @id @default(cuid())
   name             String
-  slug             String            @unique
-  sku              String            @unique
+  slug             String        @unique
+  sku              String        @unique
   description      String?
   shortDescription String?
   price            Decimal
   comparePrice     Decimal?
   costPrice        Decimal?
-  trackInventory   Boolean           @default(true)
-  quantity         Int               @default(0)
-  lowStockAlert    Int               @default(5)
+  trackInventory   Boolean       @default(true)
+  quantity         Int           @default(0)
+  lowStockAlert    Int           @default(5)
   weight           Decimal?
   metaTitle        String?
   metaDescription  String?
-  status           ProductStatus     @default(DRAFT)
-  isFeatured       Boolean           @default(false)
+  status           ProductStatus @default(DRAFT)
+  isFeatured       Boolean       @default(false)
   metadata         Json?
 
-  brand            String?
-  gtin             String?
-  ean              String?
-  mpn              String?
-  googleCategory   String?
-  condition        String @default("new")
-  characteristics  Json?
+  brand           String?
+  gtin            String?
+  ean             String?
+  mpn             String?
+  googleCategory  String?
+  condition       String  @default("new")
+  characteristics Json?
 
   images     ProductImage[]
   categories ProductCategory[]
@@ -201,25 +206,27 @@ model ProductVariant {
 // ── Orders ───────────────────────────────────────
 
 model Order {
-  id              String        @id @default(cuid())
-  orderNumber     String        @unique @default(cuid())
-  status          OrderStatus   @default(PENDING)
+  id          String      @id @default(cuid())
+  orderNumber String      @unique @default(cuid())
+  status      OrderStatus @default(PENDING)
 
-  userId          String?
-  user            User?         @relation(fields: [userId], references: [id])
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
 
   customerName    String
   customerEmail   String
   customerPhone   String?
   shippingAddress Json
   shippingMethod  String?
-  shippingCost    Decimal       @default(0)
+  shippingCost    Decimal @default(0)
   trackingNumber  String?
 
-  subtotal       Decimal
-  taxAmount      Decimal
-  discountAmount Decimal @default(0)
-  total          Decimal
+  subtotal        Decimal
+  taxAmount       Decimal
+  discountAmount  Decimal  @default(0)
+  discountCode    String?
+  discountPercent Decimal? @db.Decimal(5, 2)
+  total           Decimal
 
   paymentStatus PaymentStatus @default(PENDING)
   paymentMethod String?
@@ -309,21 +316,21 @@ model Brand {
 }
 
 model HomepageSection {
-  id             String  @id @default(cuid())
-  title          String
-  subtitle       String?
-  slug           String  @unique
-  filterType     String  @default("featured")
-  categorySlug   String?
-  maxProducts    Int     @default(5)
-  viewAllUrl     String?
-  viewAllLabel   String  @default("View all")
-  bgStyle        String  @default("white")
-  columns        Int     @default(5)
-  isActive       Boolean @default(true)
-  sortOrder      Int     @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id           String   @id @default(cuid())
+  title        String
+  subtitle     String?
+  slug         String   @unique
+  filterType   String   @default("featured")
+  categorySlug String?
+  maxProducts  Int      @default(5)
+  viewAllUrl   String?
+  viewAllLabel String   @default("View all")
+  bgStyle      String   @default("white")
+  columns      Int      @default(5)
+  isActive     Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model HomepageTab {
@@ -399,6 +406,20 @@ model WishlistItem {
   createdAt DateTime @default(now())
 
   @@unique([userId, productId])
+}
+
+// ── Newsletter & Discounts ───────────────────────
+
+model Newsletter {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  userId         String?   @unique
+  user           User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  discountCode   String?   @unique
+  discountUsed   Boolean   @default(false)
+  unsubscribedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }
 
 // ── Import ───────────────────────────────────────

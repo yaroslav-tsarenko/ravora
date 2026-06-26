@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
     const onSale = searchParams.get("onSale");
 
     const where: Prisma.ProductWhereInput = {};
+    const andClauses: Prisma.ProductWhereInput[] = [];
 
     const isPublicQuery = !status || (status !== "ALL" && status === "ACTIVE");
 
@@ -40,11 +41,14 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      where.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { sku: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-      ];
+      andClauses.push({
+        OR: [
+          { name: { contains: search, mode: "insensitive" } },
+          { sku: { contains: search, mode: "insensitive" } },
+          { description: { contains: search, mode: "insensitive" } },
+          { brand: { contains: search, mode: "insensitive" } },
+        ],
+      });
     }
 
     if (category) {
@@ -71,7 +75,9 @@ export async function GET(request: NextRequest) {
     }
 
     if (inStock === "true") {
-      where.quantity = { gt: 0 };
+      andClauses.push({
+        OR: [{ trackInventory: false }, { quantity: { gt: 0 } }],
+      });
     }
 
     if (featured === "true") {
@@ -79,19 +85,30 @@ export async function GET(request: NextRequest) {
     }
 
     if (brand) {
-      where.brand = brand;
+      where.brand = { equals: brand, mode: "insensitive" };
     }
 
     if (onSale === "true") {
-      where.comparePrice = { not: null };
+      andClauses.push({ comparePrice: { gt: 0 } });
     }
 
-    const orderBy: Prisma.ProductOrderByWithRelationInput = (() => {
+    if (andClauses.length) {
+      where.AND = andClauses;
+    }
+
+    const orderBy: Prisma.ProductOrderByWithRelationInput[] = (() => {
       switch (sort) {
-        case "price-asc": return { price: "asc" };
-        case "price-desc": return { price: "desc" };
-        case "name-asc": return { name: "asc" };
-        default: return { createdAt: "desc" };
+        case "price-asc": return [{ price: "asc" }];
+        case "price-desc": return [{ price: "desc" }];
+        case "name-asc": return [{ name: "asc" }];
+        case "popular":
+          return [
+            { orderItems: { _count: "desc" } },
+            { isFeatured: "desc" },
+            { quantity: "desc" },
+            { createdAt: "desc" },
+          ];
+        default: return [{ createdAt: "desc" }];
       }
     })();
 

@@ -12,6 +12,7 @@ export function ProductSort({ value, onChange }: ProductSortProps) {
 
   const options = [
     { key: "newest", label: t("newest") },
+    { key: "popular", label: "Most popular" },
     { key: "price-asc", label: t("priceLowHigh") },
     { key: "price-desc", label: t("priceHighLow") },
     { key: "name-asc", label: t("nameAZ") },

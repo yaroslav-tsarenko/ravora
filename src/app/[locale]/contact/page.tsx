@@ -323,7 +323,7 @@ export default function ContactPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               {[
                 { q: "How long does shipping take?", a: "Standard 5-7 days, Express 2-3 days." },
-                { q: "What is your return policy?", a: "30-day returns on all unused items." },
+                { q: "What is your return policy?", a: "14-day returns on all unused items." },
                 { q: "Do you ship internationally?", a: "Yes, across all EU countries." },
                 { q: "How do I track my order?", a: "Check your account or email for tracking." },
               ].map((faq, i) => (

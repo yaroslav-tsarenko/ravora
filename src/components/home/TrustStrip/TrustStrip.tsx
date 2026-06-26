@@ -8,7 +8,7 @@ import styles from "./TrustStrip.module.css";
 const items = [
   { icon: Truck, label: "Free Shipping", desc: "On orders over €100", color: "rgba(255, 255, 255, 0.12)", iconColor: "#fff" },
   { icon: ShieldCheck, label: "Secure Payment", desc: "100% protected checkout", color: "rgba(255, 255, 255, 0.12)", iconColor: "#fff" },
-  { icon: RotateCcw, label: "Easy Returns", desc: "30-day return policy", color: "rgba(255, 255, 255, 0.12)", iconColor: "#fff" },
+  { icon: RotateCcw, label: "Easy Returns", desc: "14-day return policy", color: "rgba(255, 255, 255, 0.12)", iconColor: "#fff" },
   { icon: Headphones, label: "24/7 Support", desc: "We're always here to help", color: "rgba(255, 255, 255, 0.12)", iconColor: "#fff" },
 ];
 
