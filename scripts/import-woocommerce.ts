@@ -320,7 +320,7 @@ async function main() {
       comparePrice: compare,
       // WC export has empty Stock for POD-style products — default to a high
       // number and disable inventory tracking so items are always buyable.
-      quantity: parseInteger(r.Stock) ?? vs.reduce((a, v) => a + (parseInteger(v.Stock) ?? 0), 0) || 999,
+      quantity: (parseInteger(r.Stock) ?? vs.reduce((a, v) => a + (parseInteger(v.Stock) ?? 0), 0)) || 999,
       weight: parseNum(r.Weight),
       status: r.Published === "1" ? "ACTIVE" : "DRAFT",
       isFeatured: r.IsFeatured === "1",
