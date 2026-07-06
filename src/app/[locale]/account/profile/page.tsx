@@ -9,6 +9,9 @@ import { profileSchema, type ProfileFormData } from "@/lib/validators/profile";
 import { useAuth } from "@/providers/AuthProvider";
 import { toast } from "sonner";
 
+const INPUT =
+  "w-full rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-3 py-2.5 text-sm text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-tertiary)] focus:border-[color:var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/20";
+
 export default function ProfilePage() {
   const t = useTranslations("account");
   const common = useTranslations("common");
@@ -49,22 +52,29 @@ export default function ProfilePage() {
   };
 
   return (
-    <div style={{ maxWidth: "32rem" }}>
-      <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.5rem" }}>{t("editProfile")}</h1>
+    <div className="max-w-lg">
+      <h1 className="mb-6 font-serif text-2xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-3xl">{t("editProfile")}</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <div>
-          <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 500, marginBottom: "0.25rem" }}>Email</label>
-          <input value={user?.email || ""} readOnly style={{ width: "100%", padding: "0.5rem 0.75rem", borderRadius: "var(--radius-md)", border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", fontSize: "0.875rem", opacity: 0.6 }} />
+          <label className="mb-1 block text-sm font-medium text-[color:var(--color-text-secondary)]">Email</label>
+          <input
+            value={user?.email || ""}
+            readOnly
+            className={`${INPUT} opacity-60`}
+          />
         </div>
         <div>
-          <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 500, marginBottom: "0.25rem" }}>Name</label>
-          <input {...register("name")} style={{ width: "100%", padding: "0.5rem 0.75rem", borderRadius: "var(--radius-md)", border: errors.name ? "1px solid red" : "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", fontSize: "0.875rem" }} />
-          {errors.name && <p style={{ color: "red", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors.name.message}</p>}
+          <label className="mb-1 block text-sm font-medium text-[color:var(--color-text-secondary)]">Name</label>
+          <input
+            {...register("name")}
+            className={`${INPUT} ${errors.name ? "!border-[color:var(--color-danger)]" : ""}`}
+          />
+          {errors.name && <p className="mt-1 text-xs text-[color:var(--color-danger)]">{errors.name.message}</p>}
         </div>
         <div>
-          <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 500, marginBottom: "0.25rem" }}>Phone</label>
-          <input {...register("phone")} style={{ width: "100%", padding: "0.5rem 0.75rem", borderRadius: "var(--radius-md)", border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", fontSize: "0.875rem" }} />
+          <label className="mb-1 block text-sm font-medium text-[color:var(--color-text-secondary)]">Phone</label>
+          <input {...register("phone")} className={INPUT} />
         </div>
         <Button type="submit" color="primary" isLoading={loading}>{common("save")}</Button>
       </form>

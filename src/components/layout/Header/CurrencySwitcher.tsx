@@ -25,60 +25,29 @@ export function CurrencySwitcher() {
   const current = CURRENCIES.find((c) => c.code === currency)!;
 
   return (
-    <div ref={ref} style={{ position: "relative" }}>
+    <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
         aria-label="Currency"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "0.75rem",
-          fontWeight: 700,
-          color: "rgba(255,255,255,0.8)",
-          background: "transparent",
-          border: "1px solid rgba(255,255,255,0.2)",
-          borderRadius: "4px",
-          padding: "0.25rem 0.5rem",
-          cursor: "pointer",
-          transition: "background 0.15s",
-        }}
+        className="inline-flex items-center justify-center gap-1 rounded-md border border-current/25 px-2 py-1 text-[11px] font-semibold tracking-wide text-current/80 transition-colors hover:bg-current/10 hover:text-current"
       >
-        {current.symbol} {current.code}
+        <span>{current.symbol}</span>
+        <span>{current.code}</span>
       </button>
       {open && (
-        <div
-          style={{
-            position: "absolute",
-            top: "100%",
-            right: 0,
-            marginTop: "0.375rem",
-            background: "#fff",
-            border: "1px solid #DADDE2",
-            borderRadius: "6px",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
-            zIndex: 60,
-            minWidth: "120px",
-            overflow: "hidden",
-          }}
-        >
+        <div className="absolute right-0 top-full z-50 mt-1.5 min-w-[128px] overflow-hidden rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-bg-elevated)] shadow-lg">
           {CURRENCIES.map((c) => (
             <button
               key={c.code}
-              onClick={() => { setCurrency(c.code); setOpen(false); }}
-              style={{
-                display: "block",
-                width: "100%",
-                padding: "0.5rem 0.75rem",
-                fontSize: "0.8125rem",
-                fontWeight: c.code === currency ? 700 : 500,
-                textAlign: "left",
-                background: c.code === currency ? "#EBF5FF" : "transparent",
-                color: c.code === currency ? "#0072CE" : "#1F2933",
-                border: "none",
-                cursor: "pointer",
-                fontFamily: "inherit",
+              onClick={() => {
+                setCurrency(c.code);
+                setOpen(false);
               }}
+              className={`block w-full px-3 py-2 text-left text-[13px] font-medium transition-colors ${
+                c.code === currency
+                  ? "bg-[color:var(--color-primary-tint)] text-[color:var(--color-primary)]"
+                  : "text-[color:var(--color-text)] hover:bg-[color:var(--color-bg-secondary)]"
+              }`}
             >
               {c.label}
             </button>

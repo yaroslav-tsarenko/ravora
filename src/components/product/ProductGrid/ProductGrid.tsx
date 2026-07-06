@@ -1,7 +1,6 @@
 "use client";
 
 import { ProductCard } from "@/components/product/ProductCard/ProductCard";
-import styles from "./ProductGrid.module.css";
 
 interface Product {
   id: string;
@@ -21,7 +20,7 @@ interface ProductGridProps {
 
 export function ProductGrid({ products }: ProductGridProps) {
   return (
-    <div className={styles.grid}>
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4 xl:gap-8">
       {products.map((product) => (
         <ProductCard
           key={product.id}

@@ -29,7 +29,7 @@ export default function WishlistPage() {
 
   return (
     <div>
-      <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.25rem" }}>{t("wishlist")}</h1>
+      <h1 className="mb-5 font-serif text-2xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-3xl">{t("wishlist")}</h1>
 
       {items.length === 0 ? (
         <EmptyState

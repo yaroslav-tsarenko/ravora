@@ -13,44 +13,14 @@ import {
   Mail, MapPin, Clock, Send,
   CheckCircle, MessageSquare, HelpCircle, ShieldCheck,
 } from "lucide-react";
-import styles from "./contact.module.css";
 
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "0.75rem 1rem",
-  paddingLeft: "2.75rem",
-  borderRadius: "12px",
-  border: "1.5px solid var(--color-border)",
-  background: "var(--color-bg)",
-  color: "var(--color-text)",
-  fontSize: "0.875rem",
-  outline: "none",
-  transition: "border-color 0.2s, box-shadow 0.2s",
-};
-
-const inputPlainStyle: React.CSSProperties = {
-  ...inputStyle,
-  paddingLeft: "1rem",
-};
-
-const labelStyle: React.CSSProperties = {
-  display: "block",
-  fontSize: "0.8125rem",
-  fontWeight: 600,
-  marginBottom: "0.375rem",
-  color: "var(--color-text-secondary)",
-};
-
-const errorStyle: React.CSSProperties = {
-  color: "var(--color-danger)",
-  fontSize: "0.75rem",
-  marginTop: "0.25rem",
-};
+const INPUT_CLASS =
+  "w-full rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-4 py-2.5 text-sm text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-tertiary)] focus:border-[color:var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/20 transition-colors";
 
 const CONTACT_INFO = [
-  { icon: Mail, title: "Email Us", detail: "info@misaelectro.ro", sub: "General inquiries — reply within 24h" },
-  { icon: Mail, title: "Wholesale (B2B)", detail: "b2b@misaelectro.ro", sub: "Bulk and trade orders" },
-  { icon: MapPin, title: "Our Office", detail: "IAŞI, Mun. Iaşi", sub: "MISARELIANA S.R.L.", tooltip: "Str. Fântânilor 43, IAŞI, Mun. Iaşi, Romania\nReg. No. 54316682" },
+  { icon: Mail, title: "Email Us", detail: "info@ravora.co.uk", sub: "General inquiries — reply within 24h" },
+  { icon: Mail, title: "Wholesale (B2B)", detail: "b2b@ravora.co.uk", sub: "Bulk and trade orders" },
+  { icon: MapPin, title: "Our Office", detail: "Bridgend, Mid Glamorgan", sub: "JAYHALE LIMITED", tooltip: "Academy House, 11 Dunraven Place, Bridgend, Mid Glamorgan, CF31 1JF, United Kingdom\nCompany No. 16020956" },
   { icon: Clock, title: "Working Hours", detail: "Mon-Fri 9:00-18:00", sub: "Sat 10:00-14:00" },
 ];
 
@@ -91,25 +61,20 @@ export default function ContactPage() {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <style>{`
-        .contact-input:focus {
-          border-color: var(--color-accent) !important;
-          box-shadow: 0 0 0 3px rgba(229,57,53,0.1) !important;
-        }
-      `}</style>
+    <div className="mx-auto w-full max-w-[var(--max-width)] px-4 pb-16">
       <Breadcrumbs items={[{ label: nav("home"), href: "/" }, { label: t("title") }]} />
 
       {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className={styles.hero}
+        className="mb-8 text-center sm:mb-12"
       >
-        <h1 className={styles.title}>
+        <span className="eyebrow">{nav("home")} / {t("title")}</span>
+        <h1 className="mt-3 font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-[40px]">
           {t("title")}
         </h1>
-        <p className={styles.subtitle}>
+        <p className="mx-auto mt-3 max-w-lg text-base text-[color:var(--color-text-secondary)] sm:text-lg">
           {t("subtitle")}. We&apos;re here to help with orders, products, and any questions you may have.
         </p>
       </motion.div>
@@ -119,7 +84,7 @@ export default function ContactPage() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className={styles.infoGrid}
+        className="mb-8 grid grid-cols-2 gap-3 sm:mb-12 sm:gap-4 lg:grid-cols-4"
       >
         {CONTACT_INFO.map((info, i) => (
           <motion.div
@@ -127,37 +92,32 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 + i * 0.05 }}
-            className={styles.infoCard}
-            whileHover={{ y: -4, boxShadow: "0 8px 24px rgba(0,0,0,0.08)" }}
+            className="rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] p-4 text-center sm:p-6"
+            whileHover={{ y: -4 }}
           >
-            <div style={{
-              width: "3rem",
-              height: "3rem",
-              borderRadius: "14px",
-              background: "var(--color-accent-light)",
-              color: "var(--color-accent)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              margin: "0 auto 0.875rem",
-            }}>
-              <info.icon size={22} />
+            <div className="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--color-primary-tint)] text-[color:var(--color-primary)]">
+              <info.icon size={22} strokeWidth={1.5} />
             </div>
-            <h3 style={{ fontSize: "0.875rem", fontWeight: 700, marginBottom: "0.375rem" }}>{info.title}</h3>
-            <p title={"tooltip" in info ? info.tooltip : undefined} style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--color-text)", marginBottom: "0.25rem", cursor: "tooltip" in info ? "help" : undefined }}>{info.detail}</p>
-            <p style={{ fontSize: "0.75rem", color: "var(--color-text-tertiary)" }}>{info.sub}</p>
+            <h3 className="mb-1 text-sm font-semibold text-[color:var(--color-text)]">{info.title}</h3>
+            <p
+              title={"tooltip" in info ? info.tooltip : undefined}
+              className={`mb-1 text-sm font-medium text-[color:var(--color-text)] ${"tooltip" in info ? "cursor-help" : ""}`}
+            >
+              {info.detail}
+            </p>
+            <p className="text-xs text-[color:var(--color-text-tertiary)]">{info.sub}</p>
           </motion.div>
         ))}
       </motion.div>
 
-      {/* Main Content: Form + Map/Info */}
-      <div className={styles.layout}>
+      {/* Main Content: Form + Sidebar */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_380px] lg:items-start lg:gap-10">
         {/* Contact Form */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className={styles.formCard}
+          className="rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] p-5 sm:p-8"
         >
           <AnimatePresence mode="wait">
             {submitted ? (
@@ -166,17 +126,17 @@ export default function ContactPage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
-                style={{ textAlign: "center", padding: "3rem 1rem" }}
+                className="px-4 py-12 text-center"
               >
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.1, type: "spring", damping: 12, stiffness: 300 }}
                 >
-                  <CheckCircle size={64} style={{ color: "#2E7D32", margin: "0 auto 1.5rem" }} />
+                  <CheckCircle size={64} className="mx-auto mb-6 text-[color:var(--color-success)]" strokeWidth={1.5} />
                 </motion.div>
-                <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: "0.75rem" }}>Message Sent!</h2>
-                <p style={{ color: "var(--color-text-secondary)", maxWidth: "320px", margin: "0 auto 1.5rem", lineHeight: 1.6 }}>
+                <h2 className="mb-3 font-serif text-2xl font-medium tracking-tight text-[color:var(--color-text)]">Message Sent!</h2>
+                <p className="mx-auto mb-6 max-w-xs text-sm leading-relaxed text-[color:var(--color-text-secondary)]">
                   {t("success")}
                 </p>
                 <Button color="primary" onPress={() => setSubmitted(false)}>
@@ -189,19 +149,19 @@ export default function ContactPage() {
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onSubmit={handleSubmit(onSubmit)}
-                style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
+                className="flex flex-col gap-5"
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-                  <div style={{ width: "2rem", height: "2rem", borderRadius: "10px", background: "var(--color-accent-light)", color: "var(--color-accent)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div className="mb-2 flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--color-accent-tint)] text-[color:var(--color-accent)]">
                     <Send size={16} />
                   </div>
-                  <h2 style={{ fontSize: "1.125rem", fontWeight: 700 }}>Send us a message</h2>
+                  <h2 className="font-serif text-xl font-medium tracking-tight text-[color:var(--color-text)]">Send us a message</h2>
                 </div>
 
                 {/* Topic Selector */}
                 <div>
-                  <label style={labelStyle}>What can we help with?</label>
-                  <div className={styles.topicGrid}>
+                  <label className="mb-1.5 block text-[13px] font-medium text-[color:var(--color-text-secondary)]">What can we help with?</label>
+                  <div className="grid grid-cols-1 gap-2 xs:grid-cols-2 sm:grid-cols-2">
                     {TOPICS.map((topic) => {
                       const isActive = selectedTopic === topic.value;
                       return (
@@ -212,20 +172,11 @@ export default function ContactPage() {
                             setSelectedTopic(topic.value);
                             setValue("subject", topic.label);
                           }}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.5rem",
-                            padding: "0.625rem 0.875rem",
-                            borderRadius: "10px",
-                            border: `1.5px solid ${isActive ? "var(--color-accent)" : "var(--color-border)"}`,
-                            background: isActive ? "var(--color-accent-light)" : "var(--color-bg)",
-                            color: isActive ? "var(--color-accent)" : "var(--color-text-secondary)",
-                            fontWeight: isActive ? 700 : 500,
-                            fontSize: "0.8125rem",
-                            cursor: "pointer",
-                            transition: "all 0.15s",
-                          }}
+                          className={`flex items-center gap-2 rounded-lg border px-3.5 py-2.5 text-[13px] transition-all ${
+                            isActive
+                              ? "border-[color:var(--color-primary)] bg-[color:var(--color-primary-tint)] font-semibold text-[color:var(--color-primary)]"
+                              : "border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] text-[color:var(--color-text-secondary)] hover:border-[color:var(--color-line-strong)]"
+                          }`}
                         >
                           <topic.icon size={15} />
                           {topic.label}
@@ -235,54 +186,50 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className={styles.twoCol}>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label style={labelStyle}>{t("name")}</label>
+                    <label className="mb-1.5 block text-[13px] font-medium text-[color:var(--color-text-secondary)]">{t("name")}</label>
                     <input
-                      className="contact-input"
-                      style={inputPlainStyle}
+                      className={INPUT_CLASS}
                       placeholder="John Doe"
                       {...register("name")}
                     />
-                    {errors.name && <span style={errorStyle}>{errors.name.message}</span>}
+                    {errors.name && <span className="mt-1 block text-xs text-[color:var(--color-danger)]">{errors.name.message}</span>}
                   </div>
                   <div>
-                    <label style={labelStyle}>{t("email")}</label>
-                    <div style={{ position: "relative" }}>
-                      <Mail size={16} style={{ position: "absolute", left: "0.875rem", top: "50%", transform: "translateY(-50%)", color: "var(--color-text-tertiary)", pointerEvents: "none" }} />
+                    <label className="mb-1.5 block text-[13px] font-medium text-[color:var(--color-text-secondary)]">{t("email")}</label>
+                    <div className="relative">
+                      <Mail size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[color:var(--color-text-tertiary)]" />
                       <input
-                        className="contact-input"
+                        className={`${INPUT_CLASS} pl-11`}
                         type="email"
-                        style={inputStyle}
                         placeholder="your@email.com"
                         {...register("email")}
                       />
                     </div>
-                    {errors.email && <span style={errorStyle}>{errors.email.message}</span>}
+                    {errors.email && <span className="mt-1 block text-xs text-[color:var(--color-danger)]">{errors.email.message}</span>}
                   </div>
                 </div>
 
                 <div>
-                  <label style={labelStyle}>{t("subject")}</label>
+                  <label className="mb-1.5 block text-[13px] font-medium text-[color:var(--color-text-secondary)]">{t("subject")}</label>
                   <input
-                    className="contact-input"
-                    style={inputPlainStyle}
+                    className={INPUT_CLASS}
                     placeholder="How can we help?"
                     {...register("subject")}
                   />
-                  {errors.subject && <span style={errorStyle}>{errors.subject.message}</span>}
+                  {errors.subject && <span className="mt-1 block text-xs text-[color:var(--color-danger)]">{errors.subject.message}</span>}
                 </div>
 
                 <div>
-                  <label style={labelStyle}>{t("message")}</label>
+                  <label className="mb-1.5 block text-[13px] font-medium text-[color:var(--color-text-secondary)]">{t("message")}</label>
                   <textarea
-                    className="contact-input"
+                    className={`${INPUT_CLASS} resize-y leading-relaxed`}
                     rows={5}
-                    style={{ ...inputPlainStyle, resize: "vertical", lineHeight: 1.6 }}
                     placeholder="Tell us more about your question or concern..."
                     {...register("message")}
                   />
-                  {errors.message && <span style={errorStyle}>{errors.message.message}</span>}
+                  {errors.message && <span className="mt-1 block text-xs text-[color:var(--color-danger)]">{errors.message.message}</span>}
                 </div>
 
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
@@ -291,7 +238,7 @@ export default function ContactPage() {
                     color="primary"
                     size="lg"
                     isLoading={loading}
-                    style={{ width: "100%" }}
+                    fullWidth
                     startContent={!loading ? <Send size={16} /> : undefined}
                   >
                     {t("send")}
@@ -307,74 +254,51 @@ export default function ContactPage() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
-          className={styles.sidebar}
+          className="flex flex-col gap-5"
         >
           {/* FAQ Teaser */}
-          <div style={{
-            padding: "1.75rem",
-            borderRadius: "var(--radius-xl)",
-            border: "1px solid var(--color-border)",
-            background: "var(--color-bg)",
-          }}>
-            <h3 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <HelpCircle size={18} style={{ color: "var(--color-accent)" }} />
+          <div className="rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] p-6">
+            <h3 className="mb-4 flex items-center gap-2 text-base font-semibold text-[color:var(--color-text)]">
+              <HelpCircle size={18} className="text-[color:var(--color-accent)]" />
               Frequently Asked
             </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            <div className="flex flex-col gap-3">
               {[
                 { q: "How long does shipping take?", a: "Standard 5-7 days, Express 2-3 days." },
                 { q: "What is your return policy?", a: "14-day returns on all unused items." },
-                { q: "Do you ship internationally?", a: "Yes, across all EU countries." },
+                { q: "Do you ship internationally?", a: "Yes, across the UK and EU." },
                 { q: "How do I track my order?", a: "Check your account or email for tracking." },
               ].map((faq, i) => (
-                <div key={i} style={{
-                  padding: "0.75rem",
-                  borderRadius: "10px",
-                  background: "var(--color-bg-secondary)",
-                  fontSize: "0.8125rem",
-                }}>
-                  <p style={{ fontWeight: 600, marginBottom: "0.25rem", color: "var(--color-text)" }}>{faq.q}</p>
-                  <p style={{ color: "var(--color-text-tertiary)", lineHeight: 1.5 }}>{faq.a}</p>
+                <div key={i} className="rounded-lg bg-[color:var(--color-bg-secondary)] p-3 text-[13px]">
+                  <p className="mb-1 font-semibold text-[color:var(--color-text)]">{faq.q}</p>
+                  <p className="leading-relaxed text-[color:var(--color-text-tertiary)]">{faq.a}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Response Time */}
-          <div style={{
-            padding: "1.5rem",
-            borderRadius: "var(--radius-xl)",
-            background: "linear-gradient(135deg, #073B66 0%, #2F557A 100%)",
-            color: "#fff",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.875rem" }}>
-              <Clock size={18} style={{ color: "#FF5A00" }} />
-              <h3 style={{ fontSize: "0.9375rem", fontWeight: 700 }}>Response Times</h3>
+          <div className="rounded-2xl bg-[color:var(--color-primary)] p-6 text-[color:var(--color-primary-fg)]">
+            <div className="mb-3.5 flex items-center gap-2">
+              <Clock size={18} className="text-[color:var(--color-accent)]" />
+              <h3 className="text-[15px] font-semibold">Response Times</h3>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem" }}>
-                <span style={{ color: "rgba(255,255,255,0.7)" }}>General email</span>
-                <span style={{ fontWeight: 600 }}>Within 24h</span>
+            <div className="flex flex-col gap-2.5">
+              <div className="flex justify-between text-[13px]">
+                <span className="opacity-70">General email</span>
+                <span className="font-semibold">Within 24h</span>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem" }}>
-                <span style={{ color: "rgba(255,255,255,0.7)" }}>Wholesale (B2B)</span>
-                <span style={{ fontWeight: 600 }}>Within 48h</span>
+              <div className="flex justify-between text-[13px]">
+                <span className="opacity-70">Wholesale (B2B)</span>
+                <span className="font-semibold">Within 48h</span>
               </div>
             </div>
           </div>
 
           {/* Trust */}
-          <div style={{
-            padding: "1.25rem",
-            borderRadius: "var(--radius-xl)",
-            border: "1px solid var(--color-border)",
-            background: "var(--color-bg)",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-          }}>
-            <ShieldCheck size={20} style={{ color: "#2E7D32", flexShrink: 0 }} />
-            <p style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)", lineHeight: 1.5 }}>
+          <div className="flex items-center gap-3 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] p-5">
+            <ShieldCheck size={20} className="shrink-0 text-[color:var(--color-success)]" strokeWidth={1.5} />
+            <p className="text-xs leading-relaxed text-[color:var(--color-text-secondary)]">
               Your information is secure and will only be used to respond to your inquiry. We never share your data.
             </p>
           </div>

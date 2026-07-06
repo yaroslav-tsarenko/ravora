@@ -30,24 +30,21 @@ export function FeaturedProducts({ products }: FeaturedProductsProps) {
 
   return (
     <AnimatedSection>
-      <section className="section-padding">
-        <div className="section-container">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2rem", gap: "1rem", flexWrap: "wrap" }}>
-            <div>
-              <h2 className="section-title">{t("featured")}</h2>
-              <p className="section-subtitle">Handpicked products just for you</p>
+      <section className="py-12 sm:py-16">
+        <div className="mx-auto max-w-[var(--container-content)] px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-[color:var(--color-line)] pb-6">
+            <div className="flex flex-col gap-1">
+              <span className="eyebrow">Editor&apos;s picks</span>
+              <h2 className="font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-[40px]">
+                {t("featured")}
+              </h2>
+              <p className="text-sm text-[color:var(--color-text-secondary)]">
+                Handpicked products just for you
+              </p>
             </div>
             <Link
               href="/catalog"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.375rem",
-                fontSize: "0.875rem",
-                fontWeight: 600,
-                color: "var(--color-accent)",
-                transition: "gap 0.2s",
-              }}
+              className="inline-flex items-center gap-1 text-sm font-semibold text-[color:var(--color-primary)] transition-colors hover:text-[color:var(--color-primary-hover)]"
             >
               {common("viewAll")} <ArrowRight size={16} />
             </Link>

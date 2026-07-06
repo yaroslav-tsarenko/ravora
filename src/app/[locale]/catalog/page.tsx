@@ -10,7 +10,6 @@ import { ProductSort } from "@/components/product/ProductSort/ProductSort";
 import { ProductSkeleton } from "@/components/product/ProductSkeleton/ProductSkeleton";
 import { EmptyState } from "@/components/shared/EmptyState/EmptyState";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
-import styles from "./catalog.module.css";
 
 export default function CatalogPage() {
   const t = useTranslations("product");
@@ -126,7 +125,7 @@ export default function CatalogPage() {
   })();
 
   return (
-    <div className={styles.wrapper}>
+    <div className="mx-auto w-full max-w-[var(--max-width)] px-4">
       <Breadcrumbs
         items={[
           { label: nav("home"), href: "/" },
@@ -136,70 +135,42 @@ export default function CatalogPage() {
         ]}
       />
 
-      <div className={styles.header}>
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className={styles.title}>{view.title}</h1>
-          <p className={styles.headerSub}>{view.subtitle}</p>
+          <span className="eyebrow">{nav("catalog")}</span>
+          <h1 className="mt-2 font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-[40px]">
+            {view.title}
+          </h1>
+          <p className="mt-1 text-sm text-[color:var(--color-text-secondary)]">{view.subtitle}</p>
         </div>
-        <div className={styles.headerActions}>
-          <div style={{ position: "relative", flex: "1 1 220px", minWidth: 0 }}>
-            <Search
-              size={14}
-              style={{
-                position: "absolute",
-                left: 12,
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "var(--color-text-tertiary)",
-                pointerEvents: "none",
-              }}
-            />
+        <div className="flex flex-wrap items-center gap-3 max-[480px]:w-full max-[480px]:justify-between">
+          <div className="relative min-w-0 flex-1 basis-[220px]">
+            <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[color:var(--color-text-tertiary)]" />
             <input
               type="search"
               value={searchInput}
               onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Search products…"
               aria-label="Search products"
-              style={{
-                width: "100%",
-                padding: "0.5rem 0.75rem 0.5rem 2rem",
-                border: "1.5px solid var(--color-border)",
-                borderRadius: 10,
-                background: "var(--color-bg)",
-                color: "var(--color-text)",
-                fontSize: "0.8125rem",
-                outline: "none",
-              }}
+              className="w-full rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] py-2 pl-8 pr-3 text-[13px] text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-tertiary)] focus:border-[color:var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/20"
             />
           </div>
           <button
             onClick={() => setMobileFiltersOpen(true)}
-            className={styles.filtersBtn}
+            className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-4 py-2 text-[13px] font-semibold text-[color:var(--color-text-secondary)] hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)] lg:hidden"
             type="button"
           >
             <SlidersHorizontal size={16} />
             Filters
             {activeFilterCount > 0 && (
-              <span className={styles.filterBadge}>{activeFilterCount}</span>
+              <span className="rounded-full bg-[color:var(--color-accent)] px-1.5 py-[1px] text-[11px] font-bold text-white">{activeFilterCount}</span>
             )}
           </button>
           {activeFilterCount > 0 && (
             <button
               onClick={clearAll}
               type="button"
-              style={{
-                padding: "0.5rem 0.75rem",
-                border: "1.5px solid var(--color-border)",
-                borderRadius: 10,
-                background: "transparent",
-                color: "var(--color-text-secondary)",
-                fontSize: "0.8125rem",
-                fontWeight: 600,
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.25rem",
-              }}
+              className="inline-flex items-center gap-1 rounded-lg border border-[color:var(--color-line)] bg-transparent px-3 py-2 text-[13px] font-semibold text-[color:var(--color-text-secondary)] hover:border-[color:var(--color-line-strong)]"
             >
               <X size={14} /> Clear
             </button>
@@ -208,8 +179,8 @@ export default function CatalogPage() {
         </div>
       </div>
 
-      <div className={styles.layout}>
-        <aside className={styles.sidebar}>
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[260px_1fr]">
+        <aside className="hidden self-start lg:sticky lg:top-[calc(var(--header-height)+var(--announcement-height)+1rem)] lg:block">
           <ProductFilters
             categories={categories}
             selectedCategory={category}
@@ -228,7 +199,7 @@ export default function CatalogPage() {
           />
         </aside>
 
-        <div className={styles.content}>
+        <div className="min-w-0">
           {loading ? (
             <ProductSkeleton count={12} />
           ) : products.length === 0 ? (
@@ -242,11 +213,11 @@ export default function CatalogPage() {
             <>
               <ProductGrid products={products} />
               {totalPages > 1 && (
-                <div className={styles.pagination}>
+                <div className="mt-10 flex flex-wrap items-center justify-center gap-1.5 pb-12">
                   <button
                     onClick={() => updateParams({ page: String(page - 1) })}
                     disabled={page <= 1}
-                    className={`${styles.pageBtn} ${styles.pageBtnEdge} ${page <= 1 ? styles.pageBtnDisabled : ""}`}
+                    className={`inline-flex h-9 items-center justify-center rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-4 text-[13px] font-medium text-[color:var(--color-text)] ${page <= 1 ? "cursor-not-allowed opacity-50" : ""}`}
                   >
                     Prev
                   </button>
@@ -265,12 +236,16 @@ export default function CatalogPage() {
                     }
                     return pages.map((p) =>
                       typeof p === "string" ? (
-                        <span key={p} className={styles.pageEllipsis}>…</span>
+                        <span key={p} className="flex h-9 w-9 items-center justify-center text-[13px] text-[color:var(--color-text-secondary)]">…</span>
                       ) : (
                         <button
                           key={p}
                           onClick={() => updateParams({ page: String(p) })}
-                          className={`${styles.pageBtn} ${p === page ? styles.pageBtnActive : ""}`}
+                          className={`inline-flex h-9 w-9 items-center justify-center rounded-lg text-[13px] ${
+                            p === page
+                              ? "bg-[color:var(--color-primary)] font-bold text-white"
+                              : "border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] font-medium text-[color:var(--color-text)]"
+                          }`}
                         >
                           {p}
                         </button>
@@ -280,7 +255,7 @@ export default function CatalogPage() {
                   <button
                     onClick={() => updateParams({ page: String(page + 1) })}
                     disabled={page >= totalPages}
-                    className={`${styles.pageBtn} ${styles.pageBtnEdge} ${page >= totalPages ? styles.pageBtnDisabled : ""}`}
+                    className={`inline-flex h-9 items-center justify-center rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-4 text-[13px] font-medium text-[color:var(--color-text)] ${page >= totalPages ? "cursor-not-allowed opacity-50" : ""}`}
                   >
                     Next
                   </button>
@@ -293,14 +268,14 @@ export default function CatalogPage() {
 
       {/* Mobile filters overlay */}
       {mobileFiltersOpen && (
-        <div className={styles.overlay}>
-          <div className={styles.overlayBackdrop} onClick={() => setMobileFiltersOpen(false)} />
-          <div className={styles.overlaySheet}>
-            <div className={styles.overlayHeader}>
-              <span className={styles.overlayTitle}>Filters</span>
+        <div className="fixed inset-0 z-[200]">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileFiltersOpen(false)} />
+          <div className="absolute inset-x-0 bottom-0 flex max-h-[85vh] flex-col overflow-auto rounded-t-2xl bg-[color:var(--color-bg-elevated)] p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <span className="text-lg font-bold text-[color:var(--color-text)]">Filters</span>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
-                className={styles.overlayClose}
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--color-bg-secondary)] text-[color:var(--color-text)]"
                 aria-label="Close filters"
               >
                 <X size={18} />

@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/Button";
 import { Mail, ShoppingBag, ArrowLeft, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import styles from "../auth.module.css";
 
 export default function ForgotPasswordPage() {
   const t = useTranslations("auth");
@@ -46,44 +45,50 @@ export default function ForgotPasswordPage() {
   } as const;
 
   return (
-    <div className={styles.authPage}>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[color:var(--color-bg)] px-4 py-8">
       <motion.div
-        className={styles.authCard}
+        className="relative w-full max-w-md rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] p-8 shadow-sm sm:p-10"
         initial={{ opacity: 0, y: 24, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <motion.div className={styles.authHeader} custom={0} variants={fadeUp} initial="hidden" animate="visible">
-          <div className={styles.logoIcon}>
-            <ShoppingBag size={24} />
+        <motion.div className="mb-8 text-center" custom={0} variants={fadeUp} initial="hidden" animate="visible">
+          <div className="mx-auto mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--color-primary)] text-white">
+            <ShoppingBag size={24} strokeWidth={1.5} />
           </div>
-          <h1 className={styles.authTitle}>{t("forgotPasswordTitle")}</h1>
-          <p className={styles.authSubtitle}>{t("forgotPasswordSubtitle")}</p>
+          <h1 className="mb-2 font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)]">{t("forgotPasswordTitle")}</h1>
+          <p className="text-[15px] leading-relaxed text-[color:var(--color-text-secondary)]">{t("forgotPasswordSubtitle")}</p>
         </motion.div>
 
         {sent ? (
-          <motion.div className={styles.magicLinkSent} custom={1} variants={fadeUp} initial="hidden" animate="visible">
-            <CheckCircle size={32} />
-            <p>{t("resetEmailSent")}</p>
+          <motion.div
+            className="rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] p-6 text-center"
+            custom={1}
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+          >
+            <CheckCircle size={32} className="mx-auto mb-3 text-[color:var(--color-success)]" strokeWidth={1.5} />
+            <p className="text-[15px] leading-relaxed text-[color:var(--color-text-secondary)]">{t("resetEmailSent")}</p>
           </motion.div>
         ) : (
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <motion.div className={styles.inputGroup} custom={1} variants={fadeUp} initial="hidden" animate="visible">
-              <label className={styles.inputLabel}>{t("email")}</label>
-              <div className={styles.inputWrapper}>
-                <Mail size={16} className={styles.inputIcon} />
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <motion.div className="flex flex-col gap-1.5" custom={1} variants={fadeUp} initial="hidden" animate="visible">
+              <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">{t("email")}</label>
+              <div className="relative flex items-center">
+                <Mail size={16} className="pointer-events-none absolute left-3 z-10 text-[color:var(--color-text-tertiary)]" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="you@example.com"
-                  className={styles.input}
+                  className="w-full rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] py-2.5 pl-10 pr-3 text-sm text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-tertiary)] focus:border-[color:var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/20"
                 />
               </div>
             </motion.div>
 
-            <motion.div custom={2} variants={fadeUp} initial="hidden" animate="visible" className={styles.submitButton}>
+            <motion.div custom={2} variants={fadeUp} initial="hidden" animate="visible" className="mt-1">
               <Button type="submit" color="primary" fullWidth isLoading={loading}>
                 {t("sendResetLink")}
               </Button>
@@ -91,8 +96,8 @@ export default function ForgotPasswordPage() {
           </form>
         )}
 
-        <motion.p className={styles.authFooter} custom={3} variants={fadeUp} initial="hidden" animate="visible">
-          <Link href="/auth/login" style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem" }}>
+        <motion.p className="mt-7 text-center text-sm text-[color:var(--color-text-secondary)]" custom={3} variants={fadeUp} initial="hidden" animate="visible">
+          <Link href="/auth/login" className="inline-flex items-center gap-1 font-semibold text-[color:var(--color-accent)] hover:opacity-80">
             <ArrowLeft size={14} />
             {t("backToLogin")}
           </Link>

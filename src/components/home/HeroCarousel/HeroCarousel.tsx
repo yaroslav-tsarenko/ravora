@@ -7,12 +7,10 @@ import { Link } from "@/i18n/routing";
 import {
   ChevronLeft, ChevronRight, ArrowRight, Truck, ShieldCheck,
   RotateCcw, Zap, Headphones, Watch, BatteryCharging,
-  Sparkles,
 } from "lucide-react";
 import banner1 from "@/assets/banner1.png";
 import banner2 from "@/assets/banner2.png";
 import banner3 from "@/assets/banner3.png";
-import styles from "./HeroCarousel.module.css";
 
 interface SlideData {
   id: string;
@@ -37,88 +35,84 @@ interface DealData {
   imageUrl?: string | null;
 }
 
-interface MisaElectroSlide {
+interface RavoraSlide {
   id: string;
   eyebrow: string;
   title: React.ReactNode;
   subtitle: string;
   primaryCta: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
-  gradient: string;
-  accent: string;
   bgImage: StaticImageData;
   thumbLabel: string;
+  thumbHint: string;
   thumbIcon: React.ElementType;
 }
 
-const misaElectroSlides: MisaElectroSlide[] = [
+const ravoraSlides: RavoraSlide[] = [
   {
     id: "audio",
-    eyebrow: "Audio · This week's pick",
+    eyebrow: "Vol. 01 · Audio",
     title: (
       <>
         Sound that goes
         <br />
-        <span className="hero-highlight">where you go.</span>
+        <em className="font-serif italic text-[color:var(--color-accent)]">where you go.</em>
       </>
     ),
     subtitle:
-      "Wireless headphones, soundbars and Hi-Fi gear from T'NB, Belkin, Trust and more — shipped from our EU warehouse.",
+      "Wireless headphones, soundbars and Hi-Fi gear from thoughtful, quiet brands — carefully sourced and shipped from the United Kingdom.",
     primaryCta: { label: "Shop audio", href: "/catalog/audio-and-hi-fi-equipment" },
-    secondaryCta: { label: "Top headphones", href: "/catalog/headphones" },
-    gradient: "linear-gradient(135deg, #0B2447 0%, #1E3A6F 45%, #2563EB 100%)",
-    accent: "#F97316",
+    secondaryCta: { label: "Headphones", href: "/catalog/headphones" },
     bgImage: banner1,
     thumbLabel: "Audio",
+    thumbHint: "Editor's picks",
     thumbIcon: Headphones,
   },
   {
     id: "power",
-    eyebrow: "Power & connectivity",
+    eyebrow: "Vol. 02 · Power",
     title: (
       <>
-        Stay charged. Stay
+        Stay charged.
         <br />
-        <span className="hero-highlight">connected.</span>
+        <em className="font-serif italic text-[color:var(--color-accent)]">Stay quiet.</em>
       </>
     ),
     subtitle:
-      "Chargers, batteries, multi-socket adapters and power strips you can rely on — engineered for daily use.",
+      "Chargers, batteries and multi-socket adapters engineered for everyday desks and travel bags.",
     primaryCta: { label: "Shop power", href: "/catalog/batteries-and-chargers" },
-    secondaryCta: { label: "Multi-socket adapters", href: "/catalog/power-strips" },
-    gradient: "linear-gradient(135deg, #0F172A 0%, #1F2937 50%, #064E3B 100%)",
-    accent: "#10B981",
+    secondaryCta: { label: "Adapters", href: "/catalog/power-strips" },
     bgImage: banner2,
     thumbLabel: "Power",
+    thumbHint: "Everyday essentials",
     thumbIcon: BatteryCharging,
   },
   {
     id: "smart",
-    eyebrow: "Smart gear · New arrivals",
+    eyebrow: "Vol. 03 · Smart",
     title: (
       <>
-        Smart tech for
+        Smart tech
         <br />
-        <span className="hero-highlight">every day.</span>
+        <em className="font-serif italic text-[color:var(--color-accent)]">without noise.</em>
       </>
     ),
     subtitle:
-      "Smartwatches, GPS, action cameras and gaming accessories — curated for the way you actually live and work.",
+      "Smartwatches, GPS and action cameras — curated for the way you actually live and work.",
     primaryCta: { label: "Browse new arrivals", href: "/catalog?sort=newest" },
-    secondaryCta: { label: "Smart watches", href: "/catalog?search=watch" },
-    gradient: "linear-gradient(135deg, #1E1B4B 0%, #4C1D95 50%, #7C3AED 100%)",
-    accent: "#FACC15",
+    secondaryCta: { label: "Smartwatches", href: "/catalog?search=watch" },
     bgImage: banner3,
     thumbLabel: "Smart",
+    thumbHint: "New this week",
     thumbIcon: Watch,
   },
 ];
 
 const trustItems = [
-  { icon: Truck, label: "Free EU shipping", sub: "Over €100" },
-  { icon: RotateCcw, label: "30-day returns", sub: "No questions" },
-  { icon: ShieldCheck, label: "2-year warranty", sub: "Every product" },
-  { icon: Zap, label: "Same-day dispatch", sub: "Before 14:00 CET" },
+  { icon: Truck, label: "Free UK shipping", sub: "Over £100" },
+  { icon: RotateCcw, label: "14-day returns", sub: "No questions" },
+  { icon: ShieldCheck, label: "Genuine warranty", sub: "Every product" },
+  { icon: Zap, label: "Same-day dispatch", sub: "Before 14:00 GMT" },
 ];
 
 interface Props {
@@ -127,17 +121,14 @@ interface Props {
 }
 
 export function HeroCarousel({ deals }: Props) {
-  // We always use MisaElectro-tailored slides for the hero.
-  // Admin-configured slides (`slides` prop) are intentionally ignored here —
-  // they belong on dedicated marketing landing pages, not the brand hero.
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
-  const slide = misaElectroSlides[current];
+  const slide = ravoraSlides[current];
 
   const go = useCallback(
     (idx: number) => {
       setDirection(idx > current ? 1 : -1);
-      setCurrent(((idx % misaElectroSlides.length) + misaElectroSlides.length) % misaElectroSlides.length);
+      setCurrent(((idx % ravoraSlides.length) + ravoraSlides.length) % ravoraSlides.length);
     },
     [current]
   );
@@ -148,25 +139,33 @@ export function HeroCarousel({ deals }: Props) {
   useEffect(() => {
     const id = setInterval(() => {
       setDirection(1);
-      setCurrent((p) => (p + 1) % misaElectroSlides.length);
-    }, 6500);
+      setCurrent((p) => (p + 1) % ravoraSlides.length);
+    }, 7000);
     return () => clearInterval(id);
   }, []);
 
   return (
-    <section className={styles.hero} aria-label="Featured collections">
-      <div className={`${styles.heroContainer} ${deals.length > 0 ? styles.withDeals : ""}`}>
-        <div className={styles.heroMain}>
-          <div className={styles.stage} style={{ background: slide.gradient }}>
+    <section
+      className="border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]"
+      aria-label="Featured collections"
+    >
+      <div
+        className={`mx-auto grid max-w-[var(--container-content)] gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14 ${
+          deals.length > 0 ? "lg:grid-cols-[minmax(0,1fr)_320px]" : "lg:grid-cols-1"
+        }`}
+      >
+        <div className="flex flex-col gap-6">
+          <div className="relative overflow-hidden rounded-3xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)]">
+            {/* Background image, gently */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${slide.id}-bg`}
-                className={styles.bgImageWrap}
-                initial={{ opacity: 0, scale: 1.04 }}
+                className="pointer-events-none absolute inset-0"
+                initial={{ opacity: 0, scale: 1.03 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.02 }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                aria-hidden="true"
+                aria-hidden
               >
                 <Image
                   src={slide.bgImage}
@@ -174,131 +173,159 @@ export function HeroCarousel({ deals }: Props) {
                   fill
                   sizes="(max-width: 1024px) 100vw, 1280px"
                   placeholder="blur"
-                  className={styles.bgImage}
+                  className="object-cover opacity-[0.18] mix-blend-multiply dark:opacity-25 dark:mix-blend-screen"
                   priority
                 />
-                <span className={styles.bgOverlay} />
-                <span className={styles.glow1} style={{ background: slide.accent }} />
-                <span className={styles.glow2} />
-                <span className={styles.gridDots} />
+                <span className="absolute inset-0 bg-gradient-to-br from-[color:var(--color-bg-elevated)]/95 via-[color:var(--color-bg-elevated)]/70 to-[color:var(--color-bg-elevated)]/40" />
               </motion.div>
             </AnimatePresence>
 
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                key={slide.id}
-                className={styles.slide}
-                initial={{ opacity: 0, x: direction * 40 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: direction * -40 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <div className={styles.copy}>
-                  <span
-                    className={styles.eyebrow}
-                    style={{ borderColor: slide.accent + "55", color: slide.accent }}
-                  >
-                    <Sparkles size={14} />
+            <div className="relative grid gap-6 p-8 sm:p-12 lg:min-h-[440px] lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-10 lg:p-16">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={slide.id}
+                  className="flex flex-col gap-6"
+                  initial={{ opacity: 0, x: direction * 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: direction * -24 }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <span className="inline-flex items-center gap-2 self-start text-[11px] font-semibold uppercase tracking-[0.2em] text-[color:var(--color-primary)]">
+                    <span className="h-px w-6 bg-[color:var(--color-primary)]/50" />
                     {slide.eyebrow}
                   </span>
-                  <h1 className={styles.title}>{slide.title}</h1>
-                  <p className={styles.subtitle}>{slide.subtitle}</p>
+                  <h1 className="font-serif text-[40px] font-medium leading-[1.05] tracking-tight text-[color:var(--color-text)] sm:text-[54px] lg:text-[64px]">
+                    {slide.title}
+                  </h1>
+                  <p className="max-w-lg text-base leading-relaxed text-[color:var(--color-text-secondary)]">
+                    {slide.subtitle}
+                  </p>
 
-                  <div className={styles.actions}>
+                  <div className="flex flex-wrap items-center gap-3">
                     <Link
                       href={slide.primaryCta.href}
-                      className={styles.ctaPrimary}
-                      style={{
-                        background: slide.accent,
-                        boxShadow: `0 12px 28px -10px ${slide.accent}`,
-                      }}
+                      className="inline-flex items-center gap-2 rounded-full bg-[color:var(--color-accent)] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-hover)]"
                     >
-                      {slide.primaryCta.label}
-                      <ArrowRight size={16} />
+                      {slide.primaryCta.label} <ArrowRight size={16} />
                     </Link>
                     {slide.secondaryCta && (
-                      <Link href={slide.secondaryCta.href} className={styles.ctaSecondary}>
+                      <Link
+                        href={slide.secondaryCta.href}
+                        className="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-primary)] px-5 py-3 text-sm font-semibold text-[color:var(--color-primary)] transition-colors hover:bg-[color:var(--color-primary-tint)]"
+                      >
                         {slide.secondaryCta.label}
                       </Link>
                     )}
                   </div>
 
-                  <ul className={styles.trust}>
+                  <ul className="mt-2 grid grid-cols-2 gap-x-6 gap-y-3 border-t border-[color:var(--color-line)] pt-6 lg:grid-cols-4">
                     {trustItems.map((t) => (
-                      <li key={t.label} className={styles.trustItem}>
-                        <span className={styles.trustIcon}>
-                          <t.icon size={14} />
+                      <li key={t.label} className="flex items-center gap-2.5">
+                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color:var(--color-primary-tint)] text-[color:var(--color-primary)]">
+                          <t.icon size={14} strokeWidth={1.5} />
                         </span>
-                        <span className={styles.trustText}>
-                          <span className={styles.trustLabel}>{t.label}</span>
-                          <span className={styles.trustSub}>{t.sub}</span>
+                        <span className="flex flex-col leading-tight">
+                          <span className="text-xs font-semibold text-[color:var(--color-text)]">
+                            {t.label}
+                          </span>
+                          <span className="text-[11px] text-[color:var(--color-text-tertiary)]">
+                            {t.sub}
+                          </span>
                         </span>
                       </li>
                     ))}
                   </ul>
-                </div>
+                </motion.div>
+              </AnimatePresence>
 
-                <div className={styles.visual} aria-hidden="true">
-                  <motion.div
-                    className={styles.priceTag}
-                    initial={{ opacity: 0, y: 16, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.55, delay: 0.25 }}
-                  >
-                    <span className={styles.priceTagFrom}>From</span>
-                    <span className={styles.priceTagPrice}>€8.29</span>
-                    <span className={styles.priceTagSub}>In stock today</span>
-                  </motion.div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
+              <div className="hidden justify-center lg:flex" aria-hidden>
+                <motion.div
+                  className="flex flex-col items-center rounded-3xl border border-[color:var(--color-line)] bg-[color:var(--color-bg)] px-8 py-6 text-center shadow-sm"
+                  initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.55, delay: 0.25 }}
+                >
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[color:var(--color-text-tertiary)]">
+                    From
+                  </span>
+                  <span className="mt-1 font-serif text-5xl font-medium text-[color:var(--color-text)]">
+                    £8.29
+                  </span>
+                  <span className="mt-2 inline-flex items-center gap-1 text-xs text-[color:var(--color-success)]">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-[color:var(--color-success)]" />
+                    In stock today
+                  </span>
+                </motion.div>
+              </div>
+            </div>
 
-            <div className={styles.controls}>
-              <button
-                type="button"
-                className={styles.arrow}
-                onClick={prev}
-                aria-label="Previous slide"
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <div className={styles.dots}>
-                {misaElectroSlides.map((s, i) => (
+            {/* Controls */}
+            <div className="absolute inset-x-4 bottom-4 flex items-center justify-between sm:inset-x-8">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={prev}
+                  aria-label="Previous slide"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] text-[color:var(--color-text-secondary)] transition-colors hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={next}
+                  aria-label="Next slide"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] text-[color:var(--color-text-secondary)] transition-colors hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+              <div className="flex items-center gap-1.5">
+                {ravoraSlides.map((s, i) => (
                   <button
                     key={s.id}
                     type="button"
-                    className={`${styles.dot} ${i === current ? styles.dotActive : ""}`}
                     onClick={() => go(i)}
                     aria-label={`Go to slide ${i + 1}`}
-                    style={i === current ? { background: slide.accent } : undefined}
+                    className={`h-1.5 rounded-full transition-all ${
+                      i === current
+                        ? "w-8 bg-[color:var(--color-primary)]"
+                        : "w-1.5 bg-[color:var(--color-line-strong)] hover:bg-[color:var(--color-primary)]/60"
+                    }`}
                   />
                 ))}
               </div>
-              <button
-                type="button"
-                className={styles.arrow}
-                onClick={next}
-                aria-label="Next slide"
-              >
-                <ChevronRight size={18} />
-              </button>
             </div>
           </div>
 
-          <div className={styles.thumbs}>
-            {misaElectroSlides.map((s, i) => (
+          {/* Thumb chapters */}
+          <div className="grid gap-2 sm:grid-cols-3">
+            {ravoraSlides.map((s, i) => (
               <button
                 key={s.id}
                 type="button"
                 onClick={() => go(i)}
-                className={`${styles.thumb} ${i === current ? styles.thumbActive : ""}`}
+                className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-all ${
+                  i === current
+                    ? "border-[color:var(--color-primary)] bg-[color:var(--color-primary-tint)]"
+                    : "border-[color:var(--color-line)] hover:border-[color:var(--color-line-strong)]"
+                }`}
               >
-                <span className={styles.thumbIcon}>
+                <span
+                  className={`inline-flex h-10 w-10 items-center justify-center rounded-lg ${
+                    i === current
+                      ? "bg-[color:var(--color-primary)] text-white"
+                      : "bg-[color:var(--color-bg-secondary)] text-[color:var(--color-text-secondary)]"
+                  }`}
+                >
                   <s.thumbIcon size={16} />
                 </span>
-                <span className={styles.thumbMeta}>
-                  <span className={styles.thumbLabel}>{s.thumbLabel}</span>
-                  <span className={styles.thumbHint}>{s.eyebrow.split("·")[0].trim()}</span>
+                <span className="flex min-w-0 flex-col">
+                  <span className="text-sm font-semibold text-[color:var(--color-text)]">
+                    {s.thumbLabel}
+                  </span>
+                  <span className="truncate text-[11px] text-[color:var(--color-text-tertiary)]">
+                    {s.thumbHint}
+                  </span>
                 </span>
               </button>
             ))}
@@ -306,10 +333,13 @@ export function HeroCarousel({ deals }: Props) {
         </div>
 
         {deals.length > 0 && (
-          <aside className={styles.sideDeals} aria-label="Hot deals">
-            <div className={styles.sideHeading}>
-              <span className={styles.sideHeadingText}>Hot deals</span>
-              <Link href="/catalog?onSale=true" className={styles.sideHeadingLink}>
+          <aside className="flex flex-col gap-4" aria-label="Hot deals">
+            <div className="flex items-center justify-between">
+              <span className="eyebrow">Hot deals</span>
+              <Link
+                href="/catalog?onSale=true"
+                className="text-xs font-semibold text-[color:var(--color-primary)] hover:text-[color:var(--color-primary-hover)]"
+              >
                 See all
               </Link>
             </div>
@@ -317,23 +347,39 @@ export function HeroCarousel({ deals }: Props) {
               <Link
                 key={deal.id}
                 href={deal.linkUrl || "/catalog"}
-                className={styles.dealCard}
+                className="group relative flex flex-col overflow-hidden rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] p-4 transition-colors hover:border-[color:var(--color-line-strong)]"
               >
                 {deal.discountText && (
-                  <span className={styles.dealDiscount}>{deal.discountText}</span>
+                  <span className="absolute left-3 top-3 inline-flex h-6 items-center rounded-full bg-[color:var(--color-accent)] px-2.5 text-[10px] font-semibold uppercase tracking-wider text-white">
+                    {deal.discountText}
+                  </span>
                 )}
-                <div className={styles.dealImage}>
+                <div className="mb-3 aspect-[4/3] w-full overflow-hidden rounded-xl bg-[color:var(--color-bg)]">
                   {deal.imageUrl ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={deal.imageUrl} alt={deal.title} className={styles.dealImg} />
+                    <img
+                      src={deal.imageUrl}
+                      alt={deal.title}
+                      className="h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
+                    />
                   ) : (
-                    <div className={styles.dealImagePlaceholder} />
+                    <span className="block h-full w-full bg-[color:var(--color-bg-secondary)]" />
                   )}
                 </div>
-                <h4 className={styles.dealTitle}>{deal.title}</h4>
-                <div className={styles.dealPrices}>
-                  {deal.oldPrice && <span className={styles.dealOld}>{deal.oldPrice}</span>}
-                  {deal.newPrice && <span className={styles.dealNew}>{deal.newPrice}</span>}
+                <h4 className="line-clamp-2 text-sm font-medium text-[color:var(--color-text)]">
+                  {deal.title}
+                </h4>
+                <div className="mt-2 flex items-baseline gap-2">
+                  {deal.oldPrice && (
+                    <span className="text-xs text-[color:var(--color-text-tertiary)] line-through">
+                      {deal.oldPrice}
+                    </span>
+                  )}
+                  {deal.newPrice && (
+                    <span className="text-base font-semibold text-[color:var(--color-accent)]">
+                      {deal.newPrice}
+                    </span>
+                  )}
                 </div>
               </Link>
             ))}

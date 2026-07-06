@@ -1,99 +1,99 @@
 /* Admin Panel — Premium Dashboard Theme (Light / Dark) */
 
 [data-admin-theme] {
-  --admin-accent: #0A84FF;
-  --admin-accent-light: #3d9eff;
-  --admin-accent-dark: #0070e0;
-  --admin-accent-bg: rgba(10, 132, 255, 0.10);
-  --admin-accent-bg-hover: rgba(10, 132, 255, 0.16);
+  --admin-accent: #C65B3C;
+  --admin-accent-light: #E37A5A;
+  --admin-accent-dark: #A94A2E;
+  --admin-accent-bg: rgba(198, 91, 60, 0.10);
+  --admin-accent-bg-hover: rgba(198, 91, 60, 0.16);
   --admin-radius: 14px;
   --admin-radius-lg: 22px;
   --admin-radius-xl: 26px;
   --admin-sidebar-width: 260px;
   --admin-topbar-height: 72px;
-  --admin-success: #00C853;
-  --admin-warning: #F59E0B;
-  --admin-danger: #EF4444;
+  --admin-success: #4E7A63;
+  --admin-warning: #B77A1F;
+  --admin-danger: #B54634;
 }
 
-/* ─── Dark Theme (default) ─── */
+/* ─── Dark Theme (default) — warm charcoal ─── */
 [data-admin-theme][data-theme="dark"] {
-  --admin-bg: #050505;
-  --admin-bg-card: #171717;
-  --admin-bg-card-hover: #1e1e1e;
-  --admin-bg-elevated: #1b1b1d;
-  --admin-bg-input: #111113;
-  --admin-border: rgba(255, 255, 255, 0.08);
-  --admin-border-hover: rgba(255, 255, 255, 0.14);
-  --admin-text: #f5f5f5;
-  --admin-text-secondary: #a1a1aa;
-  --admin-text-muted: #71717a;
-  --admin-text-tertiary: #52525b;
-  --admin-sidebar-bg: #070707;
-  --admin-topbar-bg: rgba(5, 5, 5, 0.8);
-  --admin-row-hover: rgba(255, 255, 255, 0.03);
-  --admin-row-border: rgba(255, 255, 255, 0.04);
+  --admin-bg: #14120F;
+  --admin-bg-card: #1C1A16;
+  --admin-bg-card-hover: #26241E;
+  --admin-bg-elevated: #1F1D18;
+  --admin-bg-input: #14120F;
+  --admin-border: rgba(246, 244, 239, 0.08);
+  --admin-border-hover: rgba(246, 244, 239, 0.14);
+  --admin-text: #F1EDE4;
+  --admin-text-secondary: #B9B0A2;
+  --admin-text-muted: #8B8578;
+  --admin-text-tertiary: #6B6560;
+  --admin-sidebar-bg: #10201C;
+  --admin-topbar-bg: rgba(16, 32, 28, 0.85);
+  --admin-row-hover: rgba(246, 244, 239, 0.03);
+  --admin-row-border: rgba(246, 244, 239, 0.04);
   --admin-checkbox-accent: var(--admin-accent);
   color-scheme: dark;
 }
 
 [data-admin-theme][data-theme="dark"],
 [data-admin-theme][data-theme="dark"] * {
-  --color-bg: #050505;
-  --color-bg-secondary: #0e0e0e;
-  --color-bg-tertiary: #1a1a1a;
-  --color-text: #f5f5f5;
-  --color-text-secondary: #a1a1aa;
-  --color-text-tertiary: #71717a;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-hover: rgba(255, 255, 255, 0.14);
-  --color-accent: #0A84FF;
-  --color-success: #00C853;
-  --color-warning: #F59E0B;
-  --color-danger: #EF4444;
-  --color-accent-light: rgba(10, 132, 255, 0.10);
-  --gradient-primary: #0A84FF;
-  --shadow-accent: 0 8px 30px rgba(10, 132, 255, 0.2);
+  --color-bg: #14120F;
+  --color-bg-secondary: #1C1A16;
+  --color-bg-tertiary: #26241E;
+  --color-text: #F1EDE4;
+  --color-text-secondary: #B9B0A2;
+  --color-text-tertiary: #8B8578;
+  --color-border: rgba(246, 244, 239, 0.08);
+  --color-border-hover: rgba(246, 244, 239, 0.14);
+  --color-accent: #E37A5A;
+  --color-success: #7CB29F;
+  --color-warning: #D6A257;
+  --color-danger: #D57560;
+  --color-accent-light: rgba(227, 122, 90, 0.14);
+  --gradient-primary: #1F4D3F;
+  --shadow-accent: 0 8px 30px rgba(227, 122, 90, 0.2);
 }
 
-/* ─── Light Theme ─── */
+/* ─── Light Theme — bone/paper ─── */
 [data-admin-theme][data-theme="light"] {
-  --admin-bg: #f5f5f7;
-  --admin-bg-card: #ffffff;
-  --admin-bg-card-hover: #fafafa;
-  --admin-bg-elevated: #ffffff;
-  --admin-bg-input: #f0f0f2;
-  --admin-border: rgba(0, 0, 0, 0.08);
-  --admin-border-hover: rgba(0, 0, 0, 0.15);
-  --admin-text: #1a1a1a;
-  --admin-text-secondary: #52525b;
-  --admin-text-muted: #a1a1aa;
-  --admin-text-tertiary: #a1a1aa;
-  --admin-sidebar-bg: #ffffff;
+  --admin-bg: #F6F4EF;
+  --admin-bg-card: #FFFFFF;
+  --admin-bg-card-hover: #FAF8F3;
+  --admin-bg-elevated: #FFFFFF;
+  --admin-bg-input: #EFEBE2;
+  --admin-border: #E4E0D9;
+  --admin-border-hover: #C9C3B7;
+  --admin-text: #1C1A17;
+  --admin-text-secondary: #6B6560;
+  --admin-text-muted: #96908A;
+  --admin-text-tertiary: #96908A;
+  --admin-sidebar-bg: #1F4D3F;
   --admin-topbar-bg: rgba(255, 255, 255, 0.85);
-  --admin-row-hover: rgba(0, 0, 0, 0.02);
-  --admin-row-border: rgba(0, 0, 0, 0.05);
+  --admin-row-hover: rgba(28, 26, 23, 0.03);
+  --admin-row-border: rgba(28, 26, 23, 0.05);
   --admin-checkbox-accent: var(--admin-accent);
   color-scheme: light;
 }
 
 [data-admin-theme][data-theme="light"],
 [data-admin-theme][data-theme="light"] * {
-  --color-bg: #f5f5f7;
-  --color-bg-secondary: #ebebed;
-  --color-bg-tertiary: #e0e0e2;
-  --color-text: #1a1a1a;
-  --color-text-secondary: #52525b;
-  --color-text-tertiary: #a1a1aa;
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-border-hover: rgba(0, 0, 0, 0.15);
-  --color-accent: #0A84FF;
-  --color-success: #00C853;
-  --color-warning: #F59E0B;
-  --color-danger: #EF4444;
-  --color-accent-light: rgba(10, 132, 255, 0.08);
-  --gradient-primary: #0A84FF;
-  --shadow-accent: 0 8px 30px rgba(10, 132, 255, 0.12);
+  --color-bg: #F6F4EF;
+  --color-bg-secondary: #EFEBE2;
+  --color-bg-tertiary: #E4E0D9;
+  --color-text: #1C1A17;
+  --color-text-secondary: #6B6560;
+  --color-text-tertiary: #96908A;
+  --color-border: #E4E0D9;
+  --color-border-hover: #C9C3B7;
+  --color-accent: #C65B3C;
+  --color-success: #4E7A63;
+  --color-warning: #B77A1F;
+  --color-danger: #B54634;
+  --color-accent-light: rgba(198, 91, 60, 0.10);
+  --gradient-primary: #1F4D3F;
+  --shadow-accent: 0 8px 30px rgba(198, 91, 60, 0.12);
 }
 
 /* ─── Admin Layout ─── */
@@ -190,7 +190,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--admin-accent), var(--admin-accent-dark));
+  background: var(--admin-accent);
   color: white;
   display: flex;
   align-items: center;
@@ -234,7 +234,7 @@
   width: 32px;
   height: 32px;
   border-radius: 10px;
-  background: linear-gradient(135deg, var(--admin-accent), var(--admin-accent-dark));
+  background: var(--admin-accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -326,7 +326,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(10, 132, 255, 0.2), rgba(10, 132, 255, 0.1));
+  background: var(--admin-accent-bg);
   color: var(--admin-accent);
   display: flex;
   align-items: center;
@@ -334,7 +334,7 @@
   font-size: 0.6875rem;
   font-weight: 700;
   flex-shrink: 0;
-  border: 1px solid rgba(10, 132, 255, 0.2);
+  border: 1px solid var(--admin-accent-bg-hover);
 }
 
 .admin-sidebar-footer-info {
@@ -441,7 +441,7 @@
 
 .kpi-card-change-up {
   color: var(--admin-success);
-  background: rgba(0, 200, 83, 0.1);
+  background: rgba(78, 122, 99, 0.14);
 }
 
 .kpi-card-change-down {
@@ -520,22 +520,22 @@
 }
 
 .admin-badge-success {
-  background: rgba(0, 200, 83, 0.12);
+  background: rgba(78, 122, 99, 0.14);
   color: var(--admin-success);
 }
 
 .admin-badge-warning {
-  background: rgba(245, 158, 11, 0.12);
+  background: rgba(183, 122, 31, 0.14);
   color: var(--admin-warning);
 }
 
 .admin-badge-danger {
-  background: rgba(239, 68, 68, 0.12);
+  background: rgba(181, 70, 52, 0.14);
   color: var(--admin-danger);
 }
 
 .admin-badge-accent {
-  background: rgba(10, 132, 255, 0.12);
+  background: rgba(198, 91, 60, 0.12);
   color: var(--admin-accent);
 }
 
@@ -736,8 +736,8 @@
 }
 
 .admin-input:focus {
-  border-color: rgba(10, 132, 255, 0.5);
-  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.12);
+  border-color: rgba(198, 91, 60, 0.5);
+  box-shadow: 0 0 0 3px rgba(198, 91, 60, 0.12);
 }
 
 .admin-input::placeholder {
@@ -760,8 +760,8 @@
 }
 
 .admin-textarea:focus {
-  border-color: rgba(10, 132, 255, 0.5);
-  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.12);
+  border-color: rgba(198, 91, 60, 0.5);
+  box-shadow: 0 0 0 3px rgba(198, 91, 60, 0.12);
 }
 
 .admin-select {
@@ -781,8 +781,8 @@
 }
 
 .admin-select:focus {
-  border-color: rgba(10, 132, 255, 0.5);
-  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.12);
+  border-color: rgba(198, 91, 60, 0.5);
+  box-shadow: 0 0 0 3px rgba(198, 91, 60, 0.12);
 }
 
 .admin-label {
@@ -859,12 +859,12 @@
 }
 
 .admin-btn-danger {
-  background: rgba(239, 68, 68, 0.12);
+  background: rgba(181, 70, 52, 0.14);
   color: var(--admin-danger);
 }
 
 .admin-btn-danger:hover {
-  background: rgba(239, 68, 68, 0.2);
+  background: rgba(181, 70, 52, 0.22);
 }
 
 .admin-btn-ghost {

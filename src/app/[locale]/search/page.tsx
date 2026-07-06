@@ -39,15 +39,16 @@ export default function SearchPage() {
   }, [query]);
 
   return (
-    <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 4rem" }}>
+    <div className="mx-auto w-full max-w-[var(--max-width)] px-4 pb-16">
       <Breadcrumbs items={[{ label: nav("home"), href: "/" }, { label: t("search") }]} />
 
-      <div style={{ textAlign: "center", marginBottom: "1.75rem" }}>
-        <h1 style={{ fontSize: "clamp(1.375rem, 4.5vw, 1.75rem)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "1rem" }}>
+      <div className="mb-7 text-center">
+        <span className="eyebrow">{t("search")}</span>
+        <h1 className="mb-4 mt-2 font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-[40px]">
           Search
         </h1>
-        <div style={{ maxWidth: "32rem", margin: "0 auto", position: "relative" }}>
-          <div style={{ position: "absolute", left: "1rem", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "var(--color-text-tertiary)" }}>
+        <div className="relative mx-auto max-w-lg">
+          <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--color-text-tertiary)]">
             <Search size={20} />
           </div>
           <input
@@ -55,17 +56,7 @@ export default function SearchPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
-            style={{
-              width: "100%",
-              padding: "0.875rem 1rem 0.875rem 2.75rem",
-              borderRadius: "var(--radius-pill)",
-              border: "1px solid var(--color-border)",
-              background: "var(--color-bg-secondary)",
-              color: "var(--color-text)",
-              fontSize: "1rem",
-              outline: "none",
-              transition: "border-color 0.2s, box-shadow 0.2s",
-            }}
+            className="w-full rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] py-3.5 pl-11 pr-4 text-base text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-tertiary)] focus:border-[color:var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/20"
           />
         </div>
       </div>

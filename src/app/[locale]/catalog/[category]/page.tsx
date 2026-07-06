@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { Link } from "@/i18n/routing";
 import { ProductGrid } from "@/components/product/ProductGrid/ProductGrid";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
 import { getDescendantCategoryIds } from "@/lib/category-tree";
@@ -28,13 +29,13 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     title: category.name,
     description:
       category.description ||
-      `Shop ${category.name} products at MisaElectro. Browse electronics, accessories, electrical materials and installation supplies.`,
+      `Shop ${category.name} products at Ravora. Browse electronics, accessories, electrical materials and installation supplies.`,
     alternates: { canonical: `/${locale}/catalog/${category.slug}` },
     openGraph: {
-      title: `${category.name} | MisaElectro`,
+      title: `${category.name} | Ravora`,
       description:
         category.description ||
-        `Shop ${category.name} products at MisaElectro.`,
+        `Shop ${category.name} products at Ravora.`,
       url: `/${locale}/catalog/${category.slug}`,
     },
   };
@@ -104,7 +105,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const basePath = `/${locale}/catalog/${category.slug}`;
 
   return (
-    <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 3rem", overflowWrap: "anywhere" }}>
+    <div className="mx-auto w-full max-w-[var(--max-width)] px-4 pb-12 [overflow-wrap:anywhere]">
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
@@ -113,17 +114,18 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         ]}
       />
 
-      <h1 style={{ fontSize: "clamp(1.25rem, 3.5vw, 1.75rem)", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: "0.75rem", wordBreak: "break-word" }}>
+      <span className="eyebrow">Category</span>
+      <h1 className="mb-3 mt-2 break-words font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-[40px]">
         {category.name}
       </h1>
 
       {category.description && (
-        <p style={{ color: "var(--color-text-secondary)", marginBottom: "1.5rem", fontSize: "0.9375rem", lineHeight: 1.6 }}>
+        <p className="mb-6 max-w-2xl text-[15px] leading-relaxed text-[color:var(--color-text-secondary)]">
           {category.description}
         </p>
       )}
 
-      <p style={{ color: "var(--color-text-tertiary)", marginBottom: "1.5rem", fontSize: "0.8125rem" }}>
+      <p className="mb-6 text-[13px] text-[color:var(--color-text-tertiary)]">
         {total.toLocaleString()} product{total === 1 ? "" : "s"}
       </p>
 
@@ -132,48 +134,26 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       {totalPages > 1 && (
         <nav
           aria-label="Pagination"
-          style={{
-            display: "flex",
-            gap: "0.5rem",
-            justifyContent: "center",
-            marginTop: "2rem",
-            flexWrap: "wrap",
-          }}
+          className="mt-8 flex flex-wrap justify-center gap-2"
         >
           {page > 1 && (
-            <a
+            <Link
               href={`${basePath}?page=${page - 1}`}
-              style={{
-                padding: "0.5rem 0.875rem",
-                border: "1px solid var(--color-border)",
-                borderRadius: "var(--radius-md)",
-                color: "var(--color-text)",
-                textDecoration: "none",
-                fontSize: "0.875rem",
-                fontWeight: 600,
-              }}
+              className="rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-3.5 py-2 text-sm font-semibold text-[color:var(--color-text)] hover:border-[color:var(--color-line-strong)]"
             >
               Previous
-            </a>
+            </Link>
           )}
-          <span style={{ padding: "0.5rem 0.875rem", color: "var(--color-text-secondary)", fontSize: "0.875rem" }}>
+          <span className="px-3.5 py-2 text-sm text-[color:var(--color-text-secondary)]">
             Page {page} of {totalPages}
           </span>
           {page < totalPages && (
-            <a
+            <Link
               href={`${basePath}?page=${page + 1}`}
-              style={{
-                padding: "0.5rem 0.875rem",
-                border: "1px solid var(--color-border)",
-                borderRadius: "var(--radius-md)",
-                color: "var(--color-text)",
-                textDecoration: "none",
-                fontSize: "0.875rem",
-                fontWeight: 600,
-              }}
+              className="rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-3.5 py-2 text-sm font-semibold text-[color:var(--color-text)] hover:border-[color:var(--color-line-strong)]"
             >
               Next
-            </a>
+            </Link>
           )}
         </nav>
       )}

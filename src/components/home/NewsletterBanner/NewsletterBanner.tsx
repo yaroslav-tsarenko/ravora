@@ -4,7 +4,6 @@ import { useState, useRef } from "react";
 import { CheckCircle, Copy, Check } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { toast } from "sonner";
-import styles from "./NewsletterBanner.module.css";
 
 export function NewsletterBanner() {
   const [email, setEmail] = useState("");
@@ -49,74 +48,65 @@ export function NewsletterBanner() {
   return (
     <motion.section
       ref={ref}
-      className={styles.section}
+      className="grid grid-cols-1 items-center gap-8 rounded-3xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] p-6 sm:p-10 md:grid-cols-[1fr_1fr]"
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6 }}
     >
       <motion.div
-        className={styles.textSide}
+        className="flex items-center gap-5"
         initial={{ opacity: 0, x: -30 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <div className={styles.topRow}>
-          <motion.div
-            className={styles.discountCircle}
-            animate={isInView ? { rotate: [0, -8, 8, -4, 0] } : {}}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          >
-            <span className={styles.discountNum}>10%</span>
-            <span className={styles.discountOff}>OFF</span>
-          </motion.div>
-          <div>
-            <h2 className={styles.title}>Subscribe & Save 10%</h2>
-            <p className={styles.subtitle}>Get exclusive deals, new arrivals & special offers straight to your inbox.</p>
-          </div>
+        <motion.div
+          className="flex h-24 w-24 shrink-0 flex-col items-center justify-center rounded-full bg-[color:var(--color-accent)] text-white shadow-sm"
+          animate={isInView ? { rotate: [0, -8, 8, -4, 0] } : {}}
+          transition={{ duration: 0.8, delay: 0.5 }}
+        >
+          <span className="font-serif text-3xl font-medium leading-none">10%</span>
+          <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em]">Off</span>
+        </motion.div>
+        <div className="flex flex-col gap-1">
+          <span className="eyebrow">Ravora dispatch</span>
+          <h2 className="font-serif text-2xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-3xl">
+            Subscribe &amp; save 10%
+          </h2>
+          <p className="text-sm text-[color:var(--color-text-secondary)]">
+            Exclusive deals, new arrivals &amp; special offers straight to your inbox.
+          </p>
         </div>
       </motion.div>
       <motion.div
-        className={styles.formSide}
+        className="flex w-full flex-col items-stretch"
         initial={{ opacity: 0, x: 30 }}
         animate={isInView ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
         {discountCode ? (
           <motion.div
-            className={styles.successMsg}
+            className="flex flex-col items-center gap-2 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-5 py-4 text-[color:var(--color-text)]"
             initial={{ scale: 0.85 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200 }}
-            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}
           >
-            <span style={{ display: "flex", alignItems: "center", gap: "0.375rem", fontSize: "0.8125rem", opacity: 0.9 }}>
+            <span className="flex items-center gap-2 text-sm text-[color:var(--color-success)]">
               <CheckCircle size={16} /> You&apos;re in! Use code:
             </span>
             <button
               type="button"
               onClick={copyCode}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                padding: "0.5rem 0.875rem",
-                borderRadius: "10px",
-                background: "rgba(255,255,255,0.15)",
-                border: "1.5px dashed rgba(255,255,255,0.5)",
-                color: "inherit",
-                cursor: "pointer",
-                fontFamily: "monospace",
-                fontWeight: 700,
-                fontSize: "0.9375rem",
-                letterSpacing: "0.5px",
-              }}
+              className="inline-flex items-center gap-2 rounded-full border border-dashed border-[color:var(--color-line-strong)] bg-[color:var(--color-bg)] px-4 py-2 font-mono text-base font-semibold tracking-wide text-[color:var(--color-text)] transition-colors hover:border-[color:var(--color-primary)]"
             >
               {discountCode}
               {copied ? <Check size={14} /> : <Copy size={14} />}
             </button>
           </motion.div>
         ) : (
-          <form onSubmit={handleSubmit} style={{ display: "flex", gap: "0.5rem" }}>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-2 sm:flex-row"
+          >
             <input
               type="email"
               value={email}
@@ -124,9 +114,13 @@ export function NewsletterBanner() {
               placeholder="Enter your email"
               required
               disabled={submitting}
-              className={styles.emailInput}
+              className="flex-1 rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-4 py-3 text-sm text-[color:var(--color-text)] outline-none transition-colors placeholder:text-[color:var(--color-text-tertiary)] focus:border-[color:var(--color-primary)]"
             />
-            <button type="submit" className={styles.submitBtn} disabled={submitting}>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="inline-flex items-center justify-center rounded-full bg-[color:var(--color-accent)] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-hover)] disabled:opacity-70"
+            >
               {submitting ? "…" : "Subscribe"}
             </button>
           </form>

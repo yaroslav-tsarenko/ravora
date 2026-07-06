@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import { Chip } from "@heroui/react";
+import { Chip } from "@/components/ui/Chip";
 import { useAuth } from "@/providers/AuthProvider";
 import { useCurrency } from "@/providers/CurrencyProvider";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner/LoadingSpinner";
@@ -11,7 +11,6 @@ import { EmptyState } from "@/components/shared/EmptyState/EmptyState";
 import { formatPrice } from "@/lib/utils/format-price";
 import { format } from "date-fns";
 import { Package } from "lucide-react";
-import styles from "../account.module.css";
 
 interface Order {
   id: string;
@@ -53,7 +52,7 @@ export default function OrdersPage() {
 
   return (
     <div>
-      <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.25rem" }}>{t("orders")}</h1>
+      <h1 className="mb-5 font-serif text-2xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-3xl">{t("orders")}</h1>
 
       {orders.length === 0 ? (
         <EmptyState
@@ -64,18 +63,22 @@ export default function OrdersPage() {
           icon={<Package size={48} />}
         />
       ) : (
-        <div className={styles.orderList}>
+        <div className="flex flex-col gap-3">
           {orders.map((order) => (
-            <Link key={order.id} href={`/account/orders/${order.id}`} className={styles.orderCard}>
-              <div className={styles.orderCardMain}>
-                <div className={styles.orderCardNumber}>#{order.orderNumber.slice(-8)}</div>
-                <div className={styles.orderCardDate}>{format(new Date(order.createdAt), "MMM d, yyyy")}</div>
-                <div className={styles.orderCardItems}>
+            <Link
+              key={order.id}
+              href={`/account/orders/${order.id}`}
+              className="grid grid-cols-1 grid-rows-[auto_auto] gap-2 rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-4 py-3.5 text-[color:var(--color-text)] transition-all hover:-translate-y-px hover:border-[color:var(--color-primary)] sm:grid-cols-[1fr_auto_auto] sm:grid-rows-1 sm:items-center sm:gap-6 sm:px-6 sm:py-4"
+            >
+              <div className="min-w-0 max-sm:col-span-full">
+                <div className="text-[15px] font-bold text-[color:var(--color-text)]">#{order.orderNumber.slice(-8)}</div>
+                <div className="mt-0.5 text-xs text-[color:var(--color-text-tertiary)]">{format(new Date(order.createdAt), "MMM d, yyyy")}</div>
+                <div className="mt-1 text-xs text-[color:var(--color-text-tertiary)]">
                   {order.items.length} {order.items.length === 1 ? "item" : "items"}
                 </div>
               </div>
               <Chip size="sm" color={statusColors[order.status] || "default"}>{order.status}</Chip>
-              <span className={styles.orderCardPrice}>{formatPrice(convert(Number(order.total)), currency)}</span>
+              <span className="whitespace-nowrap text-base font-bold text-[color:var(--color-text)] sm:text-[15px]">{formatPrice(convert(Number(order.total)), currency)}</span>
             </Link>
           ))}
         </div>

@@ -14,25 +14,25 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "MisaElectro — Electrical Materials & Supplies | misaelectro.ro",
-    template: "%s | MisaElectro — misaelectro.ro",
+    default: "Ravora — A refined selection of modern electronics",
+    template: "%s | Ravora",
   },
   description:
-    "MisaElectro (misaelectro.ro) — your trusted source for electrical materials, wiring, lighting and installation supplies across Europe. Certified inventory, fast delivery.",
-  applicationName: "MisaElectro",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://misaelectro.ro"),
+    "Ravora — a curated, editorial-quality electronics store. Carefully sourced products, transparent shipping, honest warranty. Shipped from the United Kingdom.",
+  applicationName: "Ravora",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://ravora.co.uk"),
   openGraph: {
     type: "website",
-    siteName: "MisaElectro",
-    url: "https://misaelectro.ro",
-    title: "MisaElectro — Electrical Materials & Supplies",
+    siteName: "Ravora",
+    url: "https://ravora.co.uk",
+    title: "Ravora — A refined selection of modern electronics",
     description:
-      "Certified electrical materials, wiring, lighting and installation supplies. Delivered across Europe.",
+      "Curated electronics from Ravora — carefully sourced, honestly presented. Shipped from the United Kingdom.",
   },
   twitter: {
     card: "summary_large_image",
-    site: "@misaelectro",
-    title: "MisaElectro — misaelectro.ro",
+    site: "@ravora",
+    title: "Ravora",
   },
   icons: { icon: "/icon.svg", apple: "/icon.svg" },
 };

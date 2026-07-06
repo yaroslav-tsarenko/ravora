@@ -12,7 +12,6 @@ import { PriceDisplay } from "@/components/shared/PriceDisplay/PriceDisplay";
 import { EmptyState } from "@/components/shared/EmptyState/EmptyState";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
 import { formatPrice } from "@/lib/utils/format-price";
-import styles from "./cart.module.css";
 
 export default function CartPage() {
   const t = useTranslations("cart");
@@ -24,17 +23,17 @@ export default function CartPage() {
   const subtotalConverted = convert(cart.subtotal);
 
   return (
-    <div className={styles.wrapper}>
+    <div className="mx-auto w-full max-w-[var(--max-width)] px-4 pb-16">
       <Breadcrumbs items={[{ label: nav("home"), href: "/" }, { label: t("title") }]} />
 
       <motion.h1
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className={styles.title}
+        className="mb-4 font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)] sm:mb-6 sm:text-[40px]"
       >
         {t("title")}{" "}
         {cart.items.length > 0 && (
-          <span style={{ color: "var(--color-text-tertiary)", fontWeight: 500 }}>
+          <span className="text-[color:var(--color-text-tertiary)]">
             ({cart.itemCount} {cart.itemCount === 1 ? "item" : "items"})
           </span>
         )}
@@ -51,18 +50,18 @@ export default function CartPage() {
           />
         </motion.div>
       ) : (
-        <div className={styles.layout}>
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_380px] lg:gap-10">
           {/* Cart Items */}
-          <div className={styles.itemsBlock}>
-            <div className={styles.itemsHeader}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <Package size={16} style={{ color: "var(--color-text-secondary)" }} />
-                <span style={{ fontSize: "0.8125rem", fontWeight: 600, color: "var(--color-text-secondary)" }}>
+          <div className="overflow-hidden rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)]">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] px-4 py-3 sm:px-6 sm:py-4">
+              <div className="flex items-center gap-2">
+                <Package size={16} className="text-[color:var(--color-text-secondary)]" />
+                <span className="text-[13px] font-semibold text-[color:var(--color-text-secondary)]">
                   {cart.itemCount} {cart.itemCount === 1 ? "item" : "items"} in your cart
                 </span>
               </div>
               {subtotalConverted >= freeShippingThreshold && (
-                <div style={{ display: "flex", alignItems: "center", gap: "0.375rem", fontSize: "0.75rem", fontWeight: 600, color: "#2E7D32" }}>
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-[color:var(--color-success)]">
                   <Truck size={14} />
                   Free shipping
                 </div>
@@ -78,64 +77,53 @@ export default function CartPage() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20, height: 0, padding: 0, margin: 0 }}
                   transition={{ delay: index * 0.05, duration: 0.25 }}
-                  className={styles.itemRow}
+                  className="flex items-start gap-3.5 p-4 sm:items-center sm:gap-5 sm:p-5 sm:px-6 [&+&]:border-t [&+&]:border-[color:var(--color-line)]"
                 >
-                  <div className={styles.itemImage}>
+                  <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-lg border border-[color:var(--color-line)] bg-white sm:h-[100px] sm:w-[100px]">
                     {item.imageUrl ? (
                       <Image
                         src={item.imageUrl}
                         alt={item.name}
                         fill
                         sizes="100px"
-                        style={{ objectFit: "contain", padding: "8px" }}
+                        className="object-contain p-2"
                       />
                     ) : (
-                      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--color-text-tertiary)" }}>
+                      <div className="flex h-full w-full items-center justify-center text-[color:var(--color-text-tertiary)]">
                         <ImageOff size={24} />
                       </div>
                     )}
                   </div>
 
-                  <div className={styles.itemContent}>
-                    <Link href={`/product/${item.slug}`} className={styles.itemName}>
+                  <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                    <Link
+                      href={`/product/${item.slug}`}
+                      className="line-clamp-2 break-words text-sm font-semibold text-[color:var(--color-text)] hover:text-[color:var(--color-primary)] sm:text-[15px] [overflow-wrap:anywhere]"
+                    >
                       {item.name}
                     </Link>
                     {item.variantName && (
-                      <span style={{ fontSize: "0.75rem", color: "var(--color-text-tertiary)" }}>
+                      <span className="text-xs text-[color:var(--color-text-tertiary)]">
                         {item.variantName}
                       </span>
                     )}
-                    <span style={{ fontSize: "0.75rem", color: "var(--color-text-tertiary)" }}>
+                    <span className="text-xs text-[color:var(--color-text-tertiary)]">
                       SKU: {item.sku}
                     </span>
 
-                    <div className={styles.itemFooter}>
+                    <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-1 sm:pt-2">
                       <QuantitySelector
                         quantity={item.quantity}
                         maxQuantity={item.maxQuantity}
                         onChange={(qty) => updateQuantity(item.productId, qty, item.variantId)}
                       />
-                      <div className={styles.itemPriceRow}>
+                      <div className="ml-auto flex items-center gap-2 sm:gap-4">
                         <PriceDisplay price={item.price * item.quantity} size="sm" />
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => removeItem(item.productId, item.variantId)}
-                          style={{
-                            width: "2rem",
-                            height: "2rem",
-                            borderRadius: "var(--radius-lg)",
-                            border: "none",
-                            background: "transparent",
-                            color: "var(--color-text-tertiary)",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            transition: "color 0.15s, background 0.15s",
-                          }}
-                          onMouseEnter={(e) => { e.currentTarget.style.color = "var(--color-danger)"; e.currentTarget.style.background = "var(--color-bg-tertiary)"; }}
-                          onMouseLeave={(e) => { e.currentTarget.style.color = "var(--color-text-tertiary)"; e.currentTarget.style.background = "transparent"; }}
+                          className="flex h-8 w-8 items-center justify-center rounded-lg border-none bg-transparent text-[color:var(--color-text-tertiary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-danger)]"
                           aria-label="Remove"
                         >
                           <Trash2 size={16} />
@@ -153,93 +141,58 @@ export default function CartPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className={styles.summary}
+            className="rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] p-5 sm:p-7 lg:sticky lg:top-[calc(var(--header-height)+var(--announcement-height)+1rem)]"
           >
-            <h2 style={{ fontSize: "1.125rem", fontWeight: 700, marginBottom: "1.25rem" }}>
+            <h2 className="mb-5 font-serif text-xl font-medium tracking-tight text-[color:var(--color-text)]">
               Order Summary
             </h2>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1.25rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.875rem" }}>
-                <span style={{ color: "var(--color-text-secondary)" }}>{t("subtotal")}</span>
-                <span style={{ fontWeight: 500 }}>{formatPrice(convert(cart.subtotal), currency)}</span>
+            <div className="mb-5 flex flex-col gap-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-[color:var(--color-text-secondary)]">{t("subtotal")}</span>
+                <span className="font-medium text-[color:var(--color-text)]">{formatPrice(convert(cart.subtotal), currency)}</span>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.875rem" }}>
-                <span style={{ color: "var(--color-text-secondary)" }}>{t("shipping")}</span>
-                <span style={{ fontWeight: 600, color: cart.shippingCost === 0 ? "#2E7D32" : undefined }}>
+              <div className="flex justify-between text-sm">
+                <span className="text-[color:var(--color-text-secondary)]">{t("shipping")}</span>
+                <span className={`font-semibold ${cart.shippingCost === 0 ? "text-[color:var(--color-success)]" : "text-[color:var(--color-text)]"}`}>
                   {cart.shippingCost > 0 ? formatPrice(convert(cart.shippingCost), currency) : "Free"}
                 </span>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.875rem" }}>
-                <span style={{ color: "var(--color-text-secondary)" }}>{t("tax")} (21%)</span>
-                <span style={{ fontWeight: 500 }}>{formatPrice(convert(cart.taxAmount), currency)}</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-[color:var(--color-text-secondary)]">{t("tax")} (21%)</span>
+                <span className="font-medium text-[color:var(--color-text)]">{formatPrice(convert(cart.taxAmount), currency)}</span>
               </div>
 
               {subtotalConverted < freeShippingThreshold && (
-                <div
-                  style={{
-                    padding: "0.625rem 0.75rem",
-                    borderRadius: "var(--radius-md)",
-                    background: "var(--color-bg-secondary)",
-                    fontSize: "0.75rem",
-                    color: "var(--color-text-secondary)",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.375rem",
-                  }}
-                >
+                <div className="flex items-center gap-1.5 rounded-lg bg-[color:var(--color-bg-secondary)] px-3 py-2.5 text-xs text-[color:var(--color-text-secondary)]">
                   <Truck size={14} />
                   Add {formatPrice(freeShippingThreshold - subtotalConverted, currency)} more for free shipping
                 </div>
               )}
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontWeight: 800,
-                  fontSize: "1.25rem",
-                  borderTop: "2px solid var(--color-border)",
-                  paddingTop: "1rem",
-                  marginTop: "0.25rem",
-                }}
-              >
+              <div className="mt-1 flex justify-between border-t-2 border-[color:var(--color-line)] pt-4 text-xl font-bold text-[color:var(--color-text)]">
                 <span>{t("total")}</span>
                 <span>{formatPrice(convert(cart.total), currency)}</span>
               </div>
             </div>
 
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Link href="/checkout" className={styles.checkoutBtn}>
+              <Link
+                href="/checkout"
+                className="flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--color-accent)] px-5 py-4 text-base font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-hover)]"
+              >
                 {t("checkout")} <ArrowRight size={18} />
               </Link>
             </motion.div>
 
             <Link
               href="/catalog"
-              style={{
-                display: "block",
-                textAlign: "center",
-                marginTop: "0.875rem",
-                fontSize: "0.875rem",
-                fontWeight: 600,
-                color: "var(--color-accent)",
-              }}
+              className="mt-3.5 block text-center text-sm font-semibold text-[color:var(--color-primary)] hover:text-[color:var(--color-primary-hover)]"
             >
               {t("continueShopping")}
             </Link>
 
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "0.375rem",
-              marginTop: "1.25rem",
-              paddingTop: "1rem",
-              borderTop: "1px solid var(--color-border)",
-              fontSize: "0.75rem",
-              color: "var(--color-text-tertiary)",
-            }}>
+            <div className="mt-5 flex items-center justify-center gap-1.5 border-t border-[color:var(--color-line)] pt-4 text-xs text-[color:var(--color-text-tertiary)]">
               <ShieldCheck size={14} />
               Secure checkout with SSL encryption
             </div>

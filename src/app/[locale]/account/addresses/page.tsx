@@ -9,7 +9,7 @@ export default function AddressesPage() {
 
   return (
     <div>
-      <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.25rem" }}>{t("addresses")}</h1>
+      <h1 className="mb-5 font-serif text-2xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-3xl">{t("addresses")}</h1>
       <EmptyState
         title="No addresses yet"
         subtitle="Add a shipping address for faster checkout"

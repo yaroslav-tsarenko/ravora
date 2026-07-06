@@ -11,7 +11,6 @@ import { useCurrency } from "@/providers/CurrencyProvider";
 import { formatPrice } from "@/lib/utils/format-price";
 import { useRouter } from "@/i18n/routing";
 import { toast } from "sonner";
-import styles from "./ProductInfo.module.css";
 
 const WARRANTY_OPTIONS = [
   { key: "none", years: 0, percent: 0, min: 0 },
@@ -136,33 +135,44 @@ export function ProductInfo({
     : 0;
 
   return (
-    <div className={styles.info}>
+    <div className="flex flex-col gap-4 sm:gap-5">
       <div>
-        <h1 className={styles.name}>{name}</h1>
-        <div className={styles.metaRow}>
-          <span className={styles.sku}>{t("sku")}: {sku}</span>
-          {ean && <span className={styles.sku}>{t("ean")}: {ean}</span>}
+        {brand && <span className="eyebrow">{brand}</span>}
+        <h1 className="mt-2 break-words font-serif text-2xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-3xl md:text-[40px] [overflow-wrap:anywhere]">
+          {name}
+        </h1>
+        <div className="mt-3 flex flex-wrap items-center gap-4">
+          <span className="text-xs text-[color:var(--color-text-tertiary)]">{t("sku")}: {sku}</span>
+          {ean && <span className="text-xs text-[color:var(--color-text-tertiary)]">{t("ean")}: {ean}</span>}
           {reviewCount > 0 && (
-            <span className={styles.ratingBadge}>
+            <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-[color:var(--color-accent)]">
               {"★".repeat(Math.round(avgRating))}{"☆".repeat(5 - Math.round(avgRating))}
-              <span className={styles.ratingCount}>({reviewCount})</span>
+              <span className="font-normal text-[color:var(--color-text-tertiary)]">({reviewCount})</span>
             </span>
           )}
         </div>
       </div>
 
-      {shortDescription && <p className={styles.shortDesc}>{shortDescription}</p>}
+      {shortDescription && <p className="text-[15px] leading-relaxed text-[color:var(--color-text-secondary)]">{shortDescription}</p>}
 
-      <hr className={styles.divider} />
+      <hr className="h-px border-0 bg-[color:var(--color-line)]" />
 
-      <div className={styles.priceBlock}>
+      <div className="flex items-center gap-4">
         <PriceDisplay price={price} comparePrice={comparePrice} size="lg" />
-        {isOnSale && <span className={styles.saveBadge}>-{savingsPercent}%</span>}
+        {isOnSale && (
+          <span className="inline-flex h-6 items-center rounded-full bg-[color:var(--color-accent)] px-2.5 text-[10px] font-semibold uppercase tracking-wider text-white">
+            −{savingsPercent}%
+          </span>
+        )}
       </div>
 
       <p
-        className={`${styles.stock} ${
-          outOfStock ? styles.stockOut : lowStock ? styles.stockLow : styles.stockInStock
+        className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-semibold ${
+          outOfStock
+            ? "bg-[color:var(--color-danger)]/10 text-[color:var(--color-danger)]"
+            : lowStock
+            ? "bg-[color:var(--color-warning)]/10 text-[color:var(--color-warning)]"
+            : "bg-[color:var(--color-success)]/10 text-[color:var(--color-success)]"
         }`}
       >
         {outOfStock
@@ -172,26 +182,30 @@ export function ProductInfo({
             : t("inStock")}
       </p>
 
-      <hr className={styles.divider} />
+      <hr className="h-px border-0 bg-[color:var(--color-line)]" />
 
-      <div className={styles.guaranteeSection}>
-        <span className={styles.guaranteeLabel}>
+      <div className="flex flex-col gap-2">
+        <span className="flex items-center gap-1.5 text-[13px] font-bold text-[color:var(--color-text)]">
           <Shield size={14} /> {t("warranty")}
         </span>
-        <p style={{ fontSize: "0.75rem", color: "var(--color-text-secondary)", marginBottom: "0.5rem" }}>
+        <p className="mb-2 text-xs text-[color:var(--color-text-secondary)]">
           {t("warrantyStandard")}
         </p>
         {warrantyAvailable && (
-          <div className={styles.guaranteeOptions}>
+          <div className="grid grid-cols-2 gap-2">
             {WARRANTY_OPTIONS.map((opt, idx) => (
               <button
                 key={opt.key}
-                className={`${styles.guaranteeOption} ${idx === selectedWarranty ? styles.guaranteeOptionActive : ""}`}
+                className={`flex flex-col items-center gap-0.5 rounded-lg border-2 px-2 py-2.5 text-center text-[13px] font-semibold transition-all ${
+                  idx === selectedWarranty
+                    ? "border-[color:var(--color-primary)] bg-[color:var(--color-primary-tint)] text-[color:var(--color-primary)] shadow-[0_0_0_1px_var(--color-primary)]"
+                    : "border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] text-[color:var(--color-text)] hover:border-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-tint)]"
+                }`}
                 onClick={() => setSelectedWarranty(idx)}
               >
                 {idx === 0 ? t("noWarranty") : t(`warrantyOption${opt.years}year` as "warrantyOption1year" | "warrantyOption2year" | "warrantyOption3year")}
                 {opt.percent > 0 && (
-                  <span className={styles.guaranteePrice}>+{formatPrice(convert(calcWarrantyPrice(price, opt)), currency)}</span>
+                  <span className="text-[11px] font-normal text-[color:var(--color-text-secondary)]">+{formatPrice(convert(calcWarrantyPrice(price, opt)), currency)}</span>
                 )}
               </button>
             ))}
@@ -199,7 +213,7 @@ export function ProductInfo({
         )}
       </div>
 
-      <div className={styles.actions}>
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         <QuantitySelector
           quantity={qty}
           maxQuantity={stockQuantity}
@@ -211,16 +225,15 @@ export function ProductInfo({
           onPress={handleAddToCart}
           isDisabled={outOfStock}
           startContent={<ShoppingCart size={18} />}
-          style={{ flex: 1 }}
+          className="flex-1"
         >
           {selectedWarranty > 0 ? t("addToCartWithWarranty") : t("addToCart")}
         </Button>
         <Button
-          color="default"
           size="lg"
           onPress={handleBuyNow}
           isDisabled={outOfStock}
-          className={styles.buyNowBtn}
+          className="!bg-[color:var(--color-text)] font-bold !text-[color:var(--color-bg)] hover:opacity-85"
         >
           {t("buyNow")}
         </Button>
@@ -235,44 +248,44 @@ export function ProductInfo({
         </Button>
       </div>
 
-      <div className={styles.details}>
+      <div className="border-t border-[color:var(--color-line)] pt-4">
         {brand && (
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>{t("brand")}</span>
-            <span className={styles.detailValue}>{brand}</span>
+          <div className="flex justify-between border-b border-[color:var(--color-line)]/50 py-2 text-sm last:border-b-0">
+            <span className="text-[color:var(--color-text-secondary)]">{t("brand")}</span>
+            <span className="font-semibold text-[color:var(--color-text)]">{brand}</span>
           </div>
         )}
-        <div className={styles.detailRow}>
-          <span className={styles.detailLabel}>{t("condition")}</span>
-          <span className={styles.detailValue}>{condition}</span>
+        <div className="flex justify-between border-b border-[color:var(--color-line)]/50 py-2 text-sm last:border-b-0">
+          <span className="text-[color:var(--color-text-secondary)]">{t("condition")}</span>
+          <span className="font-semibold text-[color:var(--color-text)]">{condition}</span>
         </div>
-        <div className={styles.detailRow}>
-          <span className={styles.detailLabel}>{t("sku")}</span>
-          <span className={styles.detailValue}>{sku}</span>
+        <div className="flex justify-between border-b border-[color:var(--color-line)]/50 py-2 text-sm last:border-b-0">
+          <span className="text-[color:var(--color-text-secondary)]">{t("sku")}</span>
+          <span className="font-semibold text-[color:var(--color-text)]">{sku}</span>
         </div>
         {ean && (
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>{t("ean")}</span>
-            <span className={styles.detailValue}>{ean}</span>
+          <div className="flex justify-between py-2 text-sm">
+            <span className="text-[color:var(--color-text-secondary)]">{t("ean")}</span>
+            <span className="font-semibold text-[color:var(--color-text)]">{ean}</span>
           </div>
         )}
       </div>
 
-      <div className={styles.trustBadges}>
-        <div className={styles.trustBadge}>
-          <Truck size={18} className={styles.trustBadgeIcon} />
-          <span className={styles.trustBadgeTitle}>{t("freeShipping")}</span>
-          <span className={styles.trustBadgeDesc}>{t("freeShippingDesc")}</span>
+      <div className="grid grid-cols-3 gap-2 pt-2 sm:gap-3">
+        <div className="flex flex-col items-center gap-1 rounded-lg bg-[color:var(--color-bg-secondary)] px-1.5 py-2.5 text-center sm:px-2 sm:py-3">
+          <Truck size={18} className="text-[color:var(--color-primary)]" strokeWidth={1.5} />
+          <span className="text-[11px] font-bold text-[color:var(--color-text)]">{t("freeShipping")}</span>
+          <span className="text-[10px] text-[color:var(--color-text-tertiary)]">{t("freeShippingDesc")}</span>
         </div>
-        <div className={styles.trustBadge}>
-          <RotateCcw size={18} className={styles.trustBadgeIcon} />
-          <span className={styles.trustBadgeTitle}>{t("easyReturns")}</span>
-          <span className={styles.trustBadgeDesc}>{t("easyReturnsDesc")}</span>
+        <div className="flex flex-col items-center gap-1 rounded-lg bg-[color:var(--color-bg-secondary)] px-1.5 py-2.5 text-center sm:px-2 sm:py-3">
+          <RotateCcw size={18} className="text-[color:var(--color-primary)]" strokeWidth={1.5} />
+          <span className="text-[11px] font-bold text-[color:var(--color-text)]">{t("easyReturns")}</span>
+          <span className="text-[10px] text-[color:var(--color-text-tertiary)]">{t("easyReturnsDesc")}</span>
         </div>
-        <div className={styles.trustBadge}>
-          <Lock size={18} className={styles.trustBadgeIcon} />
-          <span className={styles.trustBadgeTitle}>{t("securePayment")}</span>
-          <span className={styles.trustBadgeDesc}>{t("securePaymentDesc")}</span>
+        <div className="flex flex-col items-center gap-1 rounded-lg bg-[color:var(--color-bg-secondary)] px-1.5 py-2.5 text-center sm:px-2 sm:py-3">
+          <Lock size={18} className="text-[color:var(--color-primary)]" strokeWidth={1.5} />
+          <span className="text-[11px] font-bold text-[color:var(--color-text)]">{t("securePayment")}</span>
+          <span className="text-[10px] text-[color:var(--color-text-tertiary)]">{t("securePaymentDesc")}</span>
         </div>
       </div>
     </div>

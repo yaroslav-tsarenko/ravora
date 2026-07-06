@@ -1,11 +1,17 @@
 "use client";
 
 import React from "react";
+import { twMerge } from "tailwind-merge";
+import clsx from "clsx";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "tertiary" | "outline" | "ghost" | "danger" | "danger-soft" | "light" | "flat" | "bordered";
-  color?: "primary" | "danger" | "success" | "warning" | "default";
-  size?: "sm" | "md" | "lg";
+type Variant = "primary" | "secondary" | "outline" | "ghost" | "danger" | "danger-soft" | "light" | "flat" | "bordered" | "tertiary";
+type Color = "primary" | "danger" | "success" | "warning" | "default";
+type Size = "sm" | "md" | "lg";
+
+interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color"> {
+  variant?: Variant;
+  color?: Color;
+  size?: Size;
   isLoading?: boolean;
   isDisabled?: boolean;
   isIconOnly?: boolean;
@@ -17,9 +23,14 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   target?: string;
   download?: boolean;
   onPress?: () => void;
-  [key: string]: unknown;
 }
 
+/**
+ * Ravora Button — warm-editorial:
+ *   primary  = terracotta filled  (main CTA — buy, subscribe, submit)
+ *   secondary= pine outline       (secondary action — view, browse)
+ *   ghost    = quiet inline       (tertiary — cancel, learn more)
+ */
 export function Button({
   variant = "primary",
   color,
@@ -36,44 +47,52 @@ export function Button({
   download,
   onPress,
   children,
-  style,
+  className,
   onClick,
+  type,
   ...rest
 }: ButtonProps) {
-  const sizeStyles: Record<string, React.CSSProperties> = {
-    sm: { padding: isIconOnly ? "0.375rem" : "0.375rem 0.75rem", fontSize: "0.8125rem" },
-    md: { padding: isIconOnly ? "0.5rem" : "0.5rem 1rem", fontSize: "0.875rem" },
-    lg: { padding: isIconOnly ? "0.625rem" : "0.625rem 1.5rem", fontSize: "1rem" },
+  const resolved = resolveVariant(variant, color);
+
+  const base =
+    "inline-flex items-center justify-center gap-2 font-medium tracking-tight " +
+    "transition-[background-color,border-color,color,transform,box-shadow] duration-200 " +
+    "select-none whitespace-nowrap rounded-[var(--radius-md)] " +
+    "disabled:cursor-not-allowed disabled:opacity-60 " +
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-bg)]";
+
+  const sizes: Record<Size, string> = {
+    sm: isIconOnly ? "h-8 w-8 text-sm" : "h-8 px-3 text-[13px]",
+    md: isIconOnly ? "h-10 w-10 text-sm" : "h-10 px-4 text-sm",
+    lg: isIconOnly ? "h-12 w-12" : "h-12 px-6 text-[15px]",
   };
 
-  const resolvedVariant = resolveVariant(variant, color);
-
-  const variantStyles: Record<string, React.CSSProperties> = {
-    primary: { background: "var(--color-accent)", color: "#fff", border: "none" },
-    secondary: { background: "var(--color-bg-secondary)", color: "var(--color-text)", border: "1px solid var(--color-border)" },
-    tertiary: { background: "transparent", color: "var(--color-text-secondary)", border: "none" },
-    outline: { background: "transparent", color: "var(--color-text)", border: "1px solid var(--color-border)" },
-    ghost: { background: "transparent", color: "var(--color-text)", border: "none" },
-    danger: { background: "var(--color-danger)", color: "#fff", border: "none" },
-    "danger-soft": { background: "var(--color-danger-bg, rgba(239,68,68,0.1))", color: "var(--color-danger)", border: "none" },
+  const variants: Record<string, string> = {
+    primary:
+      "bg-[color:var(--color-accent)] text-white border border-transparent hover:bg-[color:var(--color-accent-hover)] active:translate-y-[1px]",
+    secondary:
+      "bg-transparent text-[color:var(--color-primary)] border border-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-tint)]",
+    outline:
+      "bg-transparent text-[color:var(--color-text)] border border-[color:var(--color-border)] hover:border-[color:var(--color-border-strong)] hover:bg-[color:var(--color-bg-secondary)]",
+    ghost:
+      "bg-transparent text-[color:var(--color-text)] border border-transparent hover:bg-[color:var(--color-bg-secondary)]",
+    tertiary:
+      "bg-transparent text-[color:var(--color-text-secondary)] border border-transparent hover:text-[color:var(--color-text)]",
+    danger:
+      "bg-[color:var(--color-danger)] text-white border border-transparent hover:brightness-105 active:translate-y-[1px]",
+    "danger-soft":
+      "bg-[color:var(--color-danger-light)] text-[color:var(--color-danger)] border border-transparent hover:brightness-95",
   };
 
-  const baseStyle: React.CSSProperties = {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "0.5rem",
-    borderRadius: "var(--radius-lg)",
-    fontWeight: 600,
-    cursor: isDisabled || isLoading ? "not-allowed" : "pointer",
-    opacity: isDisabled || isLoading ? 0.6 : 1,
-    transition: "all 0.2s ease",
-    textDecoration: "none",
-    width: fullWidth ? "100%" : undefined,
-    ...sizeStyles[size],
-    ...variantStyles[resolvedVariant],
-    ...style,
-  };
+  const classes = twMerge(
+    clsx(
+      base,
+      sizes[size],
+      variants[resolved] ?? variants.primary,
+      fullWidth && "w-full",
+      className,
+    ),
+  );
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (isDisabled || isLoading) return;
@@ -83,7 +102,12 @@ export function Button({
 
   const content = (
     <>
-      {isLoading && <span style={{ width: "1em", height: "1em", border: "2px solid currentColor", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.6s linear infinite", display: "inline-block" }} />}
+      {isLoading && (
+        <span
+          aria-hidden
+          className="inline-block h-[1em] w-[1em] animate-spin rounded-full border-2 border-current border-t-transparent"
+        />
+      )}
       {!isLoading && startContent}
       {!isIconOnly && children}
       {endContent}
@@ -91,26 +115,38 @@ export function Button({
   );
 
   if (as || href) {
-    const Component = as || "a";
+    const Component: React.ElementType = as || "a";
     return (
-      <Component href={href} target={target} download={download} style={baseStyle} onClick={handleClick} {...rest}>
+      <Component
+        href={href}
+        target={target}
+        download={download}
+        className={classes}
+        onClick={handleClick as unknown as React.MouseEventHandler}
+        {...rest}
+      >
         {content}
       </Component>
     );
   }
 
   return (
-    <button type={rest.type || "button"} style={baseStyle} onClick={handleClick} disabled={isDisabled || isLoading} {...rest}>
+    <button
+      type={type || "button"}
+      className={classes}
+      onClick={handleClick}
+      disabled={isDisabled || isLoading}
+      {...rest}
+    >
       {content}
     </button>
   );
 }
 
-function resolveVariant(variant: string, color?: string): string {
-  if (color === "primary") return "primary";
+function resolveVariant(variant: Variant, color?: Color): string {
+  if (color === "primary" && variant !== "outline" && variant !== "bordered" && variant !== "ghost" && variant !== "light" && variant !== "flat") return "primary";
   if (color === "danger" && (variant === "flat" || variant === "light")) return "danger-soft";
   if (color === "danger") return "danger";
-  if (color === "success") return "primary";
   if (variant === "light" || variant === "flat") return "ghost";
   if (variant === "bordered") return "outline";
   return variant;

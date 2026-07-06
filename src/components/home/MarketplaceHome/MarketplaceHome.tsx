@@ -17,7 +17,6 @@ import { KnowledgeHub } from "../KnowledgeHub/KnowledgeHub";
 import { CategoryShowcase } from "../CategoryShowcase/CategoryShowcase";
 import { WhyShopWithUs } from "../WhyShopWithUs/WhyShopWithUs";
 import { HomeCTABanners } from "../HomeCTABanners/HomeCTABanners";
-import styles from "./MarketplaceHome.module.css";
 import type { HomepageProduct, CategorySection, BrandSection } from "@/lib/homepage-products";
 
 interface BannerData {
@@ -122,14 +121,14 @@ export function MarketplaceHome({ data }: Props) {
   } = data;
 
   return (
-    <div className={styles.marketplace}>
+    <div className="min-h-screen bg-[color:var(--color-bg)]">
       <PromoStrip items={promoStripItems} />
 
       <HeroCarousel slides={heroSlides} deals={dealCards} />
 
-      <div className={styles.container}>
-        <div className={styles.mainLayout}>
-          <div className={styles.content}>
+      <div className="mx-auto max-w-[var(--container-content)] px-4 pb-24 pt-8 sm:px-6 lg:px-8">
+        <div className="flex items-start gap-0">
+          <div className="flex min-w-0 flex-1 flex-col gap-16 sm:gap-20">
             {/* === ABOVE THE FOLD — start selling immediately === */}
 
             <HomeCTABanners />

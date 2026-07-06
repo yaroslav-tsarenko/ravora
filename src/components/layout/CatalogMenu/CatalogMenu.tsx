@@ -10,7 +10,6 @@ import {
   Battery, Camera, Tv, Smartphone, Tablet, Watch, Speaker,
   Music, Gamepad2, Cpu, HardDrive, Mouse, Keyboard,
 } from "lucide-react";
-import styles from "./CatalogMenu.module.css";
 
 export interface CatalogCategory {
   id: string;
@@ -83,14 +82,10 @@ function subtreeCount(cat: CatalogCategory): number {
   return own + (cat.children || []).reduce((s, c) => s + subtreeCount(c), 0);
 }
 
-// If the catalog is dominated by a single top-level, promote its children
-// so the rail feels rich and useful.
 function pickDepartments(categories: CatalogCategory[]): CatalogCategory[] {
   const sorted = [...categories].sort((a, b) => subtreeCount(b) - subtreeCount(a));
   if (sorted.length <= 2 && sorted[0]?.children?.length) {
-    return [...(sorted[0].children || [])].sort(
-      (a, b) => subtreeCount(b) - subtreeCount(a)
-    );
+    return [...(sorted[0].children || [])].sort((a, b) => subtreeCount(b) - subtreeCount(a));
   }
   return sorted;
 }
@@ -101,12 +96,9 @@ export function CatalogMenu({ open, onClose, categories }: Props) {
   const panelRef = useRef<HTMLDivElement>(null);
 
   const departments = useMemo(() => pickDepartments(categories), [categories]);
-
-  // Derive active department: explicit pin > first available
   const activeId = pinnedId ?? departments[0]?.id ?? null;
   const setActiveId = setPinnedId;
 
-  // ESC to close
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -116,7 +108,6 @@ export function CatalogMenu({ open, onClose, categories }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  // Lock body scroll
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -129,9 +120,7 @@ export function CatalogMenu({ open, onClose, categories }: Props) {
   const active = departments.find((d) => d.id === activeId) || departments[0];
   const activeChildren = useMemo(() => {
     if (!active) return [] as CatalogCategory[];
-    return [...(active.children || [])].sort(
-      (a, b) => subtreeCount(b) - subtreeCount(a)
-    );
+    return [...(active.children || [])].sort((a, b) => subtreeCount(b) - subtreeCount(a));
   }, [active]);
 
   const filteredDepartments = useMemo(() => {
@@ -154,7 +143,7 @@ export function CatalogMenu({ open, onClose, categories }: Props) {
       {open && (
         <>
           <motion.div
-            className={styles.overlay}
+            className="fixed inset-0 z-50 bg-[color:var(--color-text)]/40 backdrop-blur-[2px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -163,7 +152,7 @@ export function CatalogMenu({ open, onClose, categories }: Props) {
           />
           <motion.div
             ref={panelRef}
-            className={styles.panel}
+            className="fixed inset-x-4 top-[76px] z-50 mx-auto flex max-h-[calc(100vh-96px)] w-auto max-w-[var(--container-content)] flex-col overflow-hidden rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] shadow-2xl"
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
@@ -172,63 +161,54 @@ export function CatalogMenu({ open, onClose, categories }: Props) {
             aria-label="Catalog"
             aria-modal="true"
           >
-            {/* Top toolbar: title + search + close */}
-            <div className={styles.toolbar}>
-              <div className={styles.toolbarTitle}>
-                <Sparkles size={16} className={styles.toolbarTitleIcon} />
-                <span>Catalog</span>
+            {/* Toolbar */}
+            <div className="flex items-center gap-3 border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)] px-5 py-3">
+              <div className="flex items-center gap-2 text-[color:var(--color-primary)]">
+                <Sparkles size={16} />
+                <span className="font-serif text-lg font-medium text-[color:var(--color-text)]">Catalog</span>
               </div>
-              <div className={styles.toolbarSearch}>
-                <Search size={14} />
+              <div className="ml-auto flex flex-1 items-center gap-2 rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-3 py-1.5 md:max-w-md">
+                <Search size={14} className="text-[color:var(--color-text-tertiary)]" />
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search categories…"
-                  className={styles.toolbarSearchInput}
+                  className="min-w-0 flex-1 bg-transparent text-sm text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-tertiary)] focus:outline-none"
                 />
                 {query && (
                   <button
                     type="button"
-                    className={styles.toolbarSearchClear}
                     onClick={() => setQuery("")}
                     aria-label="Clear search"
+                    className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[color:var(--color-bg-secondary)] text-[color:var(--color-text-secondary)] hover:bg-[color:var(--color-line)]"
                   >
-                    <X size={12} />
+                    <X size={11} />
                   </button>
                 )}
               </div>
               <button
                 type="button"
                 onClick={onClose}
-                className={styles.toolbarClose}
                 aria-label="Close catalog"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[color:var(--color-text-secondary)] hover:bg-[color:var(--color-bg-secondary)]"
               >
                 <X size={18} />
               </button>
             </div>
 
-            {/* Body: rail (left) + content (right) */}
-            <div className={styles.body}>
+            {/* Body */}
+            <div className="flex flex-1 overflow-hidden">
               {departments.length === 0 ? (
-                <div className={styles.skeleton}>
-                  <div className={styles.skeletonRail}>
-                    {Array.from({ length: 10 }).map((_, i) => (
-                      <div key={i} className={styles.skeletonRailItem}>
-                        <div className={styles.skeletonDot} />
-                        <div className={styles.skeletonBar} style={{ width: `${50 + (i * 13) % 35}%` }} />
-                      </div>
-                    ))}
-                  </div>
-                  <div className={styles.skeletonContent}>
-                    {Array.from({ length: 12 }).map((_, i) => (
-                      <div key={i} className={styles.skeletonBar} style={{ width: `${60 + (i * 11) % 30}%` }} />
-                    ))}
-                  </div>
+                <div className="flex flex-1 items-center justify-center p-10 text-sm text-[color:var(--color-text-tertiary)]">
+                  Loading catalog…
                 </div>
               ) : (
                 <>
-                  <nav className={styles.rail} aria-label="Departments">
+                  <nav
+                    className="w-[280px] shrink-0 overflow-y-auto border-r border-[color:var(--color-line)] bg-[color:var(--color-bg)] p-2"
+                    aria-label="Departments"
+                  >
                     {filteredDepartments.map((dept) => {
                       const Icon = getIcon(dept.name);
                       const isActive = active?.id === dept.id;
@@ -236,62 +216,76 @@ export function CatalogMenu({ open, onClose, categories }: Props) {
                         <button
                           key={dept.id}
                           type="button"
-                          className={`${styles.railItem} ${isActive ? styles.railItemActive : ""}`}
                           onMouseEnter={() => setActiveId(dept.id)}
                           onFocus={() => setActiveId(dept.id)}
                           onClick={() => setActiveId(dept.id)}
+                          className={`group flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${
+                            isActive
+                              ? "bg-[color:var(--color-primary-tint)] text-[color:var(--color-primary)]"
+                              : "text-[color:var(--color-text)] hover:bg-[color:var(--color-bg-secondary)]"
+                          }`}
                         >
-                          <span className={styles.railIcon}>
-                            <Icon size={16} />
+                          <span
+                            className={`inline-flex h-7 w-7 items-center justify-center rounded-md ${
+                              isActive
+                                ? "bg-[color:var(--color-primary)] text-white"
+                                : "bg-[color:var(--color-bg-secondary)] text-[color:var(--color-text-secondary)] group-hover:bg-[color:var(--color-primary-tint)] group-hover:text-[color:var(--color-primary)]"
+                            }`}
+                          >
+                            <Icon size={15} />
                           </span>
-                          <span className={styles.railLabel}>{dept.name}</span>
-                          <ChevronRight size={14} className={styles.railArrow} />
+                          <span className="flex-1 truncate font-medium">{dept.name}</span>
+                          <ChevronRight
+                            size={14}
+                            className={`shrink-0 transition-opacity ${isActive ? "opacity-100" : "opacity-30"}`}
+                          />
                         </button>
                       );
                     })}
                     {filteredDepartments.length === 0 && (
-                      <div className={styles.railEmpty}>
+                      <div className="px-4 py-6 text-center text-xs text-[color:var(--color-text-tertiary)]">
                         No departments match &ldquo;{query}&rdquo;
                       </div>
                     )}
                     <Link
                       href="/catalog"
                       onClick={onClose}
-                      className={styles.railAll}
+                      className="mt-2 flex items-center justify-between rounded-lg border border-dashed border-[color:var(--color-line)] px-3 py-2.5 text-sm font-semibold text-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-tint)]"
                     >
                       Browse all <ArrowRight size={14} />
                     </Link>
                   </nav>
 
-                  <div className={styles.content}>
-                    {active ? (
+                  <div className="flex-1 overflow-y-auto p-6 sm:p-8">
+                    {active && (
                       <motion.div
                         key={active.id}
                         initial={{ opacity: 0, x: 8 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.18 }}
-                        className={styles.contentInner}
+                        className="flex flex-col gap-6"
                       >
-                        <div className={styles.contentHero}>
+                        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[color:var(--color-line)] pb-5">
                           <div>
-                            <span className={styles.contentEyebrow}>Department</span>
-                            <h3 className={styles.contentTitle}>{active.name}</h3>
-                            <p className={styles.contentMeta}>
+                            <span className="eyebrow">Department</span>
+                            <h3 className="font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)]">
+                              {active.name}
+                            </h3>
+                            <p className="mt-1 text-sm text-[color:var(--color-text-secondary)]">
                               {subtreeCount(active).toLocaleString("en-US")} products in stock
                             </p>
                           </div>
                           <Link
                             href={`/catalog/${active.slug}`}
                             onClick={onClose}
-                            className={styles.contentCta}
+                            className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-sm font-semibold text-white hover:bg-[color:var(--color-primary-hover)]"
                           >
-                            Shop all
-                            <ArrowRight size={14} />
+                            Shop all <ArrowRight size={14} />
                           </Link>
                         </div>
 
                         {filteredChildren.length > 0 ? (
-                          <div className={styles.subGrid}>
+                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                             {filteredChildren.map((child) => {
                               const Icon = getIcon(child.name);
                               const count = subtreeCount(child);
@@ -300,14 +294,16 @@ export function CatalogMenu({ open, onClose, categories }: Props) {
                                   key={child.id}
                                   href={`/catalog/${child.slug}`}
                                   onClick={onClose}
-                                  className={styles.subCard}
+                                  className="group flex items-center gap-3 rounded-xl border border-[color:var(--color-line)] p-3 transition-colors hover:border-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-tint)]"
                                 >
-                                  <span className={styles.subCardIcon}>
+                                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[color:var(--color-bg-secondary)] text-[color:var(--color-text-secondary)] transition-colors group-hover:bg-[color:var(--color-primary)] group-hover:text-white">
                                     <Icon size={16} />
                                   </span>
-                                  <span className={styles.subCardText}>
-                                    <span className={styles.subCardName}>{child.name}</span>
-                                    <span className={styles.subCardCount}>
+                                  <span className="flex min-w-0 flex-1 flex-col">
+                                    <span className="truncate text-sm font-medium text-[color:var(--color-text)]">
+                                      {child.name}
+                                    </span>
+                                    <span className="text-xs text-[color:var(--color-text-tertiary)]">
                                       {count.toLocaleString("en-US")} items
                                     </span>
                                   </span>
@@ -319,34 +315,33 @@ export function CatalogMenu({ open, onClose, categories }: Props) {
                           <Link
                             href={`/catalog/${active.slug}`}
                             onClick={onClose}
-                            className={styles.contentEmpty}
+                            className="inline-flex items-center gap-2 rounded-xl border border-dashed border-[color:var(--color-line)] px-5 py-4 text-sm text-[color:var(--color-text-secondary)] hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]"
                           >
                             <Sparkles size={16} />
-                            Browse all {subtreeCount(active).toLocaleString("en-US")} products in
-                            {" "}{active.name} →
+                            Browse all {subtreeCount(active).toLocaleString("en-US")} products in {active.name} →
                           </Link>
                         )}
 
-                        <div className={styles.promo}>
-                          <div className={styles.promoCopy}>
-                            <span className={styles.promoEyebrow}>Free EU shipping</span>
-                            <span className={styles.promoTitle}>
-                              On {active.name} orders over €100
+                        <div className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg)] p-5 sm:flex-row sm:items-center">
+                          <div className="flex flex-col">
+                            <span className="eyebrow text-[color:var(--color-accent)]">Free UK shipping</span>
+                            <span className="mt-0.5 font-serif text-lg font-medium text-[color:var(--color-text)]">
+                              On {active.name} orders over £100
                             </span>
-                            <span className={styles.promoSub}>
-                              Same-day dispatch · 30-day returns · 2-year warranty
+                            <span className="text-xs text-[color:var(--color-text-tertiary)]">
+                              Same-day dispatch · 14-day returns · Genuine warranty
                             </span>
                           </div>
                           <Link
                             href={`/catalog/${active.slug}`}
                             onClick={onClose}
-                            className={styles.promoBtn}
+                            className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-accent)] px-4 py-2 text-sm font-semibold text-white hover:bg-[color:var(--color-accent-hover)]"
                           >
                             Shop now <ArrowRight size={14} />
                           </Link>
                         </div>
                       </motion.div>
-                    ) : null}
+                    )}
                   </div>
                 </>
               )}

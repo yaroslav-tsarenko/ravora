@@ -2,7 +2,6 @@
 
 import { Link } from "@/i18n/routing";
 import { MapPin, Phone, Globe, Info, HelpCircle, Truck, RotateCcw, CreditCard, Package } from "lucide-react";
-import styles from "./TopBar.module.css";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   MapPin, Phone, Globe, Info, HelpCircle, Truck, RotateCcw, CreditCard, Package,
@@ -35,25 +34,33 @@ export function TopBar({ links }: Props) {
   const rightLinks = items.filter((l) => l.position === "right");
 
   return (
-    <div className={styles.topBar}>
-      <div className={styles.container}>
-        <nav className={styles.left}>
+    <div className="hidden border-b border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] text-[color:var(--color-text-secondary)] md:block">
+      <div className="mx-auto flex max-w-[var(--container-content)] items-center justify-between gap-6 px-4 py-2 text-xs sm:px-6 lg:px-8">
+        <nav className="flex flex-wrap items-center gap-x-5 gap-y-1">
           {leftLinks.map((link) => {
             const Icon = link.icon ? ICON_MAP[link.icon] : null;
             return (
-              <Link key={link.id} href={link.linkUrl} className={styles.link}>
-                {Icon && <Icon size={13} />}
+              <Link
+                key={link.id}
+                href={link.linkUrl}
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-[color:var(--color-primary)]"
+              >
+                {Icon && <Icon size={12} />}
                 <span>{link.label}</span>
               </Link>
             );
           })}
         </nav>
-        <div className={styles.right}>
+        <div className="flex items-center gap-4">
           {rightLinks.map((link) => {
             const Icon = link.icon ? ICON_MAP[link.icon] : null;
             return (
-              <Link key={link.id} href={link.linkUrl} className={styles.link}>
-                {Icon && <Icon size={13} />}
+              <Link
+                key={link.id}
+                href={link.linkUrl}
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-[color:var(--color-primary)]"
+              >
+                {Icon && <Icon size={12} />}
                 <span>{link.label}</span>
               </Link>
             );

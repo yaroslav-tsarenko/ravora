@@ -4,7 +4,6 @@ import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { Globe } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import styles from "./Header.module.css";
 
 const LOCALE_LABELS: Record<string, string> = {
   en: "EN",
@@ -35,46 +34,25 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <div ref={ref} style={{ position: "relative" }}>
+    <div ref={ref} className="relative">
       <button
-        className={styles.iconButton}
+        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-text)]"
         onClick={() => setOpen(!open)}
         aria-label="Change language"
       >
-        <Globe size={20} />
+        <Globe size={18} strokeWidth={1.75} />
       </button>
       {open && (
-        <div
-          style={{
-            position: "absolute",
-            top: "100%",
-            right: 0,
-            marginTop: "0.5rem",
-            background: "var(--color-bg)",
-            border: "1px solid var(--color-border)",
-            borderRadius: "var(--radius-md)",
-            overflow: "hidden",
-            boxShadow: "var(--shadow-md)",
-            zIndex: 50,
-            minWidth: "5rem",
-          }}
-        >
+        <div className="absolute right-0 top-full z-50 mt-2 min-w-[5rem] overflow-hidden rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] shadow-[0_4px_14px_rgba(28,26,23,0.06)]">
           {Object.entries(LOCALE_LABELS).map(([key, label]) => (
             <button
               key={key}
               onClick={() => switchLocale(key)}
-              style={{
-                display: "block",
-                width: "100%",
-                padding: "0.5rem 1rem",
-                textAlign: "left",
-                fontSize: "0.875rem",
-                fontWeight: key === locale ? 700 : 400,
-                background: key === locale ? "var(--color-bg-tertiary)" : "transparent",
-                color: "var(--color-text)",
-                border: "none",
-                cursor: "pointer",
-              }}
+              className={`block w-full cursor-pointer border-none px-4 py-2 text-left text-sm text-[color:var(--color-text)] hover:bg-[color:var(--color-bg-secondary)] ${
+                key === locale
+                  ? "bg-[color:var(--color-bg-secondary)] font-bold"
+                  : "bg-transparent font-normal"
+              }`}
             >
               {label}
             </button>

@@ -7,7 +7,6 @@ import { QuantitySelector } from "@/components/shared/QuantitySelector/QuantityS
 import { PriceDisplay } from "@/components/shared/PriceDisplay/PriceDisplay";
 import { useCart } from "@/providers/CartProvider";
 import type { CartItem as CartItemType } from "@/types/cart";
-import styles from "./CartItem.module.css";
 
 interface CartItemProps {
   item: CartItemType;
@@ -17,34 +16,34 @@ export function CartItem({ item }: CartItemProps) {
   const { updateQuantity, removeItem } = useCart();
 
   return (
-    <div className={styles.item}>
-      <div className={styles.image}>
+    <div className="flex gap-4 border-b border-[color:var(--color-line)] py-5 first:pt-0">
+      <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-[color:var(--color-line)] bg-white">
         {item.imageUrl ? (
           <Image
             src={item.imageUrl}
             alt={item.name}
             fill
-            sizes="80px"
-            style={{ objectFit: "contain", padding: "4px" }}
+            sizes="96px"
+            className="object-contain p-1"
           />
         ) : (
-          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.625rem", color: "var(--color-text-tertiary)" }}>
+          <div className="flex h-full w-full items-center justify-center text-[10px] text-[color:var(--color-text-tertiary)]">
             No Image
           </div>
         )}
       </div>
-      <div className={styles.content}>
-        <h3 className={styles.name}>{item.name}</h3>
+      <div className="flex flex-1 flex-col gap-1">
+        <h3 className="text-[15px] font-semibold text-[color:var(--color-text)]">{item.name}</h3>
         {item.variantName && (
-          <span className={styles.variant}>{item.variantName}</span>
+          <span className="text-xs text-[color:var(--color-text-tertiary)]">{item.variantName}</span>
         )}
-        <div className={styles.footer}>
+        <div className="mt-auto flex items-center justify-between">
           <QuantitySelector
             quantity={item.quantity}
             maxQuantity={item.maxQuantity}
             onChange={(qty) => updateQuantity(item.productId, qty, item.variantId)}
           />
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <div className="flex items-center gap-3">
             <PriceDisplay price={item.price * item.quantity} size="sm" />
             <Button
               isIconOnly

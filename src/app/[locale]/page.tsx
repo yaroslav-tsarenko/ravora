@@ -390,13 +390,13 @@ export default async function HomePage() {
         data={{
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "MisaElectro",
-          legalName: "MISARELIANA S.R.L.",
-          alternateName: ["misaelectro.ro", "Misa Electro"],
-          url: "https://misaelectro.ro",
-          sameAs: ["https://misaelectro.ro"],
+          name: "Ravora",
+          legalName: "JAYHALE LIMITED",
+          alternateName: ["ravora.co.uk"],
+          url: "https://ravora.co.uk",
+          sameAs: ["https://ravora.co.uk"],
           description:
-            "MisaElectro (misaelectro.ro) — your trusted source for electrical materials, wiring, lighting and installation supplies across Europe.",
+            "Ravora — a curated, editorial-quality electronics store. Carefully sourced products, transparent shipping, honest warranty. Shipped from the United Kingdom.",
         }}
       />
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}

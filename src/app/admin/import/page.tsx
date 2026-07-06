@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
-import { Chip } from "@heroui/react";
+import { Chip } from "@/components/ui/Chip";
 import { Upload, Download, FileSpreadsheet } from "lucide-react";
 import { toast } from "sonner";
 

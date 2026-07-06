@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/Button";
 import { Mail, Lock, Eye, EyeOff, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import styles from "../auth.module.css";
 
 export default function LoginPage() {
   const t = useTranslations("auth");
@@ -50,52 +49,52 @@ export default function LoginPage() {
   } as const;
 
   return (
-    <div className={styles.authPage}>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[color:var(--color-bg)] px-4 py-8">
       <motion.div
-        className={styles.authCard}
+        className="relative w-full max-w-md rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] p-8 shadow-sm sm:p-10"
         initial={{ opacity: 0, y: 24, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <motion.div className={styles.authHeader} custom={0} variants={fadeUp} initial="hidden" animate="visible">
-          <div className={styles.logoIcon}>
-            <ShoppingBag size={24} />
+        <motion.div className="mb-8 text-center" custom={0} variants={fadeUp} initial="hidden" animate="visible">
+          <div className="mx-auto mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--color-primary)] text-white">
+            <ShoppingBag size={24} strokeWidth={1.5} />
           </div>
-          <h1 className={styles.authTitle}>{t("loginTitle")}</h1>
-          <p className={styles.authSubtitle}>{t("loginSubtitle")}</p>
+          <h1 className="mb-2 font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)]">{t("loginTitle")}</h1>
+          <p className="text-[15px] leading-relaxed text-[color:var(--color-text-secondary)]">{t("loginSubtitle")}</p>
         </motion.div>
 
-        <form onSubmit={handleEmailLogin} className={styles.form}>
-          <motion.div className={styles.inputGroup} custom={1} variants={fadeUp} initial="hidden" animate="visible">
-            <label className={styles.inputLabel}>{t("email")}</label>
-            <div className={styles.inputWrapper}>
-              <Mail size={16} className={styles.inputIcon} />
+        <form onSubmit={handleEmailLogin} className="flex flex-col gap-4">
+          <motion.div className="flex flex-col gap-1.5" custom={1} variants={fadeUp} initial="hidden" animate="visible">
+            <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">{t("email")}</label>
+            <div className="relative flex items-center">
+              <Mail size={16} className="pointer-events-none absolute left-3 z-10 text-[color:var(--color-text-tertiary)]" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="you@example.com"
-                className={styles.input}
+                className="w-full rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] py-2.5 pl-10 pr-3 text-sm text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-tertiary)] focus:border-[color:var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/20"
               />
             </div>
           </motion.div>
 
-          <motion.div className={styles.inputGroup} custom={2} variants={fadeUp} initial="hidden" animate="visible">
-            <label className={styles.inputLabel}>{t("password")}</label>
-            <div className={styles.inputWrapper}>
-              <Lock size={16} className={styles.inputIcon} />
+          <motion.div className="flex flex-col gap-1.5" custom={2} variants={fadeUp} initial="hidden" animate="visible">
+            <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">{t("password")}</label>
+            <div className="relative flex items-center">
+              <Lock size={16} className="pointer-events-none absolute left-3 z-10 text-[color:var(--color-text-tertiary)]" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="Enter your password"
-                className={`${styles.input} ${styles.inputWithToggle}`}
+                className="w-full rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] py-2.5 pl-10 pr-10 text-sm text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-tertiary)] focus:border-[color:var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/20"
               />
               <button
                 type="button"
-                className={styles.inputToggle}
+                className="absolute right-2 inline-flex items-center justify-center rounded p-1 text-[color:var(--color-text-tertiary)] hover:text-[color:var(--color-text-secondary)]"
                 onClick={() => setShowPassword(!showPassword)}
                 tabIndex={-1}
               >
@@ -105,21 +104,21 @@ export default function LoginPage() {
           </motion.div>
 
           <motion.div custom={3} variants={fadeUp} initial="hidden" animate="visible">
-            <Link href="/auth/forgot-password" className={styles.forgotPasswordLink}>
+            <Link href="/auth/forgot-password" className="block text-right text-[13px] font-medium text-[color:var(--color-accent)] hover:opacity-80">
               {t("forgotPassword")}
             </Link>
           </motion.div>
 
-          <motion.div custom={4} variants={fadeUp} initial="hidden" animate="visible" className={styles.submitButton}>
+          <motion.div custom={4} variants={fadeUp} initial="hidden" animate="visible" className="mt-1">
             <Button type="submit" color="primary" fullWidth isLoading={loading}>
               {t("signIn")}
             </Button>
           </motion.div>
         </form>
 
-        <motion.p className={styles.authFooter} custom={5} variants={fadeUp} initial="hidden" animate="visible">
+        <motion.p className="mt-7 text-center text-sm text-[color:var(--color-text-secondary)]" custom={5} variants={fadeUp} initial="hidden" animate="visible">
           {t("noAccount")}{" "}
-          <Link href="/auth/register">
+          <Link href="/auth/register" className="font-semibold text-[color:var(--color-accent)] hover:opacity-80">
             {t("signUp")}
           </Link>
         </motion.p>

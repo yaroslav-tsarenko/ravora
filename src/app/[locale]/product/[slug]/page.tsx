@@ -7,7 +7,6 @@ import { ProductInfo } from "@/components/product/ProductInfo/ProductInfo";
 import { ProductTabs } from "@/components/product/ProductTabs/ProductTabs";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs/Breadcrumbs";
 import { JsonLd } from "@/components/shared/SEO/JsonLd";
-import styles from "./product.module.css";
 
 export const revalidate = 60;
 
@@ -120,7 +119,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     ? product.reviews.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / reviewCount
     : 0;
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://misaelectro.ro";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ravora.co.uk";
 
   const characteristics = product.characteristics as Record<string, Record<string, string>> | null;
 
@@ -162,13 +161,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
   ];
 
   return (
-    <div className={styles.wrapper}>
+    <div className="mx-auto w-full max-w-[var(--max-width)] px-4 pb-16">
       <JsonLd data={jsonLd} />
 
       <Breadcrumbs items={breadcrumbItems} />
 
-      <div className={styles.layout}>
-        <div className={styles.gallerySticky}>
+      <div className="mt-2 grid grid-cols-1 items-start gap-6 md:grid-cols-2 md:gap-8 lg:gap-12">
+        <div className="md:sticky md:top-[calc(var(--header-height)+1rem)]">
           <ProductGallery images={product.images} productName={product.name} />
         </div>
         <ProductInfo

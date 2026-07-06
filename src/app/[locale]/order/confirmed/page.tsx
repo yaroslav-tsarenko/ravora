@@ -32,40 +32,31 @@ function ConfirmedContent() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div style={{ maxWidth: "640px", margin: "2rem auto 4rem", padding: "0 1rem" }}>
+    <div className="mx-auto mb-16 mt-8 max-w-2xl px-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        style={{ textAlign: "center", marginBottom: "2rem" }}
+        className="mb-8 text-center"
       >
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-          style={{
-            width: 72,
-            height: 72,
-            borderRadius: "50%",
-            background: "var(--color-success-light, rgba(34,197,94,0.12))",
-            color: "var(--color-success)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto 1rem",
-          }}
+          className="mx-auto mb-4 flex h-[72px] w-[72px] items-center justify-center rounded-full bg-[color:var(--color-success)]/12 text-[color:var(--color-success)]"
         >
-          <CheckCircle size={40} />
+          <CheckCircle size={40} strokeWidth={1.5} />
         </motion.div>
-        <h1 style={{ fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: "0.5rem" }}>
+        <span className="eyebrow">Order confirmed</span>
+        <h1 className="mb-2 mt-2 font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-[40px]">
           {t("orderPlaced")}
         </h1>
-        <p style={{ color: "var(--color-text-secondary)", fontSize: "0.9375rem" }}>
+        <p className="text-[15px] text-[color:var(--color-text-secondary)]">
           Thank you for your order. We&apos;ll send a confirmation email shortly.
         </p>
         {order && (
-          <p style={{ marginTop: "0.75rem", fontSize: "0.875rem", color: "var(--color-text-tertiary)" }}>
-            Order <strong style={{ color: "var(--color-text)" }}>#{order.orderNumber.slice(-8)}</strong>
+          <p className="mt-3 text-sm text-[color:var(--color-text-tertiary)]">
+            Order <strong className="text-[color:var(--color-text)]">#{order.orderNumber.slice(-8)}</strong>
           </p>
         )}
       </motion.div>
@@ -75,55 +66,41 @@ function ConfirmedContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          style={{
-            border: "1px solid var(--color-border)",
-            borderRadius: "var(--radius-xl)",
-            background: "var(--color-bg)",
-            padding: "1.5rem",
-            marginBottom: "1.5rem",
-          }}
+          className="mb-6 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] p-6"
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
-            <Package size={18} color="var(--color-accent)" />
-            <h2 style={{ fontSize: "1rem", fontWeight: 700 }}>Order Summary</h2>
+          <div className="mb-4 flex items-center gap-2">
+            <Package size={18} className="text-[color:var(--color-accent)]" />
+            <h2 className="font-serif text-lg font-medium tracking-tight text-[color:var(--color-text)]">Order Summary</h2>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1rem" }}>
+          <div className="mb-4 flex flex-col gap-3">
             {order.items.map((item) => (
-              <div key={item.id} style={{ display: "flex", justifyContent: "space-between", gap: "1rem", fontSize: "0.875rem", paddingBottom: "0.75rem", borderBottom: "1px solid var(--color-border)" }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis" }}>{item.productName}</div>
-                  <div style={{ fontSize: "0.75rem", color: "var(--color-text-tertiary)", marginTop: "0.125rem" }}>
+              <div key={item.id} className="flex justify-between gap-4 border-b border-[color:var(--color-line)] pb-3 text-sm">
+                <div className="min-w-0 flex-1">
+                  <div className="truncate font-semibold text-[color:var(--color-text)]">{item.productName}</div>
+                  <div className="mt-0.5 text-xs text-[color:var(--color-text-tertiary)]">
                     Qty {item.quantity} × {formatPrice(convert(Number(item.price)), currency)}
                   </div>
                 </div>
-                <span style={{ fontWeight: 700, whiteSpace: "nowrap" }}>{formatPrice(convert(Number(item.total)), currency)}</span>
+                <span className="whitespace-nowrap font-bold text-[color:var(--color-text)]">{formatPrice(convert(Number(item.total)), currency)}</span>
               </div>
             ))}
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem", fontSize: "0.875rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ color: "var(--color-text-secondary)" }}>Subtotal</span>
-              <span>{formatPrice(convert(Number(order.subtotal)), currency)}</span>
+          <div className="flex flex-col gap-1.5 text-sm">
+            <div className="flex justify-between">
+              <span className="text-[color:var(--color-text-secondary)]">Subtotal</span>
+              <span className="text-[color:var(--color-text)]">{formatPrice(convert(Number(order.subtotal)), currency)}</span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ color: "var(--color-text-secondary)" }}>Shipping</span>
-              <span>{Number(order.shippingCost) === 0 ? "Free" : formatPrice(convert(Number(order.shippingCost)), currency)}</span>
+            <div className="flex justify-between">
+              <span className="text-[color:var(--color-text-secondary)]">Shipping</span>
+              <span className="text-[color:var(--color-text)]">{Number(order.shippingCost) === 0 ? "Free" : formatPrice(convert(Number(order.shippingCost)), currency)}</span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ color: "var(--color-text-secondary)" }}>Tax</span>
-              <span>{formatPrice(convert(Number(order.taxAmount)), currency)}</span>
+            <div className="flex justify-between">
+              <span className="text-[color:var(--color-text-secondary)]">Tax</span>
+              <span className="text-[color:var(--color-text)]">{formatPrice(convert(Number(order.taxAmount)), currency)}</span>
             </div>
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              fontWeight: 800,
-              fontSize: "1.0625rem",
-              borderTop: "1px solid var(--color-border)",
-              paddingTop: "0.625rem",
-              marginTop: "0.375rem",
-            }}>
+            <div className="mt-1.5 flex justify-between border-t border-[color:var(--color-line)] pt-2.5 text-[17px] font-bold text-[color:var(--color-text)]">
               <span>Total</span>
               <span>{formatPrice(convert(Number(order.total)), currency)}</span>
             </div>
@@ -136,35 +113,26 @@ function ConfirmedContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: "0.875rem",
-            marginBottom: "1.5rem",
-          }}
+          className="mb-6 grid grid-cols-1 gap-3.5 sm:grid-cols-2"
         >
-          <div style={{ padding: "1rem 1.25rem", border: "1px solid var(--color-border)", borderRadius: "var(--radius-lg)", background: "var(--color-bg)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-              <MapPin size={14} color="var(--color-accent)" />
-              <span style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: "var(--color-text-tertiary)" }}>
-                Delivery to
-              </span>
+          <div className="rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-5 py-4">
+            <div className="mb-2 flex items-center gap-2">
+              <MapPin size={14} className="text-[color:var(--color-accent)]" />
+              <span className="eyebrow">Delivery to</span>
             </div>
-            <p style={{ fontSize: "0.8125rem", color: "var(--color-text-secondary)", lineHeight: 1.5 }}>
+            <p className="text-[13px] leading-relaxed text-[color:var(--color-text-secondary)]">
               {order.shippingAddress.firstName} {order.shippingAddress.lastName}<br />
               {order.shippingAddress.address1}<br />
               {order.shippingAddress.city}, {order.shippingAddress.postalCode}<br />
               {order.shippingAddress.country}
             </p>
           </div>
-          <div style={{ padding: "1rem 1.25rem", border: "1px solid var(--color-border)", borderRadius: "var(--radius-lg)", background: "var(--color-bg)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-              <Truck size={14} color="var(--color-accent)" />
-              <span style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", color: "var(--color-text-tertiary)" }}>
-                Next Steps
-              </span>
+          <div className="rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-5 py-4">
+            <div className="mb-2 flex items-center gap-2">
+              <Truck size={14} className="text-[color:var(--color-accent)]" />
+              <span className="eyebrow">Next Steps</span>
             </div>
-            <ul style={{ fontSize: "0.8125rem", color: "var(--color-text-secondary)", lineHeight: 1.6, paddingLeft: "1rem", margin: 0 }}>
+            <ul className="list-disc pl-4 text-[13px] leading-relaxed text-[color:var(--color-text-secondary)]">
               <li>We&apos;ll prepare your order within 1–2 business days</li>
               <li>You&apos;ll receive a tracking link by email</li>
               <li>Estimated delivery depends on destination</li>
@@ -177,20 +145,10 @@ function ConfirmedContent() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        style={{
-          padding: "0.875rem 1rem",
-          background: "var(--color-accent-light)",
-          border: "1px solid var(--color-accent)",
-          borderRadius: "var(--radius-lg)",
-          display: "flex",
-          alignItems: "center",
-          gap: "0.625rem",
-          marginBottom: "1.5rem",
-          fontSize: "0.8125rem",
-        }}
+        className="mb-6 flex items-center gap-2.5 rounded-lg border border-[color:var(--color-accent)]/30 bg-[color:var(--color-accent-tint)] px-4 py-3.5 text-[13px]"
       >
-        <Mail size={16} color="var(--color-accent)" style={{ flexShrink: 0 }} />
-        <span>
+        <Mail size={16} className="shrink-0 text-[color:var(--color-accent)]" />
+        <span className="text-[color:var(--color-text)]">
           A confirmation email has been sent to{" "}
           <strong>{order?.customerEmail || "your email"}</strong>
         </span>
@@ -200,16 +158,12 @@ function ConfirmedContent() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        style={{
-          display: "flex",
-          gap: "0.75rem",
-          flexWrap: "wrap",
-        }}
+        className="flex flex-wrap gap-3"
       >
-        <Button as={Link} href="/account/orders" variant="bordered" style={{ flex: "1 1 200px" }}>
-          View Orders <ChevronRight size={16} />
+        <Button as={Link} href="/account/orders" variant="bordered" className="flex-1 basis-[200px]" endContent={<ChevronRight size={16} />}>
+          View Orders
         </Button>
-        <Button as={Link} href="/catalog" color="primary" style={{ flex: "1 1 200px" }}>
+        <Button as={Link} href="/catalog" color="primary" className="flex-1 basis-[200px]">
           Continue Shopping
         </Button>
       </motion.div>

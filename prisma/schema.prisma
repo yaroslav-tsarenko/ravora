@@ -74,7 +74,7 @@ model Address {
 
 model StoreSettings {
   id              String   @id @default("default")
-  name            String   @default("MisaElectro")
+  name            String   @default("Ravora")
   description     String?
   logoUrl         String?
   faviconUrl      String?

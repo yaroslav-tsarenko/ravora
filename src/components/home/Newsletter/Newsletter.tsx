@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { Send, Check, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import styles from "./Newsletter.module.css";
 
 export function Newsletter() {
   const t = useTranslations("home");
@@ -53,69 +52,63 @@ export function Newsletter() {
 
   return (
     <motion.section
-      className={`${styles.section} section-padding`}
+      className="relative overflow-hidden rounded-3xl border border-[color:var(--color-line)] bg-[color:var(--color-primary)] px-6 py-12 text-[color:var(--color-primary-fg)] sm:px-10 sm:py-16"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      <div className={styles.bgOrb + " " + styles.bgOrb1} />
-      <div className={styles.bgOrb + " " + styles.bgOrb2} />
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <h2 className={styles.title}>{t("newsletter")}</h2>
-          <p className={styles.subtitle}>{t("newsletterSubtitle")}</p>
+      <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
+        <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">
+          <span className="h-px w-6 bg-white/40" />
+          Ravora dispatch
+        </span>
+        <div className="flex flex-col gap-2">
+          <h2 className="font-serif text-3xl font-medium tracking-tight sm:text-[40px]">
+            {t("newsletter")}
+          </h2>
+          <p className="text-sm text-white/70 sm:text-base">
+            {t("newsletterSubtitle")}
+          </p>
         </div>
         {discountCode ? (
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            padding: "0.875rem 1.125rem",
-            borderRadius: "14px",
-            background: "rgba(255,255,255,0.95)",
-            color: "#065F46",
-            fontWeight: 700,
-          }}>
+          <div className="flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 text-[color:var(--color-primary)]">
             <Check size={18} />
-            <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.2 }}>
-              <span style={{ fontSize: "0.6875rem", fontWeight: 500, opacity: 0.7 }}>Your 10% code</span>
-              <span style={{ fontSize: "1rem", letterSpacing: "0.5px" }}>{discountCode}</span>
+            <div className="flex flex-col leading-tight">
+              <span className="text-[11px] font-medium uppercase tracking-widest text-[color:var(--color-text-tertiary)]">
+                Your 10% code
+              </span>
+              <span className="text-base font-semibold tracking-wide">{discountCode}</span>
             </div>
             <button
               type="button"
               onClick={copyCode}
               aria-label="Copy code"
-              style={{
-                border: "none",
-                background: "#10B981",
-                color: "#fff",
-                padding: "0.5rem 0.625rem",
-                borderRadius: "10px",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.25rem",
-                fontSize: "0.75rem",
-                fontWeight: 600,
-              }}
+              className="inline-flex items-center gap-1 rounded-full bg-[color:var(--color-accent)] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-hover)]"
             >
               {copied ? <Check size={14} /> : <Copy size={14} />}
               {copied ? "Copied" : "Copy"}
             </button>
           </div>
         ) : (
-          <form className={styles.form} onSubmit={handleSubmit}>
+          <form
+            className="flex w-full max-w-lg flex-col gap-2 sm:flex-row"
+            onSubmit={handleSubmit}
+          >
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t("newsletterPlaceholder")}
-              className={styles.input}
               required
               disabled={submitting}
+              className="flex-1 rounded-full border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder:text-white/60 outline-none transition-colors focus:border-white/50"
             />
-            <button type="submit" className={styles.submitBtn} disabled={submitting}>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--color-accent)] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-hover)] disabled:opacity-70"
+            >
               <Send size={16} />
               {submitting ? "…" : t("newsletterCta")}
             </button>

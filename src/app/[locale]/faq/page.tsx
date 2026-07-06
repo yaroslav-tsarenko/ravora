@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const faqs = [
   {
     q: "How long does shipping take?",
-    a: "Standard shipping takes 3-5 business days. Express shipping is available for 1-2 business day delivery. Free shipping is offered on orders over €100.",
+    a: "Standard shipping takes 3-5 business days. Express shipping is available for 1-2 business day delivery. Free shipping is offered on orders over £100.",
   },
   {
     q: "What is your return policy?",
@@ -16,7 +16,7 @@ const faqs = [
   },
   {
     q: "Do you ship internationally?",
-    a: "Yes! We ship to most countries worldwide. International shipping typically takes 7-14 business days depending on the destination.",
+    a: "Yes! We ship across the UK and to most EU countries. International shipping typically takes 7-14 business days depending on the destination.",
   },
   {
     q: "How can I track my order?",
@@ -36,7 +36,7 @@ const faqs = [
   },
   {
     q: "How do I contact customer support?",
-    a: "You can reach us via our contact form, email at support@misaelectro.ro, or through live chat on our website. We're available 24/7 to help.",
+    a: "You can reach us via our contact form or email at info@ravora.co.uk. We aim to respond within 24 hours on weekdays.",
   },
 ];
 
@@ -44,37 +44,20 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div style={{
-      borderRadius: "var(--radius-xl)",
-      border: "1px solid var(--color-border)",
-      overflow: "hidden",
-      background: open ? "var(--color-bg-secondary)" : "var(--color-bg)",
-      transition: "background-color 0.2s",
-    }}>
+    <div
+      className={`overflow-hidden rounded-2xl border border-[color:var(--color-line)] transition-colors ${
+        open ? "bg-[color:var(--color-bg-secondary)]" : "bg-[color:var(--color-bg-elevated)]"
+      }`}
+    >
       <button
         onClick={() => setOpen(!open)}
-        style={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "1.125rem 1.25rem",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          textAlign: "left",
-          gap: "1rem",
-        }}
+        className="flex w-full cursor-pointer items-center justify-between gap-4 border-none bg-transparent px-5 py-[1.125rem] text-left"
       >
-        <span style={{ fontWeight: 600, fontSize: "0.9375rem", color: "var(--color-text)" }}>{q}</span>
+        <span className="text-[15px] font-semibold text-[color:var(--color-text)]">{q}</span>
         <ChevronDown
           size={18}
-          style={{
-            color: "var(--color-text-tertiary)",
-            flexShrink: 0,
-            transition: "transform 0.2s",
-            transform: open ? "rotate(180deg)" : "none",
-          }}
+          className="shrink-0 text-[color:var(--color-text-tertiary)] transition-transform"
+          style={{ transform: open ? "rotate(180deg)" : "none" }}
         />
       </button>
       <AnimatePresence>
@@ -84,9 +67,9 @@ function FaqItem({ q, a }: { q: string; a: string }) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            style={{ overflow: "hidden" }}
+            className="overflow-hidden"
           >
-            <div style={{ padding: "0 1.25rem 1.125rem", fontSize: "0.875rem", color: "var(--color-text-secondary)", lineHeight: 1.7 }}>
+            <div className="px-5 pb-[1.125rem] text-sm leading-relaxed text-[color:var(--color-text-secondary)]">
               {a}
             </div>
           </motion.div>
@@ -98,20 +81,21 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 export default function FaqPage() {
   return (
-    <div style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "0 1rem 4rem" }}>
+    <div className="mx-auto w-full max-w-[var(--max-width)] px-4 pb-16">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "FAQ" }]} />
 
-      <div style={{ maxWidth: "720px", margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-          <h1 style={{ fontSize: "clamp(1.5rem, 5.5vw, 2.25rem)", fontWeight: 800, letterSpacing: "-0.04em", marginBottom: "0.75rem", wordBreak: "break-word" }}>
-            Frequently Asked <span className="gradient-text">Questions</span>
+      <div className="mx-auto max-w-3xl">
+        <div className="mb-8 text-center">
+          <span className="eyebrow">Help center</span>
+          <h1 className="mb-3 mt-2 break-words font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-[40px]">
+            Frequently Asked <span className="text-[color:var(--color-accent)]">Questions</span>
           </h1>
-          <p style={{ fontSize: "clamp(0.875rem, 2.4vw, 1rem)", color: "var(--color-text-secondary)", lineHeight: 1.6 }}>
+          <p className="text-base leading-relaxed text-[color:var(--color-text-secondary)] sm:text-lg">
             Everything you need to know about shopping with us
           </p>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+        <div className="flex flex-col gap-3">
           {faqs.map((faq) => (
             <FaqItem key={faq.q} q={faq.q} a={faq.a} />
           ))}

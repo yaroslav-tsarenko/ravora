@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Chip } from "@heroui/react";
+import { Chip } from "@/components/ui/Chip";
 import { formatPrice } from "@/lib/utils/format-price";
 import { format } from "date-fns";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner/LoadingSpinner";

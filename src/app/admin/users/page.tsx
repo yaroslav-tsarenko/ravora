@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Chip } from "@heroui/react";
+import { Chip } from "@/components/ui/Chip";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner/LoadingSpinner";
 import { Users, ShoppingCart, Star } from "lucide-react";
 import { format } from "date-fns";

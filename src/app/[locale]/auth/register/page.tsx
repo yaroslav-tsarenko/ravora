@@ -11,14 +11,13 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { COUNTRIES } from "@/lib/countries";
-import styles from "../auth.module.css";
 
 function getPasswordStrength(password: string): { level: number; label: string; color: string } {
   if (password.length === 0) return { level: 0, label: "", color: "transparent" };
-  if (password.length < 6) return { level: 25, label: "Weak", color: "#ef4444" };
-  if (password.length < 10) return { level: 50, label: "Fair", color: "#f59e0b" };
-  if (password.length < 14) return { level: 75, label: "Good", color: "#22c55e" };
-  return { level: 100, label: "Strong", color: "#16a34a" };
+  if (password.length < 6) return { level: 25, label: "Weak", color: "var(--color-danger)" };
+  if (password.length < 10) return { level: 50, label: "Fair", color: "var(--color-warning)" };
+  if (password.length < 14) return { level: 75, label: "Good", color: "var(--color-success)" };
+  return { level: 100, label: "Strong", color: "var(--color-success)" };
 }
 
 const STEP_LABELS = ["Personal Info", "Contact Details", "Address", "Password"];
@@ -51,6 +50,12 @@ const initialForm: FormData = {
   password: "",
   confirmPassword: "",
 };
+
+const INPUT_ICON_CLASS =
+  "w-full rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] py-2.5 pl-10 pr-3 text-sm text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-tertiary)] focus:border-[color:var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/20";
+
+const INPUT_PLAIN_CLASS =
+  "w-full rounded-lg border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-3 py-2.5 text-sm text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-tertiary)] focus:border-[color:var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary)]/20";
 
 export default function RegisterPage() {
   const t = useTranslations("auth");
@@ -144,93 +149,43 @@ export default function RegisterPage() {
     exit: { opacity: 0, x: -40 },
   };
 
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "0.625rem 0.75rem 0.625rem 2.5rem",
-    fontSize: "0.875rem",
-    color: "var(--color-text)",
-    background: "var(--color-bg)",
-    border: "1px solid var(--color-border)",
-    borderRadius: "var(--radius-lg)",
-    outline: "none",
-    transition: "border-color 0.2s, box-shadow 0.2s",
-    fontFamily: "inherit",
-  };
-
-  const plainInputStyle: React.CSSProperties = {
-    ...inputStyle,
-    paddingLeft: "0.75rem",
-  };
-
-  const selectStyle: React.CSSProperties = {
-    ...plainInputStyle,
-    appearance: "none" as const,
-    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239E9EB8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "right 0.75rem center",
-    paddingRight: "2rem",
-  };
-
   const renderError = (field: keyof FormData) =>
     errors[field] ? (
-      <span style={{ color: "var(--color-danger)", fontSize: "0.75rem", marginTop: "0.25rem" }}>{errors[field]}</span>
+      <span className="mt-1 block text-xs text-[color:var(--color-danger)]">{errors[field]}</span>
     ) : null;
 
+  const errorBorder = (field: keyof FormData) =>
+    errors[field] ? "!border-[color:var(--color-danger)]" : "";
+
   return (
-    <div className={styles.authPage}>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[color:var(--color-bg)] px-4 py-8">
       <motion.div
-        className={styles.authCard}
-        style={{ maxWidth: 480 }}
+        className="relative w-full max-w-[480px] rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] p-8 shadow-sm sm:p-10"
         initial={{ opacity: 0, y: 24, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <div className={styles.authHeader}>
-          <div className={styles.logoIcon}>
-            <ShoppingBag size={24} />
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--color-primary)] text-white">
+            <ShoppingBag size={24} strokeWidth={1.5} />
           </div>
-          <h1 className={styles.authTitle}>{t("registerTitle")}</h1>
-          <p className={styles.authSubtitle}>{t("registerSubtitle")}</p>
+          <h1 className="mb-2 font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)]">{t("registerTitle")}</h1>
+          <p className="text-[15px] leading-relaxed text-[color:var(--color-text-secondary)]">{t("registerSubtitle")}</p>
         </div>
 
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.75rem",
-          padding: "0.75rem 1rem",
-          borderRadius: "12px",
-          background: "linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)",
-          border: "1px solid #6EE7B7",
-          marginBottom: "1.5rem",
-          fontSize: "0.8125rem",
-        }}>
-          <div style={{
-            minWidth: "44px",
-            height: "44px",
-            borderRadius: "50%",
-            background: "#10B981",
-            color: "#fff",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: 800,
-            fontSize: "0.9375rem",
-          }}>
+        {/* Welcome gift banner */}
+        <div className="mb-6 flex items-center gap-3 rounded-xl border border-[color:var(--color-success)]/30 bg-[color:var(--color-success)]/10 p-3 text-[13px]">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[color:var(--color-success)] text-sm font-bold text-white">
             10%
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 700, color: "#065F46" }}>Welcome gift: 10% off</div>
-            <div style={{ color: "#047857", fontSize: "0.75rem" }}>Auto-applied to your first order at checkout.</div>
+          <div className="flex-1">
+            <div className="font-semibold text-[color:var(--color-success)]">Welcome gift: 10% off</div>
+            <div className="text-xs text-[color:var(--color-text-secondary)]">Auto-applied to your first order at checkout.</div>
           </div>
         </div>
 
         {/* Step indicator */}
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.25rem",
-          marginBottom: "1.75rem",
-        }}>
+        <div className="mb-7 flex items-center gap-1">
           {STEP_LABELS.map((label, i) => {
             const Icon = STEP_ICONS[i];
             const isActive = i === step;
@@ -240,57 +195,42 @@ export default function RegisterPage() {
                 key={i}
                 type="button"
                 onClick={() => i < step && setStep(i)}
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "0.35rem",
-                  padding: "0.5rem 0.25rem",
-                  borderRadius: "10px",
-                  border: "none",
-                  cursor: i <= step ? "pointer" : "default",
-                  background: isActive ? "var(--color-accent-light)" : "transparent",
-                  fontWeight: isActive ? 700 : 500,
-                  fontSize: "0.6875rem",
-                  color: isActive ? "var(--color-accent)" : isDone ? "var(--color-accent)" : "var(--color-text-tertiary)",
-                  transition: "all 0.2s",
-                  fontFamily: "inherit",
-                }}
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border-none px-1 py-2 text-[11px] transition-all ${
+                  i <= step ? "cursor-pointer" : "cursor-default"
+                } ${
+                  isActive
+                    ? "bg-[color:var(--color-primary-tint)] font-bold text-[color:var(--color-primary)]"
+                    : isDone
+                    ? "font-medium text-[color:var(--color-primary)]"
+                    : "font-medium text-[color:var(--color-text-tertiary)]"
+                }`}
               >
                 {isDone ? (
-                  <div style={{ width: 18, height: 18, borderRadius: "50%", background: "var(--color-accent)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[color:var(--color-primary)] text-white">
                     <Check size={10} strokeWidth={3} />
                   </div>
                 ) : (
                   <Icon size={14} />
                 )}
-                <span style={{ display: "none" }}>{label}</span>
+                <span className="sr-only">{label}</span>
               </button>
             );
           })}
         </div>
 
-        <div style={{
-          display: "flex",
-          gap: "0.5rem",
-          marginBottom: "1.25rem",
-        }}>
+        {/* Progress bar */}
+        <div className="mb-5 flex gap-2">
           {STEP_LABELS.map((_, i) => (
             <div
               key={i}
-              style={{
-                flex: 1,
-                height: 3,
-                borderRadius: 2,
-                background: i <= step ? "var(--color-accent)" : "var(--color-border)",
-                transition: "background 0.3s",
-              }}
+              className={`h-[3px] flex-1 rounded-full transition-colors ${
+                i <= step ? "bg-[color:var(--color-primary)]" : "bg-[color:var(--color-line)]"
+              }`}
             />
           ))}
         </div>
 
-        <p style={{ fontSize: "0.8125rem", color: "var(--color-text-secondary)", marginBottom: "1rem", fontWeight: 600 }}>
+        <p className="mb-4 text-[13px] font-semibold text-[color:var(--color-text-secondary)]">
           Step {step + 1} of 4: {STEP_LABELS[step]}
         </p>
 
@@ -304,58 +244,55 @@ export default function RegisterPage() {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.2 }}
-                className={styles.form}
+                className="flex flex-col gap-4"
               >
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>First Name *</label>
-                  <div className={styles.inputWrapper}>
-                    <User size={16} className={styles.inputIcon} />
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">First Name *</label>
+                  <div className="relative flex items-center">
+                    <User size={16} className="pointer-events-none absolute left-3 z-10 text-[color:var(--color-text-tertiary)]" />
                     <input
                       type="text"
                       value={form.firstName}
                       onChange={set("firstName")}
                       placeholder="John"
-                      className={styles.input}
-                      style={errors.firstName ? { borderColor: "var(--color-danger)" } : undefined}
+                      className={`${INPUT_ICON_CLASS} ${errorBorder("firstName")}`}
                     />
                   </div>
                   {renderError("firstName")}
                 </div>
 
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Last Name *</label>
-                  <div className={styles.inputWrapper}>
-                    <User size={16} className={styles.inputIcon} />
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">Last Name *</label>
+                  <div className="relative flex items-center">
+                    <User size={16} className="pointer-events-none absolute left-3 z-10 text-[color:var(--color-text-tertiary)]" />
                     <input
                       type="text"
                       value={form.lastName}
                       onChange={set("lastName")}
                       placeholder="Doe"
-                      className={styles.input}
-                      style={errors.lastName ? { borderColor: "var(--color-danger)" } : undefined}
+                      className={`${INPUT_ICON_CLASS} ${errorBorder("lastName")}`}
                     />
                   </div>
                   {renderError("lastName")}
                 </div>
 
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Date of Birth *</label>
-                  <div className={styles.inputWrapper}>
-                    <Calendar size={16} className={styles.inputIcon} />
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">Date of Birth *</label>
+                  <div className="relative flex items-center">
+                    <Calendar size={16} className="pointer-events-none absolute left-3 z-10 text-[color:var(--color-text-tertiary)]" />
                     <input
                       type="date"
                       value={form.dateOfBirth}
                       onChange={set("dateOfBirth")}
-                      className={styles.input}
-                      style={errors.dateOfBirth ? { borderColor: "var(--color-danger)" } : undefined}
+                      className={`${INPUT_ICON_CLASS} ${errorBorder("dateOfBirth")}`}
                     />
                   </div>
                   {renderError("dateOfBirth")}
                 </div>
 
-                <div className={styles.submitButton}>
-                  <Button type="button" color="primary" fullWidth onPress={goNext}>
-                    Continue <ChevronRight size={16} />
+                <div className="mt-1">
+                  <Button type="button" color="primary" fullWidth onPress={goNext} endContent={<ChevronRight size={16} />}>
+                    Continue
                   </Button>
                 </div>
               </motion.div>
@@ -369,51 +306,49 @@ export default function RegisterPage() {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.2 }}
-                className={styles.form}
+                className="flex flex-col gap-4"
               >
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>{t("email")} *</label>
-                  <div className={styles.inputWrapper}>
-                    <Mail size={16} className={styles.inputIcon} />
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">{t("email")} *</label>
+                  <div className="relative flex items-center">
+                    <Mail size={16} className="pointer-events-none absolute left-3 z-10 text-[color:var(--color-text-tertiary)]" />
                     <input
                       type="email"
                       value={form.email}
                       onChange={set("email")}
                       placeholder="you@example.com"
-                      className={styles.input}
-                      style={errors.email ? { borderColor: "var(--color-danger)" } : undefined}
+                      className={`${INPUT_ICON_CLASS} ${errorBorder("email")}`}
                     />
                   </div>
                   {renderError("email")}
                 </div>
 
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Phone *</label>
-                  <div className={styles.inputWrapper}>
-                    <Phone size={16} className={styles.inputIcon} />
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">Phone *</label>
+                  <div className="relative flex items-center">
+                    <Phone size={16} className="pointer-events-none absolute left-3 z-10 text-[color:var(--color-text-tertiary)]" />
                     <input
                       type="tel"
                       value={form.phone}
                       onChange={set("phone")}
                       placeholder={`${phoneHint} XX XXX XXXX`}
-                      className={styles.input}
-                      style={errors.phone ? { borderColor: "var(--color-danger)" } : undefined}
+                      className={`${INPUT_ICON_CLASS} ${errorBorder("phone")}`}
                     />
                   </div>
                   {renderError("phone")}
                   {!form.country && (
-                    <span style={{ fontSize: "0.7rem", color: "var(--color-text-tertiary)" }}>
+                    <span className="text-[11px] text-[color:var(--color-text-tertiary)]">
                       Select country in next step for phone code hint
                     </span>
                   )}
                 </div>
 
-                <div style={{ display: "flex", gap: "0.75rem" }} className={styles.submitButton}>
-                  <Button type="button" variant="bordered" onPress={goBack}>
-                    <ChevronLeft size={16} /> Back
+                <div className="mt-1 flex gap-3">
+                  <Button type="button" variant="bordered" onPress={goBack} startContent={<ChevronLeft size={16} />}>
+                    Back
                   </Button>
-                  <Button type="button" color="primary" style={{ flex: 1 }} onPress={goNext}>
-                    Continue <ChevronRight size={16} />
+                  <Button type="button" color="primary" onPress={goNext} endContent={<ChevronRight size={16} />} className="flex-1">
+                    Continue
                   </Button>
                 </div>
               </motion.div>
@@ -427,47 +362,43 @@ export default function RegisterPage() {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.2 }}
-                className={styles.form}
+                className="flex flex-col gap-4"
               >
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Street Address *</label>
-                  <div className={styles.inputWrapper}>
-                    <MapPin size={16} className={styles.inputIcon} />
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">Street Address *</label>
+                  <div className="relative flex items-center">
+                    <MapPin size={16} className="pointer-events-none absolute left-3 z-10 text-[color:var(--color-text-tertiary)]" />
                     <input
                       type="text"
                       value={form.street}
                       onChange={set("street")}
                       placeholder="123 Main Street, Apt 4B"
-                      className={styles.input}
-                      style={errors.street ? { borderColor: "var(--color-danger)" } : undefined}
+                      className={`${INPUT_ICON_CLASS} ${errorBorder("street")}`}
                     />
                   </div>
                   {renderError("street")}
                 </div>
 
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>City *</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">City *</label>
                   <input
                     type="text"
                     value={form.city}
                     onChange={set("city")}
-                    placeholder="Riga"
-                    style={{
-                      ...plainInputStyle,
-                      borderColor: errors.city ? "var(--color-danger)" : undefined,
-                    }}
+                    placeholder="London"
+                    className={`${INPUT_PLAIN_CLASS} ${errorBorder("city")}`}
                   />
                   {renderError("city")}
                 </div>
 
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Country *</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">Country *</label>
                   <select
                     value={form.country}
                     onChange={set("country")}
+                    className={`${INPUT_PLAIN_CLASS} appearance-none pr-10 bg-[right_0.75rem_center] bg-no-repeat ${errorBorder("country")}`}
                     style={{
-                      ...selectStyle,
-                      borderColor: errors.country ? "var(--color-danger)" : undefined,
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2396908A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
                       color: form.country ? "var(--color-text)" : "var(--color-text-tertiary)",
                     }}
                   >
@@ -479,27 +410,24 @@ export default function RegisterPage() {
                   {renderError("country")}
                 </div>
 
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Postal Code *</label>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">Postal Code *</label>
                   <input
                     type="text"
                     value={form.postalCode}
                     onChange={set("postalCode")}
-                    placeholder="LV-1001"
-                    style={{
-                      ...plainInputStyle,
-                      borderColor: errors.postalCode ? "var(--color-danger)" : undefined,
-                    }}
+                    placeholder="CF31 1JF"
+                    className={`${INPUT_PLAIN_CLASS} ${errorBorder("postalCode")}`}
                   />
                   {renderError("postalCode")}
                 </div>
 
-                <div style={{ display: "flex", gap: "0.75rem" }} className={styles.submitButton}>
-                  <Button type="button" variant="bordered" onPress={goBack}>
-                    <ChevronLeft size={16} /> Back
+                <div className="mt-1 flex gap-3">
+                  <Button type="button" variant="bordered" onPress={goBack} startContent={<ChevronLeft size={16} />}>
+                    Back
                   </Button>
-                  <Button type="button" color="primary" style={{ flex: 1 }} onPress={goNext}>
-                    Continue <ChevronRight size={16} />
+                  <Button type="button" color="primary" onPress={goNext} endContent={<ChevronRight size={16} />} className="flex-1">
+                    Continue
                   </Button>
                 </div>
               </motion.div>
@@ -513,23 +441,22 @@ export default function RegisterPage() {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.2 }}
-                className={styles.form}
+                className="flex flex-col gap-4"
               >
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>{t("password")} *</label>
-                  <div className={styles.inputWrapper}>
-                    <Lock size={16} className={styles.inputIcon} />
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">{t("password")} *</label>
+                  <div className="relative flex items-center">
+                    <Lock size={16} className="pointer-events-none absolute left-3 z-10 text-[color:var(--color-text-tertiary)]" />
                     <input
                       type={showPassword ? "text" : "password"}
                       value={form.password}
                       onChange={set("password")}
                       placeholder="Min 6 characters"
-                      className={`${styles.input} ${styles.inputWithToggle}`}
-                      style={errors.password ? { borderColor: "var(--color-danger)" } : undefined}
+                      className={`${INPUT_ICON_CLASS} pr-10 ${errorBorder("password")}`}
                     />
                     <button
                       type="button"
-                      className={styles.inputToggle}
+                      className="absolute right-2 inline-flex items-center justify-center rounded p-1 text-[color:var(--color-text-tertiary)] hover:text-[color:var(--color-text-secondary)]"
                       onClick={() => setShowPassword(!showPassword)}
                       tabIndex={-1}
                     >
@@ -538,30 +465,32 @@ export default function RegisterPage() {
                   </div>
                   {renderError("password")}
                   {form.password.length > 0 && (
-                    <div style={{ marginTop: "0.375rem" }}>
-                      <div style={{ height: 4, borderRadius: 2, background: "var(--color-border)", overflow: "hidden" }}>
-                        <div style={{ width: `${strength.level}%`, height: "100%", background: strength.color, transition: "width 0.3s" }} />
+                    <div className="mt-1.5">
+                      <div className="h-1 overflow-hidden rounded-full bg-[color:var(--color-line)]">
+                        <div
+                          className="h-full rounded-full transition-all duration-300"
+                          style={{ width: `${strength.level}%`, background: strength.color }}
+                        />
                       </div>
-                      <p style={{ fontSize: "0.75rem", color: strength.color, marginTop: "0.25rem", margin: "0.25rem 0 0" }}>{strength.label}</p>
+                      <p className="mt-1 text-xs" style={{ color: strength.color }}>{strength.label}</p>
                     </div>
                   )}
                 </div>
 
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>{t("confirmPassword")} *</label>
-                  <div className={styles.inputWrapper}>
-                    <Lock size={16} className={styles.inputIcon} />
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[13px] font-medium text-[color:var(--color-text-secondary)]">{t("confirmPassword")} *</label>
+                  <div className="relative flex items-center">
+                    <Lock size={16} className="pointer-events-none absolute left-3 z-10 text-[color:var(--color-text-tertiary)]" />
                     <input
                       type={showConfirmPassword ? "text" : "password"}
                       value={form.confirmPassword}
                       onChange={set("confirmPassword")}
                       placeholder="Confirm your password"
-                      className={`${styles.input} ${styles.inputWithToggle}`}
-                      style={errors.confirmPassword ? { borderColor: "var(--color-danger)" } : undefined}
+                      className={`${INPUT_ICON_CLASS} pr-10 ${errorBorder("confirmPassword")}`}
                     />
                     <button
                       type="button"
-                      className={styles.inputToggle}
+                      className="absolute right-2 inline-flex items-center justify-center rounded p-1 text-[color:var(--color-text-tertiary)] hover:text-[color:var(--color-text-secondary)]"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       tabIndex={-1}
                     >
@@ -571,17 +500,17 @@ export default function RegisterPage() {
                   {renderError("confirmPassword")}
                 </div>
 
-                <p className={styles.termsText}>
+                <p className="text-[13px] leading-relaxed text-[color:var(--color-text-tertiary)]">
                   By creating an account, you agree to our{" "}
-                  <Link href="/policies/terms">Terms of Service</Link> and{" "}
-                  <Link href="/policies/privacy">Privacy Policy</Link>.
+                  <Link href="/policies/terms" className="text-[color:var(--color-accent)] hover:underline">Terms of Service</Link> and{" "}
+                  <Link href="/policies/privacy" className="text-[color:var(--color-accent)] hover:underline">Privacy Policy</Link>.
                 </p>
 
-                <div style={{ display: "flex", gap: "0.75rem" }} className={styles.submitButton}>
-                  <Button type="button" variant="bordered" onPress={goBack}>
-                    <ChevronLeft size={16} /> Back
+                <div className="mt-1 flex gap-3">
+                  <Button type="button" variant="bordered" onPress={goBack} startContent={<ChevronLeft size={16} />}>
+                    Back
                   </Button>
-                  <Button type="submit" color="primary" style={{ flex: 1 }} isLoading={loading}>
+                  <Button type="submit" color="primary" isLoading={loading} className="flex-1">
                     {t("signUp")}
                   </Button>
                 </div>
@@ -590,9 +519,9 @@ export default function RegisterPage() {
           </AnimatePresence>
         </form>
 
-        <p className={styles.authFooter}>
+        <p className="mt-7 text-center text-sm text-[color:var(--color-text-secondary)]">
           {t("haveAccount")}{" "}
-          <Link href="/auth/login">{t("signIn")}</Link>
+          <Link href="/auth/login" className="font-semibold text-[color:var(--color-accent)] hover:opacity-80">{t("signIn")}</Link>
         </p>
       </motion.div>
     </div>

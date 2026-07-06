@@ -7,43 +7,33 @@ interface PriceDisplayProps {
   price: number;
   comparePrice?: number | null;
   size?: "sm" | "md" | "lg";
+  className?: string;
 }
 
-const sizes = {
-  sm: { price: "0.9375rem", compare: "0.75rem" },
-  md: { price: "1.25rem", compare: "0.875rem" },
-  lg: { price: "1.75rem", compare: "1.0625rem" },
+const sizeClass: Record<NonNullable<PriceDisplayProps["size"]>, { current: string; compare: string }> = {
+  sm: { current: "text-[15px]", compare: "text-xs" },
+  md: { current: "text-xl", compare: "text-sm" },
+  lg: { current: "text-3xl", compare: "text-base" },
 };
 
-export function PriceDisplay({
-  price,
-  comparePrice,
-  size = "md",
-}: PriceDisplayProps) {
+export function PriceDisplay({ price, comparePrice, size = "md", className }: PriceDisplayProps) {
   const { currency, convert } = useCurrency();
-  const isOnSale = comparePrice && comparePrice > price;
+  const isOnSale = !!(comparePrice && comparePrice > price);
 
   return (
-    <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
+    <div className={`flex items-baseline gap-2 ${className ?? ""}`}>
       <span
-        style={{
-          fontSize: sizes[size].price,
-          fontWeight: 800,
-          letterSpacing: "-0.02em",
-          color: isOnSale ? "#FF5A00" : "var(--color-text)",
-        }}
+        className={`font-semibold tracking-tight ${sizeClass[size].current} ${
+          isOnSale ? "text-[color:var(--color-accent)]" : "text-[color:var(--color-text)]"
+        }`}
       >
         {formatPrice(convert(price), currency)}
       </span>
       {isOnSale && (
         <span
-          style={{
-            fontSize: sizes[size].compare,
-            color: "var(--color-text-tertiary)",
-            textDecoration: "line-through",
-          }}
+          className={`${sizeClass[size].compare} text-[color:var(--color-text-tertiary)] line-through`}
         >
-          {formatPrice(convert(comparePrice), currency)}
+          {formatPrice(convert(comparePrice!), currency)}
         </span>
       )}
     </div>
