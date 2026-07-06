@@ -1,19 +1,17 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, type ReactNode } from "react";
 import NextLink from "next/link";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/routing";
 import {
-  ShoppingBag, Search, Menu, X, User, Shield,
-  ChevronRight, Heart, Bell,
-  Cable, LayoutGrid, Zap, Lightbulb, CircuitBoard, Plug,
-  Box, Wrench, Shield as ShieldIcon, SquareStack,
-  Headphones, Watch, Smartphone, Tablet, Tv, Camera,
-  Speaker, Music, Gamepad2, Cpu, HardDrive, Mouse,
-  Keyboard, Battery, Phone, Radio, Printer, Mic, Car,
-  Navigation,
+  ShoppingBag, Search, Menu, X, User as UserIcon, UserRound, Shield,
+  ChevronLeft, ChevronRight, ChevronDown, Heart, Bell,
+  Shirt, Layers, PersonStanding, Baby,
+  Waves, Footprints, Tag, Leaf, Package, Sparkles, Ruler,
+  Sun, Flame, Wind, Award, Trophy, Zap, Palette, Scissors,
+  Droplets, Gift, Star, Move, Dumbbell, Triangle, LayoutGrid,
 } from "lucide-react";
 import { useCart } from "@/providers/CartProvider";
 import { useAuth } from "@/providers/AuthProvider";
@@ -36,110 +34,209 @@ function subtreeCount(cat: Category): number {
   return own + (cat.children || []).reduce((s, c) => s + subtreeCount(c), 0);
 }
 
-function collectSubcategories(cat: Category, limit = 30): Category[] {
-  const result: Category[] = [];
-  const walk = (c: Category) => {
-    for (const child of c.children || []) {
-      if (result.length >= limit) return;
-      result.push(child);
-      walk(child);
+/**
+ * Flatten the tree into a single list (excluding roots that have 0 own
+ * products) then sort by subtree size — this lets us blend top departments
+ * and their most-populated subcategories into a single dense strip.
+ */
+function flattenForStrip(cats: Category[]): Category[] {
+  const acc: Category[] = [];
+  const walk = (list: Category[]) => {
+    for (const c of list) {
+      acc.push(c);
+      if (c.children?.length) walk(c.children);
     }
   };
-  walk(cat);
-  return result
-    .sort((a, b) => subtreeCount(b) - subtreeCount(a))
-    .slice(0, limit);
+  walk(cats);
+  return acc.sort((a, b) => subtreeCount(b) - subtreeCount(a));
 }
 
+function collectAllSubcategories(cats: Category[]): Category[] {
+  const acc: Category[] = [];
+  const walk = (list: Category[]) => {
+    for (const c of list) {
+      if (c.children?.length) walk(c.children);
+      else acc.push(c);
+    }
+  };
+  walk(cats);
+  return acc.sort((a, b) => subtreeCount(b) - subtreeCount(a));
+}
+
+/**
+ * One distinctive icon per category slug — hand-picked so no two adjacent
+ * categories in the strip repeat the same glyph.
+ */
+const SLUG_ICONS: Record<string, React.ElementType> = {
+  // Top-level departments
+  men: UserIcon,
+  women: UserRound,
+  kids: Baby,
+  accessories: Tag,
+
+  // Level 2 subcategories
+  "men-bottoms": Footprints,
+  "men-sweatshirts": Layers,
+  "men-t-shirts": Shirt,
+  "women-bottoms": Ruler,
+  "women-swimwear": Waves,
+  "women-t-shirts": Shirt,
+  "kids-all-over-shirts": Palette,
+  "kids-hoodies-sweatshirts": Layers,
+  "kids-t-shirts": Shirt,
+
+  // Level 3 — Men Bottoms
+  "men-bottoms-sweatpants": Footprints,
+  "men-bottoms-shorts": Sun,
+  "men-bottoms-leggings": Dumbbell,
+  "men-bottoms-swim-trunks": Waves,
+  "men-bottoms-trousers": Move,
+
+  // Level 3 — Men T-shirts
+  "men-t-shirts-jerseys": Trophy,
+  "men-t-shirts-athletic": Zap,
+  "men-t-shirts-graphic": Palette,
+  "men-t-shirts-all-over": Sparkles,
+  "men-t-shirts-long-sleeve": Wind,
+  "men-t-shirts-tanks": Sun,
+  "men-t-shirts-polos": Award,
+
+  // Level 3 — Men Sweatshirts
+  "men-sweatshirts-hoodies": Layers,
+  "men-sweatshirts-zip-hoodies": Layers,
+  "men-sweatshirts-crewnecks": UserRound,
+  "men-sweatshirts-performance": Zap,
+
+  // Level 3 — Women Bottoms
+  "women-bottoms-leggings": Dumbbell,
+  "women-bottoms-sweatpants": Footprints,
+  "women-bottoms-shorts": Sun,
+  "women-bottoms-skirts": Wind,
+  "women-bottoms-trousers": Move,
+
+  // Level 3 — Women T-shirts
+  "women-t-shirts-crop": Scissors,
+  "women-t-shirts-sports-bras": Heart,
+  "women-t-shirts-tanks": Sun,
+  "women-t-shirts-long-sleeve": Wind,
+  "women-t-shirts-v-neck": Triangle,
+  "women-t-shirts-polos": Award,
+  "women-t-shirts-athletic": Zap,
+  "women-t-shirts-all-over": Sparkles,
+
+  // Level 3 — Women Swimwear
+  "women-swimwear-bikinis": Waves,
+  "women-swimwear-one-piece": Droplets,
+  "women-swimwear-cover-ups": Sun,
+  "women-swimwear-shorts": Waves,
+
+  // Level 3 — Kids Hoodies
+  "kids-hoodies-youth": Star,
+  "kids-hoodies-toddler": Baby,
+  "kids-hoodies-zip": Layers,
+
+  // Level 3 — Kids T-shirts
+  "kids-t-shirts-youth": Star,
+  "kids-t-shirts-toddler": Baby,
+  "kids-t-shirts-baby": Gift,
+  "kids-t-shirts-long-sleeve": Wind,
+  "kids-t-shirts-all-over": Sparkles,
+};
+
 const ICON_RULES: { kw: string; icon: React.ElementType }[] = [
-  { kw: "headphone", icon: Headphones },
-  { kw: "earphone", icon: Headphones },
-  { kw: "soundbar", icon: Speaker },
-  { kw: "speaker", icon: Speaker },
-  { kw: "microphone", icon: Mic },
-  { kw: "audio", icon: Music },
-  { kw: "hi-fi", icon: Music },
-  { kw: "hifi", icon: Music },
-  { kw: "stereo", icon: Music },
-  { kw: "record player", icon: Music },
-  { kw: "tv", icon: Tv },
-  { kw: "television", icon: Tv },
-  { kw: "video", icon: Tv },
-  { kw: "home cinema", icon: Tv },
-  { kw: "projector", icon: Tv },
-  { kw: "smartwatch", icon: Watch },
-  { kw: "watch", icon: Watch },
-  { kw: "mobile phone", icon: Smartphone },
-  { kw: "mobile communication", icon: Smartphone },
-  { kw: "smartphone", icon: Smartphone },
-  { kw: "phone", icon: Phone },
-  { kw: "landline", icon: Phone },
-  { kw: "tablet", icon: Tablet },
-  { kw: "camera", icon: Camera },
-  { kw: "photography", icon: Camera },
-  { kw: "console", icon: Gamepad2 },
-  { kw: "gaming", icon: Gamepad2 },
-  { kw: "game", icon: Gamepad2 },
-  { kw: "computer", icon: Cpu },
-  { kw: "laptop", icon: Cpu },
-  { kw: "storage", icon: HardDrive },
-  { kw: "memory", icon: HardDrive },
-  { kw: "mouse", icon: Mouse },
-  { kw: "keyboard", icon: Keyboard },
-  { kw: "printer", icon: Printer },
-  { kw: "scanner", icon: Printer },
-  { kw: "battery", icon: Battery },
-  { kw: "charger", icon: Battery },
-  { kw: "radio", icon: Radio },
-  { kw: "gps", icon: Navigation },
-  { kw: "navigation", icon: Navigation },
-  { kw: "vehicle", icon: Car },
-  { kw: "car ", icon: Car },
-  { kw: "automotive", icon: Car },
-  { kw: "wiring", icon: Cable },
-  { kw: "cable", icon: Cable },
-  { kw: "automation", icon: CircuitBoard },
-  { kw: "control", icon: CircuitBoard },
-  { kw: "distribution", icon: LayoutGrid },
-  { kw: "energy", icon: Zap },
-  { kw: "power", icon: Zap },
-  { kw: "protection", icon: ShieldIcon },
-  { kw: "protective", icon: ShieldIcon },
-  { kw: "fuse", icon: Zap },
-  { kw: "lighting", icon: Lightbulb },
-  { kw: "light", icon: Lightbulb },
-  { kw: "lamp", icon: Lightbulb },
-  { kw: "terminal", icon: SquareStack },
-  { kw: "mounting", icon: Box },
-  { kw: "conduit", icon: Wrench },
-  { kw: "connector", icon: Plug },
-  { kw: "plug", icon: Plug },
-  { kw: "tool", icon: Wrench },
-  { kw: "box", icon: Box },
+  { kw: "bikini", icon: Waves },
+  { kw: "swim", icon: Waves },
+  { kw: "beach", icon: Waves },
+  { kw: "trunk", icon: Waves },
+  { kw: "cover", icon: Sun },
+  { kw: "one-piece", icon: Droplets },
+  { kw: "sports bra", icon: Heart },
+  { kw: "bralette", icon: Heart },
+  { kw: "bustier", icon: Heart },
+  { kw: "crop", icon: Scissors },
+  { kw: "v-neck", icon: Triangle },
+  { kw: "long sleeve", icon: Wind },
+  { kw: "long-sleeve", icon: Wind },
+  { kw: "tank", icon: Sun },
+  { kw: "polo", icon: Award },
+  { kw: "jersey", icon: Trophy },
+  { kw: "athletic", icon: Zap },
+  { kw: "performance", icon: Zap },
+  { kw: "compression", icon: Zap },
+  { kw: "graphic", icon: Palette },
+  { kw: "all-over", icon: Sparkles },
+  { kw: "all over", icon: Sparkles },
+  { kw: "print", icon: Palette },
+  { kw: "hoodie", icon: Layers },
+  { kw: "crewneck", icon: UserRound },
+  { kw: "crew neck", icon: UserRound },
+  { kw: "crew", icon: UserRound },
+  { kw: "sweatshirt", icon: Layers },
+  { kw: "sweater", icon: Layers },
+  { kw: "jumper", icon: Layers },
+  { kw: "pullover", icon: Layers },
+  { kw: "t-shirt", icon: Shirt },
+  { kw: "tshirt", icon: Shirt },
+  { kw: "tee", icon: Shirt },
+  { kw: "shirt", icon: Shirt },
+  { kw: "top", icon: Shirt },
+  { kw: "legging", icon: Dumbbell },
+  { kw: "sweatpant", icon: Footprints },
+  { kw: "jogger", icon: Footprints },
+  { kw: "short", icon: Sun },
+  { kw: "trouser", icon: Move },
+  { kw: "pants", icon: Move },
+  { kw: "bottom", icon: Footprints },
+  { kw: "skirt", icon: Wind },
+  { kw: "dress", icon: Ruler },
+  { kw: "youth", icon: Star },
+  { kw: "toddler", icon: Baby },
+  { kw: "baby", icon: Gift },
+  { kw: "kids", icon: Baby },
+  { kw: "ladies", icon: UserRound },
+  { kw: "women", icon: UserRound },
+  { kw: "men", icon: UserIcon },
+  { kw: "accessor", icon: Tag },
+  { kw: "sale", icon: Tag },
+  { kw: "outlet", icon: Tag },
+  { kw: "new", icon: Sparkles },
+  { kw: "trending", icon: Flame },
+  { kw: "sustainable", icon: Leaf },
+  { kw: "organic", icon: Leaf },
+  { kw: "eco", icon: Leaf },
 ];
 
-function getIconForCategory(name: string) {
+function getIconForCategory(slug: string, name: string) {
+  const bySlug = SLUG_ICONS[slug];
+  if (bySlug) return bySlug;
   const lower = name.toLowerCase();
   for (const { kw, icon } of ICON_RULES) {
     if (lower.includes(kw)) return icon;
   }
-  return LayoutGrid;
+  return Package;
+}
+
+/**
+ * Build a slug → top-level department name map so we can prefix ambiguous
+ * child labels (e.g. three "T-shirts" siblings become "Men T-shirts",
+ * "Women T-shirts", "Kids T-shirts").
+ */
+function buildDeptMap(cats: Category[]): Map<string, string> {
+  const map = new Map<string, string>();
+  const walk = (list: Category[], dept: string) => {
+    for (const c of list) {
+      map.set(c.slug, dept);
+      if (c.children?.length) walk(c.children, dept);
+    }
+  };
+  for (const top of cats) walk(top.children || [], top.name);
+  return map;
 }
 
 const LABEL_OVERRIDES: { pattern: RegExp; label: string }[] = [
-  { pattern: /^mobile communication.*/i, label: "Mobile & accessories" },
-  { pattern: /^mobile phones?$/i, label: "Mobile phones" },
-  { pattern: /^tv,? video and home cinema.*/i, label: "TV & video" },
-  { pattern: /^portable audio.*/i, label: "Portable audio" },
-  { pattern: /^audio and hi-fi.*/i, label: "Audio & Hi-Fi" },
-  { pattern: /^plug & play games consoles?.*/i, label: "Games consoles" },
-  { pattern: /^batteries and chargers?.*/i, label: "Batteries & chargers" },
-  { pattern: /^landline telephones?.*/i, label: "Landlines" },
-  { pattern: /^accessories for food preparation.*/i, label: "Kitchen accessories" },
-  { pattern: /^smartwatches?.*/i, label: "Smartwatches" },
-  { pattern: /^gps and accessories?.*/i, label: "GPS" },
-  { pattern: /^disposable batteries?.*/i, label: "Disposable batteries" },
-  { pattern: /^photography and accessories?.*/i, label: "Photography" },
+  { pattern: /^hoodies?\s?&\s?sweatshirts?$/i, label: "Hoodies" },
+  { pattern: /^all-over shirts?$/i, label: "All-over prints" },
+  { pattern: /^one-piece$/i, label: "One-Piece" },
 ];
 
 function shortenCategoryLabel(name: string, max = 22): string {
@@ -148,6 +245,235 @@ function shortenCategoryLabel(name: string, max = 22): string {
   }
   if (name.length <= max) return name;
   return name.slice(0, max - 1).trimEnd() + "…";
+}
+
+/**
+ * Curated 24-slot numbered navigation broken into 3 pages of 8, chosen from
+ * real DB categories (verified populations in the current catalog). Rotates
+ * with a smooth crossfade every ~5s. Pauses when megamenu / mobile drawer
+ * is open so users can act on what they're looking at.
+ */
+const NAV_PAGES: { label: string; href: string }[][] = [
+  // Page 1 · Departments & marketing shortcuts
+  [
+    { label: "Women",     href: "/catalog/women" },
+    { label: "Men",       href: "/catalog/men" },
+    { label: "Kids",      href: "/catalog/kids" },
+    { label: "Sale",      href: "/catalog?onSale=true" },
+    { label: "New in",    href: "/catalog?sort=newest" },
+    { label: "Swim",      href: "/catalog/women-swimwear" },
+    { label: "Hoodies",   href: "/catalog/kids-hoodies-sweatshirts" },
+    { label: "Bikinis",   href: "/catalog/women-swimwear-bikinis" },
+  ],
+  // Page 2 · Bestselling subcategories
+  [
+    { label: "T-shirts",     href: "/catalog/women-t-shirts" },
+    { label: "Sweatshirts",  href: "/catalog/men-sweatshirts" },
+    { label: "Crewnecks",    href: "/catalog/men-sweatshirts-crewnecks" },
+    { label: "Bottoms",      href: "/catalog/women-bottoms" },
+    { label: "Youth Tees",   href: "/catalog/kids-t-shirts-youth" },
+    { label: "Athletic",     href: "/catalog/men-t-shirts-athletic" },
+    { label: "Jerseys",      href: "/catalog/men-t-shirts-jerseys" },
+    { label: "Shorts",       href: "/catalog/women-bottoms-shorts" },
+  ],
+  // Page 3 · Niche & discovery
+  [
+    { label: "Leggings",     href: "/catalog/women-bottoms-leggings" },
+    { label: "Crop Tops",    href: "/catalog/women-t-shirts-crop" },
+    { label: "Skirts",       href: "/catalog/women-bottoms-skirts" },
+    { label: "One-Piece",    href: "/catalog/women-swimwear-one-piece" },
+    { label: "Swim Trunks",  href: "/catalog/men-bottoms-swim-trunks" },
+    { label: "V-Neck",       href: "/catalog/women-t-shirts-v-neck" },
+    { label: "Baby Tees",    href: "/catalog/kids-t-shirts-baby" },
+    { label: "Graphic Tees", href: "/catalog/men-t-shirts-graphic" },
+  ],
+];
+
+function NumberedNavRotator({ paused }: { paused: boolean }) {
+  const [page, setPage] = useState(0);
+  const [hover, setHover] = useState(false);
+  const active = paused || hover;
+
+  useEffect(() => {
+    if (active) return;
+    const t = setInterval(() => {
+      setPage((p) => (p + 1) % NAV_PAGES.length);
+    }, 5000);
+    return () => clearInterval(t);
+  }, [active]);
+
+  const items = NAV_PAGES[page];
+  const baseIndex = page * 8;
+
+  return (
+    <div
+      className="hidden border-b border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] md:block"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <div className="relative mx-auto flex h-12 max-w-[var(--container-content)] items-center px-4 sm:px-6 lg:px-8">
+        {/* Left ambient chevron indicator */}
+        <button
+          type="button"
+          aria-label="Previous categories"
+          onClick={() => setPage((p) => (p - 1 + NAV_PAGES.length) % NAV_PAGES.length)}
+          className="absolute left-2 z-10 hidden h-6 w-6 items-center justify-center rounded-full text-[color:var(--color-text-tertiary)] transition-colors hover:bg-[color:var(--color-bg-elevated)] hover:text-[color:var(--color-primary)] lg:inline-flex"
+        >
+          <ChevronLeft size={12} />
+        </button>
+
+        <div className="relative mx-auto flex h-full w-full items-center justify-center overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={page}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-wrap items-center justify-center gap-x-7 gap-y-1 lg:gap-x-9"
+            >
+              {items.map((item, i) => (
+                <Link
+                  key={`${page}-${item.href}-${i}`}
+                  href={item.href}
+                  className="group inline-flex items-center gap-1.5 text-[color:var(--color-text)] transition-colors hover:text-[color:var(--color-primary)]"
+                >
+                  <span className="font-mono text-[10px] font-semibold tabular-nums tracking-widest text-[color:var(--color-text-tertiary)] group-hover:text-[color:var(--color-primary)]">
+                    {String(baseIndex + i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="whitespace-nowrap font-serif text-[13px] font-medium tracking-tight lg:text-[14px]">
+                    {item.label}
+                  </span>
+                </Link>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Right ambient chevron + page dots */}
+        <div className="absolute right-2 z-10 hidden items-center gap-2 lg:flex">
+          <div className="flex items-center gap-1">
+            {NAV_PAGES.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                aria-label={`Show page ${i + 1}`}
+                onClick={() => setPage(i)}
+                className={`h-1 rounded-full transition-all ${
+                  i === page
+                    ? "w-4 bg-[color:var(--color-primary)]"
+                    : "w-1 bg-[color:var(--color-line-strong)] hover:bg-[color:var(--color-primary)]/60"
+                }`}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            aria-label="Next categories"
+            onClick={() => setPage((p) => (p + 1) % NAV_PAGES.length)}
+            className="inline-flex h-6 w-6 items-center justify-center rounded-full text-[color:var(--color-text-tertiary)] transition-colors hover:bg-[color:var(--color-bg-elevated)] hover:text-[color:var(--color-primary)]"
+          >
+            <ChevronRight size={12} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Horizontal strip with left/right scroll arrows that appear only when
+ * there's overflow in that direction. Native scrollbar stays hidden.
+ */
+function CategoryStrip({
+  children,
+  containerBg,
+  ariaLabel,
+}: {
+  children: ReactNode;
+  containerBg: string;
+  ariaLabel?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  const update = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    setCanPrev(el.scrollLeft > 4);
+    setCanNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    update();
+    const el = ref.current;
+    if (!el) return;
+    el.addEventListener("scroll", update, { passive: true });
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", update);
+      ro.disconnect();
+    };
+  }, [update]);
+
+  const scrollByAmount = (dir: -1 | 1) => {
+    const el = ref.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.75, behavior: "smooth" });
+  };
+
+  return (
+    <div className="relative">
+      <div
+        ref={ref}
+        role="region"
+        aria-label={ariaLabel}
+        className="scrollbar-none overflow-x-auto scroll-smooth"
+      >
+        {children}
+      </div>
+
+      {/* Left fade + arrow */}
+      <div
+        aria-hidden
+        className={`pointer-events-none absolute inset-y-0 left-0 w-14 transition-opacity ${
+          canPrev ? "opacity-100" : "opacity-0"
+        }`}
+        style={{ background: `linear-gradient(90deg, ${containerBg} 15%, transparent 100%)` }}
+      />
+      <button
+        type="button"
+        onClick={() => scrollByAmount(-1)}
+        aria-label="Scroll categories left"
+        className={`absolute left-2 top-1/2 z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] text-[color:var(--color-text)] shadow-sm transition-all hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)] md:inline-flex ${
+          canPrev ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        <ChevronLeft size={16} />
+      </button>
+
+      {/* Right fade + arrow */}
+      <div
+        aria-hidden
+        className={`pointer-events-none absolute inset-y-0 right-0 w-14 transition-opacity ${
+          canNext ? "opacity-100" : "opacity-0"
+        }`}
+        style={{ background: `linear-gradient(270deg, ${containerBg} 15%, transparent 100%)` }}
+      />
+      <button
+        type="button"
+        onClick={() => scrollByAmount(1)}
+        aria-label="Scroll categories right"
+        className={`absolute right-2 top-1/2 z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] text-[color:var(--color-text)] shadow-sm transition-all hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)] md:inline-flex ${
+          canNext ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        <ChevronRight size={16} />
+      </button>
+    </div>
+  );
 }
 
 const topBarBase =
@@ -196,16 +522,42 @@ export function Header() {
     }
   };
 
-  const sortedCategories = [...categories].sort((a, b) => subtreeCount(b) - subtreeCount(a));
-  const useSubcategoryDisplay =
-    sortedCategories.length <= 2 && sortedCategories[0]?.children?.length;
-  const featuredCategory = sortedCategories[0];
-  const displayCategories: Category[] = useSubcategoryDisplay
-    ? [...(featuredCategory!.children || [])].sort((a, b) => subtreeCount(b) - subtreeCount(a))
-    : sortedCategories;
+  // Level 3 chip strip: top departments blended with their strongest sub-cats.
+  const topLevel = [...categories].sort((a, b) => subtreeCount(b) - subtreeCount(a));
+  const strongestSubs = flattenForStrip(categories)
+    .filter((c) => !topLevel.some((t) => t.id === c.id))
+    .slice(0, 18);
+  const topStripCategories = [...topLevel, ...strongestSubs].slice(0, 20);
 
-  const topStripCategories = displayCategories.slice(0, 12);
-  const featuredSubcategories = featuredCategory ? collectSubcategories(featuredCategory, 16) : [];
+  // Level 4 trending strip: 25 densest leaf/sub categories across whole tree.
+  const trendingSubs = collectAllSubcategories(categories).slice(0, 25);
+
+  // Disambiguate labels when a base name repeats across departments —
+  // e.g. Men/Women/Kids each have "T-shirts" → "Men T-shirts" etc.
+  const deptMap = buildDeptMap(categories);
+  const nameCountLevel3 = new Map<string, number>();
+  for (const c of topStripCategories) {
+    const key = c.name.toLowerCase();
+    nameCountLevel3.set(key, (nameCountLevel3.get(key) ?? 0) + 1);
+  }
+  const nameCountLevel4 = new Map<string, number>();
+  for (const c of trendingSubs) {
+    const key = c.name.toLowerCase();
+    nameCountLevel4.set(key, (nameCountLevel4.get(key) ?? 0) + 1);
+  }
+  const labelFor = (
+    cat: Category,
+    countMap: Map<string, number>,
+    max = 22,
+  ): string => {
+    const base = shortenCategoryLabel(cat.name, max);
+    const isTopLevel = topLevel.some((t) => t.id === cat.id);
+    if (isTopLevel) return base;
+    const dept = deptMap.get(cat.slug);
+    const isDuplicate = (countMap.get(cat.name.toLowerCase()) ?? 0) > 1;
+    if (dept && isDuplicate) return `${dept} ${base}`;
+    return base;
+  };
 
   return (
     <>
@@ -214,168 +566,148 @@ export function Header() {
           scrolled ? "shadow-[0_1px_0_0_var(--color-line)]" : ""
         }`}
       >
-        {/* Level 1 — Top utility bar (deep pine) */}
+        {/* Level 1 — Top utility bar */}
         <div className={topBarBase}>
           <div className="mx-auto flex h-9 max-w-[var(--container-content)] items-center justify-between px-4 sm:px-6 lg:px-8">
             <nav className="flex items-center gap-4 sm:gap-5">
               <Link href="/" className={`${utilityLink} !text-white`}>
-                Shopping
+                Shop
               </Link>
               <span aria-hidden className="h-3 w-px bg-white/20" />
-              <Link href="/about" className={utilityLink}>
+              <Link href="/catalog?sort=newest" className={utilityLink}>
+                New in
+              </Link>
+              <span aria-hidden className="h-3 w-px bg-white/20" />
+              <Link href="/catalog?onSale=true" className={utilityLink}>
+                Sale
+              </Link>
+              <span aria-hidden className="h-3 w-px bg-white/20 hidden sm:inline-block" />
+              <Link href="/about" className={`${utilityLink} hidden sm:inline-flex`}>
                 About
               </Link>
-              <span aria-hidden className="h-3 w-px bg-white/20" />
-              <Link href="/contact" className={utilityLink}>
+              <span aria-hidden className="h-3 w-px bg-white/20 hidden sm:inline-block" />
+              <Link href="/contact" className={`${utilityLink} hidden sm:inline-flex`}>
                 {t("contact")}
               </Link>
             </nav>
             <div className="flex items-center gap-2 text-white">
+              <span className="hidden text-[11px] font-medium tracking-wide text-white/70 sm:inline">
+                Free UK shipping over £100
+              </span>
+              <span aria-hidden className="hidden h-3 w-px bg-white/20 sm:inline-block" />
               <ThemeToggle />
               <CurrencySwitcher />
             </div>
           </div>
         </div>
 
-        {/* Level 2 — Main bar */}
+        {/* Level 2 — Branding row (centered wordmark, editorial masthead) */}
         <div className="border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]">
-          <div className="mx-auto flex h-16 max-w-[var(--container-content)] items-center gap-4 px-4 sm:h-[72px] sm:px-6 lg:h-[80px] lg:gap-6 lg:px-8">
+          <div className="mx-auto flex max-w-[var(--container-content)] items-center justify-center gap-4 px-4 py-4 sm:py-5 lg:py-6">
+            <span aria-hidden className="hidden h-px w-8 shrink-0 bg-[color:var(--color-line-strong)] lg:block" />
+            <Link
+              href="/"
+              className="flex flex-col items-center text-[color:var(--color-text)]"
+              aria-label="Ravora"
+            >
+              <RavoraLogo size={30} />
+              <span className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.32em] text-[color:var(--color-text-tertiary)] sm:mt-2 sm:text-[10px]">
+                est. 2026 · United Kingdom
+              </span>
+            </Link>
+            <span aria-hidden className="hidden h-px w-8 shrink-0 bg-[color:var(--color-line-strong)] lg:block" />
+          </div>
+        </div>
+
+        {/* Level 3 — Functional bar: filled catalog + full-width search + actions */}
+        <div className="border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]">
+          <div className="mx-auto flex h-16 max-w-[var(--container-content)] items-center gap-3 px-4 sm:px-6 lg:h-[68px] lg:gap-4 lg:px-8">
+            {/* Custom Catalog button — filled brand pill with grid icon + chevron */}
             <button
-              className={`hidden items-center gap-2 rounded-lg border border-[color:var(--color-line)] px-3 py-2 text-sm font-medium text-[color:var(--color-text)] transition-colors hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)] lg:inline-flex ${
-                megaOpen ? "!border-[color:var(--color-primary)] !text-[color:var(--color-primary)] bg-[color:var(--color-primary-tint)]" : ""
+              className={`group inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.18em] text-white shadow-sm transition-all hover:-translate-y-0.5 lg:px-5 lg:py-3 lg:text-[13px] ${
+                megaOpen
+                  ? "bg-[color:var(--color-accent)] shadow-md ring-2 ring-[color:var(--color-accent)]/30"
+                  : "bg-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-hover)]"
               }`}
               onClick={() => setMegaOpen((v) => !v)}
               aria-expanded={megaOpen}
               aria-controls="catalog-dropdown"
               ref={megaRef}
             >
-              <Menu size={16} />
-              <span>{t("catalog")}</span>
+              <LayoutGrid size={14} strokeWidth={2.5} className="shrink-0" />
+              <span className="hidden sm:inline">{t("catalog")}</span>
+              <ChevronDown
+                size={12}
+                strokeWidth={2.5}
+                className={`shrink-0 transition-transform ${megaOpen ? "rotate-180" : ""}`}
+              />
             </button>
 
-            <Link
-              href="/"
-              className="flex items-center gap-2.5 text-[color:var(--color-primary)]"
-              aria-label="Ravora"
-            >
-              <span className="text-[color:var(--color-primary)]">
-                <RavoraLogo size={34} />
-              </span>
-              <span className="hidden font-serif text-2xl font-medium leading-none tracking-tight text-[color:var(--color-text)] sm:inline">
-                Ravora
-              </span>
-            </Link>
-
+            {/* Search — full-width inline on desktop */}
             <form
-              className="hidden flex-1 items-center rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] pl-4 pr-1 shadow-[0_1px_0_0_rgba(28,26,23,0.03)] transition-shadow focus-within:border-[color:var(--color-primary)] focus-within:shadow-[0_0_0_3px_var(--color-primary-tint)] md:flex"
+              className="hidden h-11 min-w-0 flex-1 items-center rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] pl-4 pr-1 transition-shadow focus-within:border-[color:var(--color-primary)] focus-within:shadow-[0_0_0_3px_var(--color-primary-tint)] md:flex"
               onSubmit={handleSearch}
             >
-              <Search size={16} className="text-[color:var(--color-text-tertiary)]" />
+              <Search size={15} className="text-[color:var(--color-text-tertiary)]" />
               <input
                 type="text"
                 className="min-w-0 flex-1 bg-transparent px-3 py-2.5 text-sm text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-tertiary)] focus:outline-none"
-                placeholder="Search Ravora"
+                placeholder="Search hoodies, tees, swimwear, bikinis…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               <button
                 type="submit"
                 aria-label="Search"
-                className="inline-flex h-9 items-center justify-center rounded-full bg-[color:var(--color-primary)] px-4 text-xs font-semibold uppercase tracking-wide text-white transition-colors hover:bg-[color:var(--color-primary-hover)]"
+                className="inline-flex h-9 items-center justify-center rounded-full bg-[color:var(--color-primary)] px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[color:var(--color-primary-hover)]"
               >
                 Search
               </button>
             </form>
 
-            {/* Desktop actions */}
-            <div className="hidden items-center gap-1 lg:flex">
+            {/* Spacer for mobile — pushes actions right */}
+            <span className="flex-1 md:hidden" />
+
+            {/* Actions */}
+            <div className="flex items-center gap-1">
+              <Link
+                href="/search"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-primary)] md:hidden"
+                aria-label={t("search")}
+              >
+                <Search size={18} />
+              </Link>
               {user && (
                 <Link
                   href="/account/wishlist"
-                  className="group inline-flex h-11 flex-col items-center justify-center rounded-lg px-2.5 text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-primary)]"
+                  className="hidden h-10 w-10 items-center justify-center rounded-full text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-primary)] lg:inline-flex"
                   aria-label="Wishlist"
                 >
-                  <Heart size={20} />
-                  <span className="mt-0.5 text-[10px] font-medium tracking-wide">Wishlist</span>
+                  <Heart size={18} />
                 </Link>
               )}
-
               <Link
-                href="/search"
-                className="group inline-flex h-11 flex-col items-center justify-center rounded-lg px-2.5 text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-primary)]"
-                aria-label="Alerts"
+                href={user ? "/account" : "/auth/login"}
+                className="hidden h-10 w-10 items-center justify-center rounded-full text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-primary)] md:inline-flex"
+                aria-label={user ? t("account") : t("login")}
               >
-                <Bell size={20} />
-                <span className="mt-0.5 text-[10px] font-medium tracking-wide">Alerts</span>
+                <UserIcon size={18} />
               </Link>
-
-              {user ? (
-                <Link
-                  href="/account"
-                  className="group inline-flex h-11 flex-col items-center justify-center rounded-lg px-2.5 text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-primary)]"
-                  aria-label={t("account")}
-                >
-                  <User size={20} />
-                  <span className="mt-0.5 text-[10px] font-medium tracking-wide">{t("account")}</span>
-                </Link>
-              ) : (
-                <Link
-                  href="/auth/login"
-                  className="group inline-flex h-11 flex-col items-center justify-center rounded-lg px-2.5 text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-primary)]"
-                  aria-label={t("login")}
-                >
-                  <User size={20} />
-                  <span className="mt-0.5 text-[10px] font-medium tracking-wide">{t("login")}</span>
-                </Link>
-              )}
-
               {user && (role === "ADMIN" || role === "SUPER_ADMIN") && (
                 <NextLink
                   href="/admin"
-                  className="group inline-flex h-11 flex-col items-center justify-center rounded-lg px-2.5 text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-primary)]"
+                  className="hidden h-10 w-10 items-center justify-center rounded-full text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-primary)] lg:inline-flex"
                   aria-label="Admin"
                 >
-                  <Shield size={20} />
-                  <span className="mt-0.5 text-[10px] font-medium tracking-wide">Admin</span>
+                  <Shield size={18} />
                 </NextLink>
               )}
-
               <Link
                 href="/cart"
-                className="group relative inline-flex h-11 flex-col items-center justify-center rounded-lg px-2.5 text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-primary)]"
+                className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-primary)]"
                 aria-label={t("cart")}
               >
-                <ShoppingBag size={20} />
-                <span className="mt-0.5 text-[10px] font-medium tracking-wide">{t("cart")}</span>
-                {itemCount > 0 && (
-                  <motion.span
-                    key={cartBounce}
-                    className="absolute right-0 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[color:var(--color-accent)] px-1 text-[10px] font-bold text-white"
-                    initial={cartBounce > 0 ? { scale: 0.5 } : false}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", damping: 10, stiffness: 400 }}
-                  >
-                    {itemCount > 99 ? "99+" : itemCount}
-                  </motion.span>
-                )}
-              </Link>
-            </div>
-
-            {/* Mobile actions */}
-            <div className="ml-auto flex items-center gap-1 lg:hidden">
-              <Link
-                href="/search"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-[color:var(--color-text-secondary)] hover:bg-[color:var(--color-bg-secondary)]"
-                aria-label={t("search")}
-              >
-                <Search size={20} />
-              </Link>
-              <Link
-                href="/cart"
-                className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-[color:var(--color-text-secondary)] hover:bg-[color:var(--color-bg-secondary)]"
-                aria-label={t("cart")}
-              >
-                <ShoppingBag size={20} />
+                <ShoppingBag size={18} />
                 {itemCount > 0 && (
                   <motion.span
                     key={cartBounce}
@@ -391,9 +723,9 @@ export function Header() {
               <button
                 onClick={() => setMobileOpen(true)}
                 aria-label="Menu"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-[color:var(--color-text)] hover:bg-[color:var(--color-bg-secondary)]"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--color-text)] hover:bg-[color:var(--color-bg-secondary)] lg:hidden"
               >
-                <Menu size={22} />
+                <Menu size={20} />
               </button>
             </div>
           </div>
@@ -404,7 +736,7 @@ export function Header() {
               className="flex items-center rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] pl-3 pr-1"
               onSubmit={handleSearch}
             >
-              <Search size={16} className="text-[color:var(--color-text-tertiary)]" />
+              <Search size={14} className="text-[color:var(--color-text-tertiary)]" />
               <input
                 type="text"
                 className="min-w-0 flex-1 bg-transparent px-2 py-2 text-sm text-[color:var(--color-text)] placeholder:text-[color:var(--color-text-tertiary)] focus:outline-none"
@@ -417,65 +749,47 @@ export function Header() {
                 aria-label="Search"
                 className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color:var(--color-primary)] text-white"
               >
-                <Search size={14} />
+                <Search size={12} />
               </button>
             </form>
           </div>
         </div>
 
-        {/* Level 3 — Category strip */}
-        {topStripCategories.length > 0 && (
-          <div className="relative border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]">
-            <div className="scrollbar-none mx-auto flex max-w-[var(--container-content)] items-center gap-6 overflow-x-auto px-4 sm:px-6 lg:px-8">
-              {topStripCategories.map((cat) => {
-                const Icon = getIconForCategory(cat.name);
-                const label = shortenCategoryLabel(cat.name);
-                return (
-                  <Link
-                    key={cat.id}
-                    href={`/catalog/${cat.slug}`}
-                    className="group flex shrink-0 flex-col items-center gap-1 py-2.5 text-[color:var(--color-text-secondary)] transition-colors hover:text-[color:var(--color-primary)]"
-                    title={cat.name}
-                  >
-                    <Icon size={18} strokeWidth={1.5} />
-                    <span className="whitespace-nowrap text-[11px] font-medium tracking-wide">
-                      {label}
-                    </span>
-                    <span className="mt-0.5 h-[2px] w-6 rounded-full bg-transparent transition-colors group-hover:bg-[color:var(--color-primary)]" />
-                  </Link>
-                );
-              })}
-            </div>
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-[color:var(--color-bg)] to-transparent"
-            />
-          </div>
-        )}
+        {/* Level 4 — Editorial numbered nav with auto-rotating pages (24 curated categories) */}
+        <NumberedNavRotator paused={megaOpen || mobileOpen} />
 
-        {/* Level 4 — Trending strip */}
-        {featuredSubcategories.length > 0 && (
+        {/* Level 4 — Trending strip (25 leaf subs across whole tree) */}
+        {trendingSubs.length > 0 && (
           <div className="hidden border-b border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] md:block">
-            <div className="scrollbar-none mx-auto flex max-w-[var(--container-content)] items-center gap-2 overflow-x-auto px-4 py-2 sm:px-6 lg:px-8">
-              <span className="mr-1 shrink-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--color-text-tertiary)]">
-                Trending
-              </span>
-              {featuredSubcategories.map((sub) => (
-                <Link
-                  key={sub.id}
-                  href={`/catalog/${sub.slug}`}
-                  className="inline-flex shrink-0 items-center rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-3 py-1 text-[12px] font-medium text-[color:var(--color-text-secondary)] transition-colors hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]"
-                  title={sub.name}
-                >
-                  {shortenCategoryLabel(sub.name, 28)}
-                </Link>
-              ))}
-              <Link
-                href="/catalog"
-                className="ml-auto inline-flex shrink-0 items-center gap-1 text-[12px] font-semibold text-[color:var(--color-primary)]"
-              >
-                All categories <ChevronRight size={12} />
-              </Link>
+            <div className="mx-auto max-w-[var(--container-content)] px-4 sm:px-6 lg:px-8">
+              <CategoryStrip containerBg="var(--color-bg-secondary)" ariaLabel="Trending categories">
+                <div className="flex items-center gap-2 py-2">
+                  <span className="mr-1 inline-flex shrink-0 items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--color-accent)]">
+                    <Flame size={11} strokeWidth={2} /> Trending
+                  </span>
+                  {trendingSubs.map((sub) => {
+                    const Icon = getIconForCategory(sub.slug, sub.name);
+                    const label = labelFor(sub, nameCountLevel4, 28);
+                    return (
+                      <Link
+                        key={sub.id}
+                        href={`/catalog/${sub.slug}`}
+                        className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] px-3 py-1 text-[12px] font-medium text-[color:var(--color-text-secondary)] transition-colors hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]"
+                        title={sub.name}
+                      >
+                        <Icon size={12} strokeWidth={1.75} />
+                        {label}
+                      </Link>
+                    );
+                  })}
+                  <Link
+                    href="/catalog"
+                    className="ml-2 inline-flex shrink-0 items-center gap-1 rounded-full bg-[color:var(--color-primary)] px-3 py-1 text-[11px] font-semibold text-white transition-colors hover:bg-[color:var(--color-primary-hover)]"
+                  >
+                    All categories <ChevronRight size={12} />
+                  </Link>
+                </div>
+              </CategoryStrip>
             </div>
           </div>
         )}
@@ -520,7 +834,7 @@ export function Header() {
                     { href: "/", label: t("home") },
                     { href: "/catalog", label: t("catalog") },
                     { href: "/catalog?sort=newest", label: "New Arrivals" },
-                    { href: "/catalog?onSale=true", label: "Deals" },
+                    { href: "/catalog?onSale=true", label: "Sale" },
                   ].map((link) => (
                     <Link
                       key={link.label}
@@ -535,8 +849,9 @@ export function Header() {
 
                   <div className="my-2 h-px bg-[color:var(--color-line)]" />
 
-                  {displayCategories.slice(0, 8).map((cat) => {
-                    const Icon = getIconForCategory(cat.name);
+                  {topStripCategories.slice(0, 16).map((cat) => {
+                    const Icon = getIconForCategory(cat.slug, cat.name);
+                    const label = labelFor(cat, nameCountLevel3);
                     return (
                       <Link
                         key={cat.id}
@@ -546,7 +861,7 @@ export function Header() {
                       >
                         <span className="flex items-center gap-3 text-[color:var(--color-text-secondary)]">
                           <Icon size={16} />
-                          <span className="text-[color:var(--color-text)]">{cat.name}</span>
+                          <span className="text-[color:var(--color-text)]">{label}</span>
                         </span>
                         <ChevronRight size={16} className="text-[color:var(--color-text-tertiary)]" />
                       </Link>

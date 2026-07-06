@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
-import { Heart, ShoppingCart, Shield, Truck, RotateCcw, Lock } from "lucide-react";
+import { Heart, ShoppingCart, Gift, Truck, RotateCcw, Lock } from "lucide-react";
 import { PriceDisplay } from "@/components/shared/PriceDisplay/PriceDisplay";
 import { QuantitySelector } from "@/components/shared/QuantitySelector/QuantitySelector";
 import { useCart } from "@/providers/CartProvider";
@@ -12,20 +12,21 @@ import { formatPrice } from "@/lib/utils/format-price";
 import { useRouter } from "@/i18n/routing";
 import { toast } from "sonner";
 
-const WARRANTY_OPTIONS = [
-  { key: "none", years: 0, percent: 0, min: 0 },
-  { key: "1year", years: 1, percent: 10, min: 6.99 },
-  { key: "2year", years: 2, percent: 16, min: 9.99 },
-  { key: "3year", years: 3, percent: 22, min: 12.99 },
+/**
+ * Optional apparel add-ons offered on the PDP alongside the main product —
+ * flat-priced, unlike the retired warranty tiers that scaled with product
+ * cost. Naming keys are kept aligned with the "warrantyOption{n}year"
+ * translations so we don't have to churn every locale.
+ */
+const EXTRAS_OPTIONS = [
+  { key: "none", labelKey: "noWarranty" as const,          nameSuffix: "",                        price: 0 },
+  { key: "gift", labelKey: "warrantyOption1year" as const, nameSuffix: "+ gift wrap",             price: 3.99 },
+  { key: "care", labelKey: "warrantyOption2year" as const, nameSuffix: "+ care kit",              price: 6.99 },
+  { key: "prio", labelKey: "warrantyOption3year" as const, nameSuffix: "+ priority dispatch",     price: 4.99 },
 ];
 
-// Hide additional warranty for low-priced items where the minimum
-// charge would be disproportionate to the product price.
-const WARRANTY_MIN_PRODUCT_PRICE = 15;
-
-function calcWarrantyPrice(productPrice: number, option: typeof WARRANTY_OPTIONS[number]): number {
-  if (option.percent === 0) return 0;
-  return Math.max(productPrice * (option.percent / 100), option.min);
+function calcExtraPrice(option: typeof EXTRAS_OPTIONS[number]): number {
+  return option.price;
 }
 
 interface ProductInfoProps {
@@ -75,17 +76,16 @@ export function ProductInfo({
   const outOfStock = stockQuantity <= 0;
   const lowStock = stockQuantity > 0 && stockQuantity <= lowStockAlert;
 
-  const warrantyAvailable = price >= WARRANTY_MIN_PRODUCT_PRICE;
-  const warrantyOption = warrantyAvailable ? WARRANTY_OPTIONS[selectedWarranty] : WARRANTY_OPTIONS[0];
-  const warrantyPrice = calcWarrantyPrice(price, warrantyOption);
-  const totalPrice = price + warrantyPrice;
+  const extrasAvailable = true;
+  const extraOption = EXTRAS_OPTIONS[selectedWarranty] ?? EXTRAS_OPTIONS[0];
+  const extraPrice = calcExtraPrice(extraOption);
+  const totalPrice = price + extraPrice;
+  const cartName = extraOption.nameSuffix ? `${name} ${extraOption.nameSuffix}` : name;
 
   const handleAddToCart = () => {
     addItem({
       productId: id,
-      name: warrantyOption.years > 0
-        ? `${name} + ${warrantyOption.years}yr warranty`
-        : name,
+      name: cartName,
       slug,
       sku,
       price: totalPrice,
@@ -98,9 +98,7 @@ export function ProductInfo({
   const handleBuyNow = () => {
     addItem({
       productId: id,
-      name: warrantyOption.years > 0
-        ? `${name} + ${warrantyOption.years}yr warranty`
-        : name,
+      name: cartName,
       slug,
       sku,
       price: totalPrice,
@@ -186,14 +184,14 @@ export function ProductInfo({
 
       <div className="flex flex-col gap-2">
         <span className="flex items-center gap-1.5 text-[13px] font-bold text-[color:var(--color-text)]">
-          <Shield size={14} /> {t("warranty")}
+          <Gift size={14} /> {t("warranty")}
         </span>
         <p className="mb-2 text-xs text-[color:var(--color-text-secondary)]">
           {t("warrantyStandard")}
         </p>
-        {warrantyAvailable && (
+        {extrasAvailable && (
           <div className="grid grid-cols-2 gap-2">
-            {WARRANTY_OPTIONS.map((opt, idx) => (
+            {EXTRAS_OPTIONS.map((opt, idx) => (
               <button
                 key={opt.key}
                 className={`flex flex-col items-center gap-0.5 rounded-lg border-2 px-2 py-2.5 text-center text-[13px] font-semibold transition-all ${
@@ -203,9 +201,9 @@ export function ProductInfo({
                 }`}
                 onClick={() => setSelectedWarranty(idx)}
               >
-                {idx === 0 ? t("noWarranty") : t(`warrantyOption${opt.years}year` as "warrantyOption1year" | "warrantyOption2year" | "warrantyOption3year")}
-                {opt.percent > 0 && (
-                  <span className="text-[11px] font-normal text-[color:var(--color-text-secondary)]">+{formatPrice(convert(calcWarrantyPrice(price, opt)), currency)}</span>
+                {t(opt.labelKey)}
+                {opt.price > 0 && (
+                  <span className="text-[11px] font-normal text-[color:var(--color-text-secondary)]">+{formatPrice(convert(opt.price), currency)}</span>
                 )}
               </button>
             ))}
@@ -271,21 +269,27 @@ export function ProductInfo({
         )}
       </div>
 
-      <div className="grid grid-cols-3 gap-2 pt-2 sm:gap-3">
-        <div className="flex flex-col items-center gap-1 rounded-lg bg-[color:var(--color-bg-secondary)] px-1.5 py-2.5 text-center sm:px-2 sm:py-3">
-          <Truck size={18} className="text-[color:var(--color-primary)]" strokeWidth={1.5} />
-          <span className="text-[11px] font-bold text-[color:var(--color-text)]">{t("freeShipping")}</span>
-          <span className="text-[10px] text-[color:var(--color-text-tertiary)]">{t("freeShippingDesc")}</span>
+      <div className="grid grid-cols-1 gap-2 pt-2 xs:grid-cols-3 sm:grid-cols-3 sm:gap-3">
+        <div className="flex flex-row items-center gap-2 rounded-lg bg-[color:var(--color-bg-secondary)] px-3 py-2.5 xs:flex-col xs:text-center sm:flex-col sm:px-2 sm:py-3 sm:text-center">
+          <Truck size={18} className="shrink-0 text-[color:var(--color-primary)]" strokeWidth={1.5} />
+          <div className="flex flex-col leading-tight xs:items-center sm:items-center">
+            <span className="text-[11px] font-bold text-[color:var(--color-text)]">{t("freeShipping")}</span>
+            <span className="text-[10px] text-[color:var(--color-text-tertiary)]">{t("freeShippingDesc")}</span>
+          </div>
         </div>
-        <div className="flex flex-col items-center gap-1 rounded-lg bg-[color:var(--color-bg-secondary)] px-1.5 py-2.5 text-center sm:px-2 sm:py-3">
-          <RotateCcw size={18} className="text-[color:var(--color-primary)]" strokeWidth={1.5} />
-          <span className="text-[11px] font-bold text-[color:var(--color-text)]">{t("easyReturns")}</span>
-          <span className="text-[10px] text-[color:var(--color-text-tertiary)]">{t("easyReturnsDesc")}</span>
+        <div className="flex flex-row items-center gap-2 rounded-lg bg-[color:var(--color-bg-secondary)] px-3 py-2.5 xs:flex-col xs:text-center sm:flex-col sm:px-2 sm:py-3 sm:text-center">
+          <RotateCcw size={18} className="shrink-0 text-[color:var(--color-primary)]" strokeWidth={1.5} />
+          <div className="flex flex-col leading-tight xs:items-center sm:items-center">
+            <span className="text-[11px] font-bold text-[color:var(--color-text)]">{t("easyReturns")}</span>
+            <span className="text-[10px] text-[color:var(--color-text-tertiary)]">{t("easyReturnsDesc")}</span>
+          </div>
         </div>
-        <div className="flex flex-col items-center gap-1 rounded-lg bg-[color:var(--color-bg-secondary)] px-1.5 py-2.5 text-center sm:px-2 sm:py-3">
-          <Lock size={18} className="text-[color:var(--color-primary)]" strokeWidth={1.5} />
-          <span className="text-[11px] font-bold text-[color:var(--color-text)]">{t("securePayment")}</span>
-          <span className="text-[10px] text-[color:var(--color-text-tertiary)]">{t("securePaymentDesc")}</span>
+        <div className="flex flex-row items-center gap-2 rounded-lg bg-[color:var(--color-bg-secondary)] px-3 py-2.5 xs:flex-col xs:text-center sm:flex-col sm:px-2 sm:py-3 sm:text-center">
+          <Lock size={18} className="shrink-0 text-[color:var(--color-primary)]" strokeWidth={1.5} />
+          <div className="flex flex-col leading-tight xs:items-center sm:items-center">
+            <span className="text-[11px] font-bold text-[color:var(--color-text)]">{t("securePayment")}</span>
+            <span className="text-[10px] text-[color:var(--color-text-tertiary)]">{t("securePaymentDesc")}</span>
+          </div>
         </div>
       </div>
     </div>

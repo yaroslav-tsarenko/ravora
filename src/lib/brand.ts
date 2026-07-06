@@ -8,9 +8,9 @@ export const brand = {
   displayName: "Ravora",
   domain: "ravora.co.uk",
   url: "https://ravora.co.uk",
-  tagline: "A refined selection of modern electronics.",
+  tagline: "Refined athletic apparel.",
   description:
-    "Ravora — a curated, editorial-quality electronics store from JAYHALE LIMITED. Carefully sourced products, transparent shipping, honest warranty.",
+    "Ravora — a curated apparel edit from JAYHALE LIMITED. Sustainably sourced tees, hoodies, bottoms and swimwear for men, women and kids. Shipped from the United Kingdom.",
   applicationName: "Ravora",
 
   company: {

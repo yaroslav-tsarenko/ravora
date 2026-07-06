@@ -26,8 +26,8 @@ const CONTACT_INFO = [
 
 const TOPICS = [
   { icon: MessageSquare, label: "General Inquiry", value: "general" },
-  { icon: HelpCircle, label: "Product Support", value: "support" },
-  { icon: ShieldCheck, label: "Warranty & Returns", value: "warranty" },
+  { icon: HelpCircle, label: "Order & Sizing", value: "support" },
+  { icon: ShieldCheck, label: "Returns & Exchanges", value: "returns" },
   { icon: Send, label: "Business / Wholesale", value: "business" },
 ];
 

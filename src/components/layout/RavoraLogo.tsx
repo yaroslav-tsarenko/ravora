@@ -1,26 +1,21 @@
 /**
- * Ravora brand mark — an editorial "R" monogram inside a deep-forest tile.
- * Warm-editorial aesthetic: quiet, confident, no gradient theatrics.
+ * Ravora wordmark — editorial letter-spaced serif in the brand's warm colour.
+ *
+ * No icon, no monogram badge. A single confident wordmark inspired by the
+ * mastheads of premium fashion editorial (Céline, COS, Aritzia): all caps,
+ * generous letter-spacing, medium-weight serif. Sizes fluidly via the `size`
+ * prop which maps to font-size (px).
  */
-export function RavoraMark({ size = 28 }: { size?: number }) {
+export function RavoraLogo({ size = 24 }: { size?: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 40 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
+    <span
+      className="inline-block font-serif font-medium uppercase leading-none"
+      style={{ fontSize: size, letterSpacing: "0.3em" }}
     >
-      <rect width="40" height="40" rx="10" fill="currentColor" />
-      <path
-        d="M13.4 30V10h8.7c2.9 0 5 .6 6.3 1.8 1.3 1.2 2 2.9 2 5.2 0 1.7-.4 3.1-1.2 4.2-.8 1.1-1.9 1.9-3.3 2.4L30.4 30h-4.7l-4-6.1h-4v6.1h-4.3zm4.3-9.6h4c1.5 0 2.6-.3 3.3-.9.7-.6 1-1.5 1-2.7 0-1.2-.4-2.1-1.1-2.7-.7-.6-1.9-.9-3.3-.9h-3.9v7.2z"
-        fill="#F6F4EF"
-      />
-    </svg>
+      Ravora
+    </span>
   );
 }
 
-export function RavoraLogo({ size = 28 }: { size?: number }) {
-  return <RavoraMark size={size} />;
-}
+// Legacy alias — kept so old imports don't break during the transition.
+export const RavoraMark = RavoraLogo;

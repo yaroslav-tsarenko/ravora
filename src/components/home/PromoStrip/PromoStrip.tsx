@@ -34,7 +34,7 @@ export function PromoStrip({ items }: Props) {
   const data = items.length > 0 ? items : defaultItems;
 
   return (
-    <div className="border-b border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)]">
+    <div className="hidden border-b border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] md:block">
       <div className="mx-auto flex max-w-[var(--container-content)] flex-wrap items-center justify-center gap-x-8 gap-y-3 px-4 py-4 sm:px-6 lg:px-8">
         {data.map((b) => {
           const Icon = ICON_MAP[b.icon] || Package;

@@ -8,7 +8,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "import:bigbuy": "tsx scripts/import-bigbuy.ts"
+    "import:woo": "tsx scripts/import-woocommerce.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1054.0",

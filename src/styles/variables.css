@@ -112,67 +112,120 @@
 
 [data-theme="dark"],
 .dark {
-  --color-primary: #7CB29F;          /* softened pine for dark mode */
-  --color-primary-hover: #9BC6B4;
-  --color-primary-tint: rgba(124, 178, 159, 0.12);
-  --color-primary-fg: #10201C;
+  /* ── Brand — vibrant on dark, matches light-theme spirit ──────────────── */
+  --color-primary: #8CD4B4;           /* fresh pine — hits AA on dark bg */
+  --color-primary-hover: #A8E0C5;
+  --color-primary-tint: rgba(140, 212, 180, 0.14);
+  --color-primary-fg: #0A100D;        /* deep near-black for text on primary */
 
-  --color-accent: #E37A5A;           /* lifted terracotta */
-  --color-accent-hover: #F09679;
-  --color-accent-tint: rgba(227, 122, 90, 0.14);
-  --color-accent-fg: #10201C;
+  --color-accent: #F58C68;            /* rich terracotta, lifted */
+  --color-accent-hover: #FFA689;
+  --color-accent-tint: rgba(245, 140, 104, 0.15);
+  --color-accent-fg: #0A100D;
 
-  --color-secondary: #10201C;
+  --color-secondary: #0A100D;
   --color-price: var(--color-accent);
   --color-cta: var(--color-accent);
   --color-cta-hover: var(--color-accent-hover);
-  --color-header: #10201C;
-  --color-header-secondary: #14251F;
+  --color-header: #0A100D;
+  --color-header-secondary: #131916;
 
   --color-accent-light: var(--color-accent-tint);
   --color-accent-2: var(--color-primary);
   --color-accent-2-hover: var(--color-primary-hover);
-  --color-accent-3: #7CB29F;
+  --color-accent-3: #8CD4B4;
+  --color-accent-4: #B9AF9B;
 
-  --color-bg: #14120F;               /* dark warm charcoal */
-  --color-bg-elevated: #1C1A16;
-  --color-bg-secondary: #1F1D18;
-  --color-bg-tertiary: #26241E;
-  --color-bg-warm: #1F1D18;
-  --color-bg-cool: #14231E;
+  /* ── Surfaces — 4 distinct elevation tiers so cards actually stand out ─ */
+  --color-bg: #0B100E;                /* base — deep pine-charcoal */
+  --color-bg-elevated: #15191A;       /* cards / dialogs (+7 luminance) */
+  --color-bg-secondary: #1A1E1F;      /* subtle raised strips */
+  --color-bg-tertiary: #24282A;       /* panels / rows / muted */
+  --color-bg-warm: #1D1B17;
+  --color-bg-cool: #12181A;
 
-  --color-text: #F1EDE4;
-  --color-text-secondary: #B9B0A2;
-  --color-text-tertiary: #8B8578;
-  --color-text-inverse: #14120F;
+  /* ── Text — high contrast, warm off-white ───────────────────────────── */
+  --color-text: #F4EFE3;              /* warm cream, WCAG AAA on bg */
+  --color-text-secondary: #B4ADA0;    /* muted but readable */
+  --color-text-tertiary: #82796D;     /* hint / metadata */
+  --color-text-inverse: #0A100D;
 
-  --color-border: #2A2822;
-  --color-border-hover: #3A362E;
-  --color-border-strong: #4B463C;
-  --color-hairline: rgba(246, 244, 239, 0.08);
+  /* ── Lines — visible without being loud ─────────────────────────────── */
+  --color-border: #2A2E30;
+  --color-border-hover: #3D4144;
+  --color-border-strong: #55595C;
+  --color-hairline: rgba(244, 239, 227, 0.08);
 
-  --color-success: #7CB29F;
-  --color-success-light: rgba(124, 178, 159, 0.12);
-  --color-warning: #D6A257;
-  --color-warning-light: rgba(214, 162, 87, 0.14);
-  --color-danger: #D57560;
-  --color-danger-light: rgba(213, 117, 96, 0.14);
+  /* ── Status — vibrant on dark ──────────────────────────────────────── */
+  --color-success: #8CD4B4;
+  --color-success-light: rgba(140, 212, 180, 0.14);
+  --color-warning: #E5B85B;
+  --color-warning-light: rgba(229, 184, 91, 0.14);
+  --color-danger: #E88871;
+  --color-danger-light: rgba(232, 136, 113, 0.14);
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
-  --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.55);
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.45);
+  /* ── Shadows — heavier for depth on dark ──────────────────────────── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 32px 80px rgba(0, 0, 0, 0.65);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-card-hover: 0 14px 32px rgba(0, 0, 0, 0.55);
+  --shadow-accent: 0 12px 30px rgba(245, 140, 104, 0.35);
+  --shadow-warm: 0 12px 30px rgba(245, 140, 104, 0.25);
 
-  --gradient-primary: linear-gradient(180deg, #14251F 0%, #10201C 100%);
-  --gradient-hero: linear-gradient(180deg, #14120F 0%, #1C1A16 100%);
-  --gradient-warm: linear-gradient(180deg, #1C1A16 0%, #14120F 100%);
-  --gradient-card-hover: linear-gradient(180deg, rgba(124, 178, 159, 0.05) 0%, rgba(227, 122, 90, 0.05) 100%);
+  /* ── Gradients — quiet, brand-tinted ──────────────────────────────── */
+  --gradient-primary: linear-gradient(180deg, #131916 0%, #0A100D 100%);
+  --gradient-accent: linear-gradient(180deg, #F58C68 0%, #C7654A 100%);
+  --gradient-warm: linear-gradient(180deg, #15191A 0%, #0B100E 100%);
+  --gradient-cool: linear-gradient(180deg, #131916 0%, #0A100D 100%);
+  --gradient-hero: linear-gradient(180deg, #0B100E 0%, #15191A 100%);
+  --gradient-badge: linear-gradient(180deg, #F58C68 0%, #C7654A 100%);
+  --gradient-mint: linear-gradient(180deg, rgba(140, 212, 180, 0.12) 0%, rgba(140, 212, 180, 0.06) 100%);
+  --gradient-sunset: linear-gradient(180deg, rgba(245, 140, 104, 0.10) 0%, rgba(245, 140, 104, 0.04) 100%);
+  --gradient-electric: linear-gradient(180deg, #8CD4B4 0%, #5FA085 100%);
+  --gradient-card-hover: linear-gradient(180deg, rgba(140, 212, 180, 0.06) 0%, rgba(245, 140, 104, 0.06) 100%);
 
-  --promo-bg-blue: rgba(124, 178, 159, 0.10);
-  --promo-bg-warm: rgba(227, 122, 90, 0.08);
-  --promo-bg-green: rgba(124, 178, 159, 0.08);
+  /* ── Promo tints — brand-tinted glass ─────────────────────────────── */
+  --promo-bg-blue: rgba(140, 212, 180, 0.10);
+  --promo-bg-warm: rgba(245, 140, 104, 0.10);
+  --promo-bg-green: rgba(140, 212, 180, 0.08);
   --promo-bg-purple: rgba(185, 176, 162, 0.06);
-  --promo-bg-pink: rgba(227, 122, 90, 0.10);
+  --promo-bg-pink: rgba(245, 140, 104, 0.12);
+
+  /* ── Tailwind @theme tokens — override the light-theme names ──────────
+     Tailwind's `@theme` block in globals.css bakes light-mode values (bone,
+     paper, cream, ink, line, etc.) into :root. We remap them here so any
+     Tailwind utility built on those tokens (`bg-bone`, `text-ink`,
+     `border-line`) automatically re-themes to dark. */
+  --color-bone: #0B100E;
+  --color-paper: #15191A;
+  --color-cream: #1A1E1F;
+  --color-surface: #1A1E1F;
+
+  --color-ink: #F4EFE3;
+  --color-ink-2: #B4ADA0;
+  --color-ink-3: #82796D;
+
+  --color-line: #2A2E30;
+  --color-line-strong: #3D4144;
+
+  --color-success-tint: rgba(140, 212, 180, 0.14);
+  --color-warning-tint: rgba(229, 184, 91, 0.14);
+  --color-danger-tint: rgba(232, 136, 113, 0.14);
+}
+
+/* ── Dark-theme surface tweaks — smooth over places that hardcoded warm
+   tones and now visually clash on the new palette. Additive only. */
+[data-theme="dark"] img[src*=".jpg"],
+[data-theme="dark"] img[src*=".jpeg"],
+[data-theme="dark"] img[src*=".png"],
+[data-theme="dark"] img[src*=".webp"],
+.dark img[src*=".jpg"],
+.dark img[src*=".jpeg"],
+.dark img[src*=".png"],
+.dark img[src*=".webp"] {
+  /* Photos of white apparel on a white bg look garish on dark surfaces —
+     nudge the whites so they read as "off-white" rather than pure white. */
+  filter: brightness(0.94) contrast(0.98);
 }

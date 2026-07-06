@@ -80,6 +80,12 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+html.dark,
+html[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 body {
@@ -122,6 +128,20 @@ img {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-border-strong);
+}
+
+/* Hide native scrollbar on horizontally-scrolling strips (e.g. header
+   category rail, trending pills). Cross-browser: Firefox uses
+   scrollbar-width, IE/Edge legacy uses -ms-overflow-style, WebKit uses the
+   pseudo-element. */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 /* ── Legacy helpers kept for compatibility ───────────────────────────── */
@@ -182,7 +202,8 @@ img {
 
 .dark .glass,
 [data-theme="dark"] .glass {
-  background: rgba(20, 18, 15, 0.75);
+  background: rgba(11, 16, 14, 0.72);
+  border: 1px solid var(--color-hairline);
 }
 
 .glass-border {

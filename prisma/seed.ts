@@ -18,29 +18,17 @@ async function main() {
     create: {
       id: "default",
       name: "Ravora",
+      description: "Refined athletic apparel for men, women and kids. Shipped from the United Kingdom.",
       email: "info@ravora.co.uk",
-      currency: "EUR",
-      taxRate: 21,
-      freeShippingMin: 50,
+      currency: "GBP",
+      taxRate: 20,
+      freeShippingMin: 100,
     },
   });
   console.log("Store settings:", storeSettings.name);
 
-  const categories = await Promise.all(
-    [
-      { name: "Electronics", slug: "electronics", description: "Gadgets, devices, and more" },
-      { name: "Clothing", slug: "clothing", description: "Fashion and apparel" },
-      { name: "Home & Garden", slug: "home-garden", description: "Everything for your home" },
-      { name: "Sports", slug: "sports", description: "Sports equipment and gear" },
-    ].map((cat) =>
-      prisma.category.upsert({
-        where: { slug: cat.slug },
-        update: {},
-        create: { ...cat, isActive: true, sortOrder: 0 },
-      })
-    )
-  );
-  console.log(`Created ${categories.length} categories`);
+  // Categories are seeded by `npm run import:woo` from the WooCommerce export —
+  // do not create additional placeholder categories here to avoid dead entries.
 
   // Test users
   // test@gmail.com / test123! — Customer with $10,000 budget
@@ -79,7 +67,7 @@ async function main() {
       title: "About Us",
       slug: "about-us",
       content:
-        "<p>Welcome to Ravora! We are dedicated to providing quality products at competitive prices.</p><p>Founded in 2024, we have been serving customers worldwide with a focus on sustainability and customer satisfaction.</p>",
+        "<p>Welcome to Ravora — a curated apparel edit for men, women and kids.</p><p>We design and source athletic and everyday apparel with sustainable materials — organic cottons, recycled polyesters, and honest fits. Shipped from the United Kingdom with free delivery over £100.</p>",
       isActive: true,
     },
   });

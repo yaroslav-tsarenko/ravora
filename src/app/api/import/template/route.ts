@@ -9,11 +9,12 @@ export async function GET() {
   ];
 
   const sampleRow = [
-    "Sample Product", "SKU-001", "29.99", "39.99", "100",
-    "A great product with detailed description", "Short product summary",
-    "Electronics", "Smartphones", "Android Phones",
-    "BrandName", "0.5", "ACTIVE", "", "", "4751234567890", "", "", "new",
-    "Dimensions>>Height:703 mm|Dimensions>>Width:603 mm|Connection>>Rated current:125 A|Equipment>>Number of rails:8|Materials>>Colour:Pure white",
+    "Unisex Organic Cotton Tee", "SKU-001", "24.50", "29.99", "100",
+    "Soft midweight jersey, side-seamed for a modern fit. GOTS-certified organic cotton, printed and finished in the EU.",
+    "Midweight organic tee. Regular fit. Unisex sizing.",
+    "Men", "T-shirts", "",
+    "Stanley/Stella", "0.18", "ACTIVE", "", "", "", "", "Apparel & Accessories > Clothing > Shirts & Tops", "new",
+    "Material>>Fabric:100% organic cotton|Material>>Weight:180 g/m²|Fit>>Cut:Regular unisex fit|Care>>Wash:Machine wash cold, tumble dry low|Origin>>Country:EU",
   ];
 
   const csv = [headers.join(","), sampleRow.join(",")].join("\n");

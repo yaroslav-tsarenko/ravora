@@ -46,23 +46,43 @@ export function PromoBannerGrid({ smallBanners, wideBanners }: Props) {
             <Link
               key={b.id}
               href={b.linkUrl || "#"}
-              className="group flex flex-col justify-between gap-3 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] p-6 text-[color:var(--color-text)] transition-colors hover:border-[color:var(--color-primary)]"
+              className="group relative flex min-h-[200px] flex-col justify-between gap-3 overflow-hidden rounded-2xl border border-[color:var(--color-line)] p-6 transition-colors hover:border-[color:var(--color-primary)]"
+              style={{
+                backgroundColor: b.bgColor || "var(--color-bg-secondary)",
+                color: b.textColor || "var(--color-text)",
+              }}
             >
-              {b.badgeText && (
-                <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-accent)]">
-                  {b.badgeText}
-                </span>
+              {b.imageUrl && (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={b.imageUrl}
+                    alt=""
+                    aria-hidden
+                    className="absolute inset-0 h-full w-full object-cover opacity-70 transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: `linear-gradient(135deg, ${b.bgColor || "#0f172a"} 0%, transparent 70%)` }}
+                  />
+                </>
               )}
-              <h3 className="font-serif text-xl font-medium leading-snug tracking-tight">
-                {b.title}
-              </h3>
-              {b.subtitle && (
-                <span className="text-sm text-[color:var(--color-text-secondary)]">
-                  {b.subtitle}
-                </span>
-              )}
-              <span className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-[color:var(--color-primary)] transition-transform group-hover:translate-x-1">
-                Shop now <ArrowRight size={14} />
+              <div className="relative flex flex-col gap-2">
+                {b.badgeText && (
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.16em] opacity-70">
+                    {b.badgeText}
+                  </span>
+                )}
+                <h3 className="font-serif text-xl font-medium leading-snug tracking-tight">
+                  {b.title}
+                </h3>
+                {b.subtitle && (
+                  <span className="text-sm opacity-80">{b.subtitle}</span>
+                )}
+              </div>
+              <span className="relative mt-2 inline-flex items-center gap-1 self-start rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-[color:var(--color-primary)] transition-transform group-hover:translate-x-1">
+                {b.ctaLabel || "Shop now"} <ArrowRight size={12} />
               </span>
             </Link>
           ))}
@@ -72,11 +92,31 @@ export function PromoBannerGrid({ smallBanners, wideBanners }: Props) {
         <Link
           key={b.id}
           href={b.linkUrl || "#"}
-          className="group relative flex flex-wrap items-center justify-between gap-4 overflow-hidden rounded-3xl border border-[color:var(--color-line)] bg-[color:var(--color-primary)] px-6 py-6 text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)] sm:px-10 sm:py-8"
+          className="group relative flex flex-wrap items-center justify-between gap-4 overflow-hidden rounded-3xl border border-[color:var(--color-line)] px-6 py-6 transition-colors sm:px-10 sm:py-8"
+          style={{
+            backgroundColor: b.bgColor || "var(--color-primary)",
+            color: b.textColor || "var(--color-primary-fg)",
+          }}
         >
-          <div className="flex flex-1 flex-col gap-1">
+          {b.imageUrl && (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={b.imageUrl}
+                alt=""
+                aria-hidden
+                className="absolute inset-0 h-full w-full object-cover opacity-40 transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div
+                className="absolute inset-0"
+                style={{ background: `linear-gradient(90deg, ${b.bgColor || "#0f172a"} 20%, transparent 90%)` }}
+              />
+            </>
+          )}
+          <div className="relative flex flex-1 flex-col gap-1">
             {b.badgeText && (
-              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[color:var(--color-accent)]">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] opacity-80">
                 {b.badgeText}
               </span>
             )}
@@ -84,11 +124,11 @@ export function PromoBannerGrid({ smallBanners, wideBanners }: Props) {
               {b.title}
             </h3>
             {b.subtitle && (
-              <p className="max-w-2xl text-sm text-white/70">{b.subtitle}</p>
+              <p className="max-w-2xl text-sm opacity-80">{b.subtitle}</p>
             )}
           </div>
           {b.ctaLabel && (
-            <span className="inline-flex items-center gap-2 rounded-full bg-[color:var(--color-accent)] px-5 py-3 text-sm font-semibold text-white transition-colors group-hover:bg-[color:var(--color-accent-hover)]">
+            <span className="relative inline-flex items-center gap-2 rounded-full bg-white/95 px-5 py-3 text-sm font-semibold text-[color:var(--color-primary)] transition-transform group-hover:translate-x-1">
               {b.ctaLabel} <ArrowRight size={16} />
             </span>
           )}

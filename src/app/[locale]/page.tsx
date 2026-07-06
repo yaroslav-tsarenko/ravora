@@ -396,7 +396,7 @@ export default async function HomePage() {
           url: "https://ravora.co.uk",
           sameAs: ["https://ravora.co.uk"],
           description:
-            "Ravora — a curated, editorial-quality electronics store. Carefully sourced products, transparent shipping, honest warranty. Shipped from the United Kingdom.",
+            "Ravora — refined athletic apparel for men, women and kids. Sustainably sourced tees, hoodies, bottoms and swimwear. Shipped from the United Kingdom.",
         }}
       />
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}

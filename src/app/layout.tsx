@@ -14,20 +14,20 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Ravora — A refined selection of modern electronics",
+    default: "Ravora — Refined athletic apparel",
     template: "%s | Ravora",
   },
   description:
-    "Ravora — a curated, editorial-quality electronics store. Carefully sourced products, transparent shipping, honest warranty. Shipped from the United Kingdom.",
+    "Ravora — a curated apparel edit for men, women and kids. Sustainably sourced tees, hoodies, bottoms and swimwear. Shipped from the United Kingdom.",
   applicationName: "Ravora",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://ravora.co.uk"),
   openGraph: {
     type: "website",
     siteName: "Ravora",
     url: "https://ravora.co.uk",
-    title: "Ravora — A refined selection of modern electronics",
+    title: "Ravora — Refined athletic apparel",
     description:
-      "Curated electronics from Ravora — carefully sourced, honestly presented. Shipped from the United Kingdom.",
+      "Curated apparel from Ravora — sustainably sourced tees, hoodies and swimwear for men, women and kids. Shipped from the United Kingdom.",
   },
   twitter: {
     card: "summary_large_image",

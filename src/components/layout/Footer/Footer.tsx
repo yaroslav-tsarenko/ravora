@@ -3,9 +3,8 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import Image from "next/image";
 import { FaLinkedinIn, FaInstagram } from "react-icons/fa6";
-import { ArrowRight, Mail, Phone, MapPin, ShieldCheck, Truck, RotateCcw } from "lucide-react";
+import { ArrowRight, Mail, Phone, MapPin, Truck, RotateCcw, Leaf } from "lucide-react";
 import { RavoraLogo } from "../RavoraLogo";
 import { brand, brandAddressLine } from "@/lib/brand";
 import visaLogo from "@/assets/visa-logo.svg";
@@ -14,16 +13,20 @@ import pciDssLogo from "@/assets/pci-dss-compliant-logo-vector.svg";
 
 const shopLinks = [
   { href: "/catalog", label: "All products" },
+  { href: "/catalog/men", label: "Men" },
+  { href: "/catalog/women", label: "Women" },
+  { href: "/catalog/kids", label: "Kids" },
+  { href: "/catalog/women-swimwear", label: "Swimwear" },
   { href: "/catalog?sort=newest", label: "New arrivals" },
   { href: "/catalog?onSale=true", label: "Sale" },
-  { href: "/catalog?sort=popular", label: "Best sellers" },
 ];
 
 const serviceLinks = [
   { href: "/policies/shipping", label: "Shipping" },
   { href: "/policies/returns", label: "Returns" },
-  { href: "/policies/warranty", label: "Warranty" },
+  { href: "/size-guide", label: "Size guide" },
   { href: "/policies/payment", label: "Payment" },
+  { href: "/policies/privacy", label: "Privacy" },
   { href: "/contact", label: "Contact" },
   { href: "/faq", label: "FAQ" },
 ];
@@ -43,7 +46,7 @@ const legalLinks = [
 const trustBadges = [
   { icon: Truck, label: "Free UK shipping over £100" },
   { icon: RotateCcw, label: "14-day returns" },
-  { icon: ShieldCheck, label: "Genuine warranty" },
+  { icon: Leaf, label: "Sustainably sourced materials" },
 ];
 
 export function Footer() {
@@ -71,17 +74,15 @@ export function Footer() {
         <div className="grid gap-10 py-14 lg:grid-cols-12 lg:gap-8">
           {/* Brand */}
           <div className="lg:col-span-4">
-            <Link href="/" className="flex items-center gap-3 text-white/95" aria-label="Ravora">
-              <span className="text-white">
-                <RavoraLogo size={38} />
-              </span>
-              <span className="font-serif text-2xl font-medium leading-none tracking-tight">
-                Ravora
+            <Link href="/" className="flex flex-col gap-1 text-white/95" aria-label="Ravora">
+              <RavoraLogo size={28} />
+              <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/50">
+                est. 2026 · United Kingdom
               </span>
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/70">
-              A curated selection of modern electronics — carefully sourced, honestly presented,
-              and shipped from the United Kingdom.
+              Refined athletic apparel for men, women and kids — sustainably sourced,
+              honestly made, and shipped from the United Kingdom.
             </p>
 
             <div className="mt-6 flex flex-col gap-2 text-sm text-white/70">
@@ -258,18 +259,25 @@ export function Footer() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-4">
             {[
               { src: visaLogo, alt: "Visa" },
               { src: mastercardLogo, alt: "Mastercard" },
               { src: pciDssLogo, alt: "PCI DSS Compliant" },
             ].map(({ src, alt }) => (
-              <span
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
                 key={alt}
-                className="inline-flex h-8 items-center justify-center rounded-md bg-white/95 px-2"
-              >
-                <Image src={src} alt={alt} height={20} width={40} className="h-4 w-auto" />
-              </span>
+                src={src.src}
+                alt={alt}
+                style={{
+                  height: 30,
+                  width: "auto",
+                  maxWidth: "none",
+                  display: "inline-block",
+                }}
+                className="shrink-0 opacity-90"
+              />
             ))}
           </div>
         </div>
