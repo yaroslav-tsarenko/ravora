@@ -7,6 +7,7 @@ import { CartToast } from "@/components/cart/CartToast/CartToast";
 
 interface CartContextType {
   cart: Cart;
+  isLoaded: boolean;
   addItem: (item: Omit<CartItem, "id">) => void;
   removeItem: (productId: string, variantId?: string) => void;
   updateQuantity: (productId: string, quantity: number, variantId?: string) => void;
@@ -40,6 +41,7 @@ function calculateTotals(items: CartItem[], taxRate: number = 21): Cart {
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<Cart>(emptyCart);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [cartBounce, setCartBounce] = useState(0);
 
   useEffect(() => {
@@ -52,6 +54,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem(CART_STORAGE_KEY);
       }
     }
+    setIsLoaded(true);
   }, []);
 
   const persistCart = useCallback((items: CartItem[]) => {
@@ -132,7 +135,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ cart, addItem, removeItem, updateQuantity, clearCart, itemCount: cart.itemCount, cartBounce }}
+      value={{ cart, isLoaded, addItem, removeItem, updateQuantity, clearCart, itemCount: cart.itemCount, cartBounce }}
     >
       {children}
     </CartContext.Provider>
