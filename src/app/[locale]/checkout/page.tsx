@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/Button";
@@ -63,10 +64,20 @@ function InputWithIcon({ icon: Icon, error, ...props }: { icon: React.ElementTyp
 }
 
 export default function CheckoutPage() {
+  return (
+    <Suspense fallback={null}>
+      <CheckoutContent />
+    </Suspense>
+  );
+}
+
+function CheckoutContent() {
   const t = useTranslations("checkout");
   const nav = useTranslations("nav");
   const router = useRouter();
   const locale = useLocale();
+  const searchParams = useSearchParams();
+  const errorType = searchParams.get("error");
   const { cart, clearCart, isLoaded } = useCart();
   const { user } = useAuth();
   const { currency, convert } = useCurrency();
@@ -218,6 +229,19 @@ export default function CheckoutPage() {
   return (
     <div className="mx-auto w-full max-w-[var(--max-width)] px-4 pb-16">
       <Breadcrumbs items={[{ label: nav("home"), href: "/" }, { label: nav("cart"), href: "/cart" }, { label: t("title") }]} />
+
+      {errorType === "payment_failed" && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 rounded-xl border border-[color:var(--color-danger)]/20 bg-[color:var(--color-danger)]/10 p-4 text-sm text-[color:var(--color-danger)]"
+        >
+          <div className="font-semibold mb-1">Payment Failed</div>
+          <p className="text-xs text-[color:var(--color-text-secondary)] opacity-90">
+            The transaction was declined by the bank or blocked by a firewall rules check. Please verify your billing details, try another payment card, or try again.
+          </p>
+        </motion.div>
+      )}
 
       <motion.h1
         initial={{ opacity: 0, y: -10 }}
