@@ -1,7 +1,7 @@
 import { spawn, execSync } from "child_process";
 
 const DB_PORTS = [51213, 51214, 51215];
-const NEXT_PORT = 3000;
+const NEXT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 function killPort(port) {
   try {
@@ -32,7 +32,7 @@ function startNext() {
   if (nextStarted) return;
   nextStarted = true;
   console.log("[dev] Starting Next.js...\n");
-  const next = spawn("npx", ["next", "dev"], {
+  const next = spawn("npx", ["next", "dev", "-p", NEXT_PORT.toString()], {
     stdio: "inherit",
     env: { ...process.env, FORCE_COLOR: "1" },
   });

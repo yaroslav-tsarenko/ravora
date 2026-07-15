@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { checkoutSchema } from "@/lib/validators/checkout";
 import { getSessionUser } from "@/lib/auth";
-import { sendOrderConfirmationEmail, sendOrderInvoiceEmail } from "@/lib/email";
-import { scheduleEmail } from "@/lib/email-jobs";
-import { resolveDiscount, markDiscountUsed } from "@/lib/discounts";
+import { resolveDiscount } from "@/lib/discounts";
+import { spoynt } from "@/lib/payment/spoynt";
 
 export async function POST(request: NextRequest) {
   try {
@@ -62,6 +61,9 @@ export async function POST(request: NextRequest) {
     const shippingCost = discountedSubtotal >= 100 ? 0 : 5.99;
     const total = +(discountedSubtotal + taxAmount + shippingCost).toFixed(2);
 
+    const storeSettings = await prisma.storeSettings.findFirst();
+    const currency = storeSettings?.currency || "EUR";
+
     const order = await prisma.order.create({
       data: {
         userId: user?.id || null,
@@ -77,43 +79,43 @@ export async function POST(request: NextRequest) {
         discountCode: discount?.code ?? null,
         discountPercent: discount?.percent ?? null,
         total,
-        paymentMethod: "manual",
+        paymentMethod: "spoynt",
         items: { create: orderItems },
       },
       include: { items: true },
     });
 
-    if (discount) {
-      await markDiscountUsed(discount, user?.id ?? null);
-    }
-
-    for (const item of items) {
-      await prisma.product.update({
-        where: { id: item.productId },
-        data: { quantity: { decrement: item.quantity } },
-      });
-    }
-
-    const emailPayload = {
+    const locale = body.locale || "en";
+    const invoice = await spoynt.createPaymentInvoice({
       orderId: order.id,
+      amount: total,
+      currency,
+      email: validated.contact.email,
+      locale,
+      customerData: {
+        firstName: validated.shipping.firstName,
+        lastName: validated.shipping.lastName,
+        phone: validated.contact.phone || undefined,
+        address1: validated.shipping.address1,
+        address2: validated.shipping.address2,
+        city: validated.shipping.city,
+        postCode: validated.shipping.postalCode,
+        country: validated.shipping.country,
+        region: validated.shipping.province,
+      }
+    });
+
+    // Save the Spoynt cpi (payment invoice ID) to the order
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { paymentId: invoice.data.id },
+    });
+
+    return NextResponse.json({
+      id: order.id,
       orderNumber: order.orderNumber,
-      customerName: order.customerName,
-      customerEmail: order.customerEmail,
-      items: order.items,
-      subtotal: order.subtotal,
-      taxAmount: order.taxAmount,
-      shippingCost: order.shippingCost,
-      discountAmount: order.discountAmount,
-      total: order.total,
-      shippingMethod: order.shippingMethod || "standard",
-      shippingAddress: validated.shipping,
-      createdAt: order.createdAt,
-    };
-
-    scheduleEmail(`order confirmation ${order.orderNumber}`, () => sendOrderConfirmationEmail(emailPayload));
-    scheduleEmail(`order invoice ${order.orderNumber}`, () => sendOrderInvoiceEmail(emailPayload));
-
-    return NextResponse.json(order, { status: 201 });
+      redirectUrl: invoice.data.attributes.hpp_url,
+    }, { status: 201 });
   } catch (error) {
     console.error("Error creating order:", error);
     return NextResponse.json({ error: "Failed to create order" }, { status: 500 });

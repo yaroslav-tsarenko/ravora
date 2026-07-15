@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { CheckCircle, Package, MapPin, Truck, Mail, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCurrency } from "@/providers/CurrencyProvider";
+import { useCart } from "@/providers/CartProvider";
 import { formatPrice } from "@/lib/utils/format-price";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner/LoadingSpinner";
 import type { OrderDetail } from "@/types/order";
@@ -15,10 +16,15 @@ import type { OrderDetail } from "@/types/order";
 function ConfirmedContent() {
   const t = useTranslations("notifications");
   const { currency, convert } = useCurrency();
+  const { clearCart } = useCart();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(!!orderId);
+
+  useEffect(() => {
+    clearCart();
+  }, [clearCart]);
 
   useEffect(() => {
     if (!orderId) return;
