@@ -67,7 +67,7 @@ export default function CheckoutPage() {
   const nav = useTranslations("nav");
   const router = useRouter();
   const locale = useLocale();
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, isLoaded } = useCart();
   const { user } = useAuth();
   const { currency, convert } = useCurrency();
   const [step, setStep] = useState(0);
@@ -204,12 +204,12 @@ export default function CheckoutPage() {
   };
 
   useEffect(() => {
-    if (cart.items.length === 0) {
+    if (isLoaded && cart.items.length === 0) {
       router.push("/cart");
     }
-  }, [cart.items.length, router]);
+  }, [isLoaded, cart.items.length, router]);
 
-  if (cart.items.length === 0) return null;
+  if (!isLoaded || cart.items.length === 0) return null;
 
   const freeShippingThreshold = convert(100);
   const subtotalConverted = convert(cart.subtotal);
