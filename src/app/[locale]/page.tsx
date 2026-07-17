@@ -327,17 +327,41 @@ async function getHomeData() {
 
     const brandSections = getBrandSections(brandProducts, TOP_BRANDS, 8);
 
-    const categoryShowcase = categoryTree
-      .map((node) => ({
-        id: node.id,
-        name: node.name,
-        slug: node.slug,
-        imageUrl: node.imageUrl,
-        productCount: node.descendantProductCount,
-      }))
-      .filter((c) => c.productCount > 0)
-      .sort((a, b) => b.productCount - a.productCount)
-      .slice(0, 8);
+    // Surface both departments and their subcategories so the "Shop by category"
+    // grid stays rich even when only a couple of root departments exist.
+    const showcaseNodes = [
+      ...categoryTree,
+      ...categoryTree.flatMap((root) => root.children),
+    ]
+      .filter((node) => node.descendantProductCount > 0)
+      .sort((a, b) => b.descendantProductCount - a.descendantProductCount)
+      .slice(0, 12);
+
+    // Backfill a representative image from a real product for any category that
+    // has no imageUrl of its own, so every card shows a relevant photo.
+    const showcaseImages = await Promise.all(
+      showcaseNodes.map(async (node) => {
+        if (node.imageUrl) return node.imageUrl;
+        const withImage = await prisma.product.findFirst({
+          where: {
+            status: "ACTIVE",
+            images: { some: {} },
+            categories: { some: { categoryId: { in: collectDescendantIds(node) } } },
+          },
+          orderBy: { createdAt: "desc" },
+          select: { images: { select: { url: true }, orderBy: { sortOrder: "asc" }, take: 1 } },
+        });
+        return withImage?.images[0]?.url ?? null;
+      }),
+    );
+
+    const categoryShowcase = showcaseNodes.map((node, i) => ({
+      id: node.id,
+      name: node.name,
+      slug: node.slug,
+      imageUrl: showcaseImages[i],
+      productCount: node.descendantProductCount,
+    }));
 
     return {
       heroSlides,

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/routing";
 import { ProductGrid } from "@/components/product/ProductGrid/ProductGrid";
@@ -51,7 +51,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     select: { id: true, name: true, description: true, slug: true },
   });
 
-  if (!category) notFound();
+  // Unknown/stale category slugs land on the full catalog instead of dead-ending on a 404.
+  if (!category) redirect(`/${locale}/catalog`);
 
   const categoryIds = await getDescendantCategoryIds(category.id);
 

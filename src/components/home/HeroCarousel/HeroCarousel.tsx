@@ -61,7 +61,7 @@ const slides: Slide[] = [
     productHref: "/catalog/men-sweatshirts",
     categoryLabel: "Men · Sweatshirts",
     image:
-      "https://ravora.co.uk/wp-content/uploads/2026/03/unisex-garment-dyed-sweatshirt-watermelon-front-69b7d7ea538d9.jpg",
+      "https://images.ravora.co.uk/wp-content/uploads/2026/03/unisex-garment-dyed-sweatshirt-watermelon-front-69b7d7ea538d9.jpg",
     bg: "#1F4636",
     fg: "#F6F4EF",
     fgMuted: "rgba(246,244,239,0.72)",
@@ -83,7 +83,7 @@ const slides: Slide[] = [
     productHref: "/catalog/women-swimwear-bikinis",
     categoryLabel: "Women · Swimwear",
     image:
-      "https://ravora.co.uk/wp-content/uploads/2026/03/all-over-print-recycled-high-waisted-bikini-white-front-69bbdc8c4aa34.jpg",
+      "https://images.ravora.co.uk/wp-content/uploads/2026/03/all-over-print-recycled-high-waisted-bikini-white-front-69bbdc8c4aa34.jpg",
     bg: "#B8523A",
     fg: "#FCEFE6",
     fgMuted: "rgba(252,239,230,0.72)",
@@ -105,7 +105,7 @@ const slides: Slide[] = [
     productHref: "/catalog/kids-hoodies-sweatshirts",
     categoryLabel: "Kids · Hoodies",
     image:
-      "https://ravora.co.uk/wp-content/uploads/2026/04/youth-heavy-blend-hoodie-light-pink-front-69d364c5580cd.jpg",
+      "https://images.ravora.co.uk/wp-content/uploads/2026/04/youth-heavy-blend-hoodie-light-pink-front-69d364c5580cd.jpg",
     bg: "#0F4C63",
     fg: "#F1F7F9",
     fgMuted: "rgba(241,247,249,0.72)",

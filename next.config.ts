@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "images.ravora.co.uk",
+      },
+      {
+        protocol: "https",
         hostname: "placehold.co",
       },
       {

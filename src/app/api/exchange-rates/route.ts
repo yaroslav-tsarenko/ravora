@@ -10,7 +10,7 @@ export async function GET() {
 
   try {
     const res = await fetch(
-      "https://api.frankfurter.dev/v1/latest?base=GBP&symbols=USD",
+      "https://api.frankfurter.dev/v1/latest?base=GBP&symbols=EUR,USD",
       { next: { revalidate: 3600 } }
     );
 
@@ -18,14 +18,18 @@ export async function GET() {
 
     const data = await res.json();
     cachedRates = {
-      rates: { GBP: 1, USD: data.rates.USD },
+      rates: {
+        GBP: 1,
+        EUR: data.rates?.EUR ?? 1.17,
+        USD: data.rates?.USD ?? 1.27,
+      },
       timestamp: Date.now(),
     };
 
     return NextResponse.json({ rates: cachedRates.rates });
   } catch {
     return NextResponse.json({
-      rates: { GBP: 1, USD: 1.27 },
+      rates: { GBP: 1, EUR: 1.17, USD: 1.27 },
     });
   }
 }
