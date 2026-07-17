@@ -289,7 +289,7 @@ const NAV_PAGES: { label: string; href: string }[][] = [
   ],
 ];
 
-function NumberedNavRotator({ paused }: { paused: boolean }) {
+function NumberedNavRotator({ paused, scrolled }: { paused: boolean; scrolled: boolean }) {
   const [page, setPage] = useState(0);
   const [hover, setHover] = useState(false);
   const active = paused || hover;
@@ -307,7 +307,12 @@ function NumberedNavRotator({ paused }: { paused: boolean }) {
 
   return (
     <div
-      className="hidden border-b border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] md:block"
+      aria-hidden={scrolled ? "true" : undefined}
+      className={`hidden overflow-hidden border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] transition-[max-height,opacity,border-bottom-width] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:block ${
+        scrolled
+          ? "pointer-events-none max-h-0 border-b-0 opacity-0"
+          : "max-h-16 border-b opacity-100"
+      }`}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
@@ -567,8 +572,13 @@ export function Header() {
           scrolled ? "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.15)]" : ""
         }`}
       >
-        {/* Level 1 — Top utility bar */}
-        <div className={topBarBase}>
+        {/* Level 1 — Top utility bar (collapses on scroll) */}
+        <div
+          aria-hidden={scrolled ? "true" : undefined}
+          className={`${topBarBase} overflow-hidden transition-[max-height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            scrolled ? "pointer-events-none max-h-0 opacity-0" : "max-h-12 opacity-100"
+          }`}
+        >
           <div className="mx-auto flex h-9 max-w-[var(--container-content)] items-center justify-between px-4 sm:px-6 lg:px-8">
             <nav className="flex items-center gap-4 sm:gap-5">
               <Link href="/" className={`${utilityLink} !text-white`}>
@@ -633,7 +643,7 @@ export function Header() {
         <div className="border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]">
           <div
             className={`mx-auto flex max-w-[var(--container-content)] items-center gap-3 px-4 transition-[height] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-6 lg:gap-4 lg:px-8 ${
-              scrolled ? "h-[58px] lg:h-[60px]" : "h-16 lg:h-[68px]"
+              scrolled ? "h-11 lg:h-12" : "h-16 lg:h-[68px]"
             }`}
           >
             {/* Compact wordmark — appears on scroll, taking the space vacated
@@ -653,7 +663,11 @@ export function Header() {
 
             {/* Custom Catalog button — filled brand pill with grid icon + chevron */}
             <button
-              className={`group inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.18em] shadow-sm transition-all hover:-translate-y-0.5 lg:px-5 lg:py-3 lg:text-[13px] ${
+              className={`group inline-flex shrink-0 items-center gap-2 rounded-full font-bold uppercase tracking-[0.18em] shadow-sm transition-all hover:-translate-y-0.5 ${
+                scrolled
+                  ? "px-3 py-1.5 text-[11px] lg:px-4 lg:py-2 lg:text-[12px]"
+                  : "px-4 py-2.5 text-[12px] lg:px-5 lg:py-3 lg:text-[13px]"
+              } ${
                 megaOpen
                   ? "bg-[color:var(--color-accent)] text-[color:var(--color-accent-fg)] shadow-md ring-2 ring-[color:var(--color-accent)]/30"
                   : "bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)] hover:bg-[color:var(--color-primary-hover)]"
@@ -674,7 +688,9 @@ export function Header() {
 
             {/* Search — full-width inline on desktop */}
             <form
-              className="hidden h-11 min-w-0 flex-1 items-center rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] pl-4 pr-1 transition-shadow focus-within:border-[color:var(--color-primary)] focus-within:shadow-[0_0_0_3px_var(--color-primary-tint)] md:flex"
+              className={`hidden min-w-0 flex-1 items-center rounded-full border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] pl-4 pr-1 transition-[height,box-shadow] focus-within:border-[color:var(--color-primary)] focus-within:shadow-[0_0_0_3px_var(--color-primary-tint)] md:flex ${
+                scrolled ? "h-8" : "h-11"
+              }`}
               onSubmit={handleSearch}
             >
               <Search size={15} className="text-[color:var(--color-text-tertiary)]" />
@@ -688,7 +704,9 @@ export function Header() {
               <button
                 type="submit"
                 aria-label="Search"
-                className="inline-flex h-9 items-center justify-center rounded-full bg-[color:var(--color-primary)] px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)]"
+                className={`inline-flex items-center justify-center rounded-full bg-[color:var(--color-primary)] px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-primary-fg)] transition-[height,background-color] hover:bg-[color:var(--color-primary-hover)] ${
+                  scrolled ? "h-7" : "h-9"
+                }`}
               >
                 Search
               </button>
@@ -785,11 +803,18 @@ export function Header() {
         </div>
 
         {/* Level 4 — Editorial numbered nav with auto-rotating pages (24 curated categories) */}
-        <NumberedNavRotator paused={megaOpen || mobileOpen} />
+        <NumberedNavRotator paused={megaOpen || mobileOpen} scrolled={scrolled} />
 
         {/* Level 4 — Trending strip (25 leaf subs across whole tree) */}
         {trendingSubs.length > 0 && (
-          <div className="hidden border-b border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] md:block">
+          <div
+            aria-hidden={scrolled ? "true" : undefined}
+            className={`hidden overflow-hidden border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] transition-[max-height,opacity,border-bottom-width] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:block ${
+              scrolled
+                ? "pointer-events-none max-h-0 border-b-0 opacity-0"
+                : "max-h-16 border-b opacity-100"
+            }`}
+          >
             <div className="mx-auto max-w-[var(--container-content)] px-4 sm:px-6 lg:px-8">
               <CategoryStrip containerBg="var(--color-bg-secondary)" ariaLabel="Trending categories">
                 <div className="flex items-center gap-2 py-2">

@@ -69,7 +69,7 @@ export function ProductCard({
       className="group flex flex-col overflow-hidden rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[color:var(--color-line-strong)] hover:shadow-[0_10px_28px_rgba(28,26,23,0.08)]"
     >
       {/* Image area */}
-      <div className="relative aspect-square overflow-hidden bg-[#F7F7F7]">
+      <div className="relative aspect-square overflow-hidden bg-[#EDEDED]">
         {imageUrl ? (
           <Image
             src={imageUrl}
