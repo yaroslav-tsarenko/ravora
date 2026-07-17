@@ -308,7 +308,7 @@ function NumberedNavRotator({ paused, scrolled }: { paused: boolean; scrolled: b
   return (
     <div
       aria-hidden={scrolled ? "true" : undefined}
-      className={`hidden overflow-hidden border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] transition-[max-height,opacity,border-bottom-width] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:block ${
+      className={`hidden overflow-hidden border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] transition-[max-height,opacity,border-bottom-width] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] md:block ${
         scrolled
           ? "pointer-events-none max-h-0 border-b-0 opacity-0"
           : "max-h-16 border-b opacity-100"
@@ -499,9 +499,28 @@ export function Header() {
   const megaRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    let raf = 0;
+    let last = false;
+    const measure = () => {
+      raf = 0;
+      const y = window.scrollY;
+      // hysteresis: enter at 48px, exit at 12px — avoids flicker near threshold
+      const next = last ? y > 12 : y > 48;
+      if (next !== last) {
+        last = next;
+        setScrolled(next);
+      }
+    };
+    const onScroll = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(measure);
+    };
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
   }, []);
 
   useEffect(() => {
@@ -575,7 +594,7 @@ export function Header() {
         {/* Level 1 — Top utility bar (collapses on scroll) */}
         <div
           aria-hidden={scrolled ? "true" : undefined}
-          className={`${topBarBase} overflow-hidden transition-[max-height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`${topBarBase} overflow-hidden transition-[max-height,opacity] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
             scrolled ? "pointer-events-none max-h-0 opacity-0" : "max-h-12 opacity-100"
           }`}
         >
@@ -613,7 +632,7 @@ export function Header() {
             the wordmark reflows into Level 3 next to the catalog button. */}
         <div
           aria-hidden={scrolled ? "true" : undefined}
-          className={`overflow-hidden border-[color:var(--color-line)] bg-[color:var(--color-bg)] transition-[max-height,opacity,border-bottom-width] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`overflow-hidden border-[color:var(--color-line)] bg-[color:var(--color-bg)] transition-[max-height,opacity,border-bottom-width] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
             scrolled
               ? "max-h-0 border-b-0 opacity-0"
               : "max-h-[160px] border-b opacity-100"
@@ -639,7 +658,7 @@ export function Header() {
         {/* Level 3 — Functional bar: filled catalog + full-width search + actions */}
         <div className="border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]">
           <div
-            className={`mx-auto flex max-w-[var(--container-content)] items-center gap-3 px-4 transition-[height] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-6 lg:gap-4 lg:px-8 ${
+            className={`mx-auto flex max-w-[var(--container-content)] items-center gap-3 px-4 transition-[height] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] sm:px-6 lg:gap-4 lg:px-8 ${
               scrolled ? "h-11 lg:h-12" : "h-16 lg:h-[68px]"
             }`}
           >
@@ -649,7 +668,7 @@ export function Header() {
               href="/"
               aria-label="Ravora"
               tabIndex={scrolled ? 0 : -1}
-              className={`overflow-hidden whitespace-nowrap text-[color:var(--color-text)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              className={`overflow-hidden whitespace-nowrap text-[color:var(--color-text)] transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                 scrolled
                   ? "mr-1 max-w-[140px] opacity-100 sm:mr-2"
                   : "pointer-events-none max-w-0 opacity-0"
@@ -813,7 +832,7 @@ export function Header() {
         {trendingSubs.length > 0 && (
           <div
             aria-hidden={scrolled ? "true" : undefined}
-            className={`hidden overflow-hidden border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] transition-[max-height,opacity,border-bottom-width] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:block ${
+            className={`hidden overflow-hidden border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] transition-[max-height,opacity,border-bottom-width] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] md:block ${
               scrolled
                 ? "pointer-events-none max-h-0 border-b-0 opacity-0"
                 : "max-h-16 border-b opacity-100"
