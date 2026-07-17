@@ -605,9 +605,6 @@ export function Header() {
               <span className="hidden text-[11px] font-medium tracking-wide text-white/70 sm:inline">
                 Free UK shipping over £100
               </span>
-              <span aria-hidden className="hidden h-3 w-px bg-white/20 sm:inline-block" />
-              <ThemeToggle />
-              <CurrencySwitcher />
             </div>
           </div>
         </div>
@@ -716,7 +713,14 @@ export function Header() {
             <span className="flex-1 md:hidden" />
 
             {/* Actions */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 text-[color:var(--color-text-secondary)]">
+              <div className="flex items-center gap-1 pr-1">
+                <CurrencySwitcher />
+                <span className="hidden md:inline-flex">
+                  <ThemeToggle />
+                </span>
+                <span aria-hidden className="mx-1 hidden h-4 w-px bg-[color:var(--color-line)] md:inline-block" />
+              </div>
               <Link
                 href="/search"
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[color:var(--color-text-secondary)] transition-colors hover:bg-[color:var(--color-bg-secondary)] hover:text-[color:var(--color-primary)] md:hidden"
