@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
           status: spoyntStatus,
           resolution: "ok",
           amount: amount || 0,
-          currency: currency || "EUR"
+          currency: currency || "GBP"
         }
       }
     };

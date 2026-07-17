@@ -4,9 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { useCurrency, type Currency } from "@/providers/CurrencyProvider";
 
 const CURRENCIES: { code: Currency; symbol: string; label: string }[] = [
-  { code: "EUR", symbol: "€", label: "EUR (€)" },
-  { code: "USD", symbol: "$", label: "USD ($)" },
   { code: "GBP", symbol: "£", label: "GBP (£)" },
+  { code: "USD", symbol: "$", label: "USD ($)" },
 ];
 
 export function CurrencySwitcher() {

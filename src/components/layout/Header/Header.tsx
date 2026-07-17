@@ -477,7 +477,7 @@ function CategoryStrip({
 }
 
 const topBarBase =
-  "bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)] dark:bg-[color:var(--color-header)]";
+  "bg-[color:var(--color-primary)] text-white dark:bg-[color:var(--color-header)]";
 const utilityLink =
   "inline-flex items-center text-[12px] font-medium tracking-wide text-white/80 transition-colors hover:text-white";
 
@@ -562,8 +562,9 @@ export function Header() {
   return (
     <>
       <header
+        data-scrolled={scrolled ? "true" : "false"}
         className={`sticky top-0 z-40 w-full border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]/95 backdrop-blur-md transition-shadow ${
-          scrolled ? "shadow-[0_1px_0_0_var(--color-line)]" : ""
+          scrolled ? "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.15)]" : ""
         }`}
       >
         {/* Level 1 — Top utility bar */}
@@ -601,14 +602,23 @@ export function Header() {
           </div>
         </div>
 
-        {/* Level 2 — Branding row (centered wordmark, editorial masthead) */}
-        <div className="border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]">
+        {/* Level 2 — Branding row (centered wordmark). Collapses on scroll;
+            the wordmark reflows into Level 3 next to the catalog button. */}
+        <div
+          aria-hidden={scrolled ? "true" : undefined}
+          className={`overflow-hidden border-[color:var(--color-line)] bg-[color:var(--color-bg)] transition-[max-height,opacity,border-bottom-width] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            scrolled
+              ? "max-h-0 border-b-0 opacity-0"
+              : "max-h-[160px] border-b opacity-100"
+          }`}
+        >
           <div className="mx-auto flex max-w-[var(--container-content)] items-center justify-center gap-4 px-4 py-4 sm:py-5 lg:py-6">
             <span aria-hidden className="hidden h-px w-8 shrink-0 bg-[color:var(--color-line-strong)] lg:block" />
             <Link
               href="/"
               className="flex flex-col items-center text-[color:var(--color-text)]"
               aria-label="Ravora"
+              tabIndex={scrolled ? -1 : 0}
             >
               <RavoraLogo size={30} />
               <span className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.32em] text-[color:var(--color-text-tertiary)] sm:mt-2 sm:text-[10px]">
@@ -621,13 +631,32 @@ export function Header() {
 
         {/* Level 3 — Functional bar: filled catalog + full-width search + actions */}
         <div className="border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]">
-          <div className="mx-auto flex h-16 max-w-[var(--container-content)] items-center gap-3 px-4 sm:px-6 lg:h-[68px] lg:gap-4 lg:px-8">
+          <div
+            className={`mx-auto flex max-w-[var(--container-content)] items-center gap-3 px-4 transition-[height] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-6 lg:gap-4 lg:px-8 ${
+              scrolled ? "h-[58px] lg:h-[60px]" : "h-16 lg:h-[68px]"
+            }`}
+          >
+            {/* Compact wordmark — appears on scroll, taking the space vacated
+                by the collapsing branding row. */}
+            <Link
+              href="/"
+              aria-label="Ravora"
+              tabIndex={scrolled ? 0 : -1}
+              className={`overflow-hidden whitespace-nowrap text-[color:var(--color-text)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                scrolled
+                  ? "mr-1 max-w-[140px] opacity-100 sm:mr-2"
+                  : "pointer-events-none max-w-0 opacity-0"
+              }`}
+            >
+              <RavoraLogo size={18} />
+            </Link>
+
             {/* Custom Catalog button — filled brand pill with grid icon + chevron */}
             <button
-              className={`group inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.18em] text-white shadow-sm transition-all hover:-translate-y-0.5 lg:px-5 lg:py-3 lg:text-[13px] ${
+              className={`group inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.18em] shadow-sm transition-all hover:-translate-y-0.5 lg:px-5 lg:py-3 lg:text-[13px] ${
                 megaOpen
-                  ? "bg-[color:var(--color-accent)] shadow-md ring-2 ring-[color:var(--color-accent)]/30"
-                  : "bg-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-hover)]"
+                  ? "bg-[color:var(--color-accent)] text-[color:var(--color-accent-fg)] shadow-md ring-2 ring-[color:var(--color-accent)]/30"
+                  : "bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)] hover:bg-[color:var(--color-primary-hover)]"
               }`}
               onClick={() => setMegaOpen((v) => !v)}
               aria-expanded={megaOpen}
@@ -659,7 +688,7 @@ export function Header() {
               <button
                 type="submit"
                 aria-label="Search"
-                className="inline-flex h-9 items-center justify-center rounded-full bg-[color:var(--color-primary)] px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[color:var(--color-primary-hover)]"
+                className="inline-flex h-9 items-center justify-center rounded-full bg-[color:var(--color-primary)] px-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)]"
               >
                 Search
               </button>
@@ -711,7 +740,7 @@ export function Header() {
                 {itemCount > 0 && (
                   <motion.span
                     key={cartBounce}
-                    className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[color:var(--color-accent)] px-1 text-[10px] font-bold text-white"
+                    className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[color:var(--color-accent)] px-1 text-[10px] font-bold text-[color:var(--color-accent-fg)]"
                     initial={cartBounce > 0 ? { scale: 0.5 } : false}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", damping: 10, stiffness: 400 }}
@@ -747,7 +776,7 @@ export function Header() {
               <button
                 type="submit"
                 aria-label="Search"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color:var(--color-primary)] text-white"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]"
               >
                 <Search size={12} />
               </button>
@@ -784,7 +813,7 @@ export function Header() {
                   })}
                   <Link
                     href="/catalog"
-                    className="ml-2 inline-flex shrink-0 items-center gap-1 rounded-full bg-[color:var(--color-primary)] px-3 py-1 text-[11px] font-semibold text-white transition-colors hover:bg-[color:var(--color-primary-hover)]"
+                    className="ml-2 inline-flex shrink-0 items-center gap-1 rounded-full bg-[color:var(--color-primary)] px-3 py-1 text-[11px] font-semibold text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)]"
                   >
                     All categories <ChevronRight size={12} />
                   </Link>
@@ -897,7 +926,7 @@ export function Header() {
                   <Link
                     href="/account"
                     onClick={() => setMobileOpen(false)}
-                    className="inline-flex h-11 items-center justify-center rounded-full bg-[color:var(--color-accent)] text-sm font-semibold text-white hover:bg-[color:var(--color-accent-hover)]"
+                    className="inline-flex h-11 items-center justify-center rounded-full bg-[color:var(--color-accent)] text-sm font-semibold text-[color:var(--color-accent-fg)] hover:bg-[color:var(--color-accent-hover)]"
                   >
                     My Account
                   </Link>
@@ -906,7 +935,7 @@ export function Header() {
                     <Link
                       href="/auth/login"
                       onClick={() => setMobileOpen(false)}
-                      className="inline-flex h-11 items-center justify-center rounded-full bg-[color:var(--color-accent)] text-sm font-semibold text-white hover:bg-[color:var(--color-accent-hover)]"
+                      className="inline-flex h-11 items-center justify-center rounded-full bg-[color:var(--color-accent)] text-sm font-semibold text-[color:var(--color-accent-fg)] hover:bg-[color:var(--color-accent-hover)]"
                     >
                       Sign In
                     </Link>

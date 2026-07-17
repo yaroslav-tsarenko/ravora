@@ -21,7 +21,7 @@ export async function GET() {
       description: product.description,
       price: Number(product.price),
       comparePrice: product.comparePrice ? Number(product.comparePrice) : null,
-      currency: "EUR",
+      currency: "GBP",
       availability: product.quantity > 0 ? "in_stock" : "out_of_stock",
       quantity: product.quantity,
       condition: product.condition,

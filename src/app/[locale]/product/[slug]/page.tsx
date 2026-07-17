@@ -135,7 +135,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     offers: {
       "@type": "Offer",
       price: Number(product.price),
-      priceCurrency: "EUR",
+      priceCurrency: "GBP",
       availability: product.quantity > 0
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",

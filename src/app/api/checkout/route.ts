@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     const total = +(discountedSubtotal + taxAmount + shippingCost).toFixed(2);
 
     const storeSettings = await prisma.storeSettings.findFirst();
-    const currency = storeSettings?.currency || "EUR";
+    const currency = storeSettings?.currency || "GBP";
 
     const order = await prisma.order.create({
       data: {

@@ -2,32 +2,31 @@
 
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
 
-export type Currency = "EUR" | "USD" | "GBP";
+export type Currency = "GBP" | "USD";
 
 interface Rates {
-  USD: number;
   GBP: number;
-  EUR: number;
+  USD: number;
 }
 
 interface CurrencyContextType {
   currency: Currency;
   setCurrency: (currency: Currency) => void;
-  convert: (amountInEur: number) => number;
+  convert: (amountInGbp: number) => number;
   rates: Rates;
 }
 
-const DEFAULT_RATES: Rates = { EUR: 1, USD: 1.08, GBP: 0.85 };
+const DEFAULT_RATES: Rates = { GBP: 1, USD: 1.27 };
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
-  const [currency, setCurrencyState] = useState<Currency>("EUR");
+  const [currency, setCurrencyState] = useState<Currency>("GBP");
   const [rates, setRates] = useState<Rates>(DEFAULT_RATES);
 
   useEffect(() => {
     const stored = localStorage.getItem("currency") as Currency | null;
-    if (stored && ["EUR", "USD", "GBP"].includes(stored)) {
+    if (stored && ["GBP", "USD"].includes(stored)) {
       setCurrencyState(stored);
     }
   }, []);
@@ -36,8 +35,8 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     fetch("/api/exchange-rates")
       .then((r) => r.json())
       .then((data) => {
-        if (data.rates) {
-          setRates({ EUR: 1, USD: data.rates.USD, GBP: data.rates.GBP });
+        if (data.rates?.USD) {
+          setRates({ GBP: 1, USD: data.rates.USD });
         }
       })
       .catch(() => {});
@@ -49,9 +48,9 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
   };
 
   const convert = useCallback(
-    (amountInEur: number) => {
-      if (currency === "EUR") return amountInEur;
-      return Math.round(amountInEur * rates[currency] * 100) / 100;
+    (amountInGbp: number) => {
+      if (currency === "GBP") return amountInGbp;
+      return Math.round(amountInGbp * rates[currency] * 100) / 100;
     },
     [currency, rates]
   );

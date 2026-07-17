@@ -60,7 +60,7 @@ function SpoyntMockContent() {
           status,
           cpi: cpi || "cpi_mock_123",
           amount: order ? Number(order.total) : 0,
-          currency: "EUR",
+          currency: "GBP",
         }),
       });
 
@@ -141,7 +141,7 @@ function SpoyntMockContent() {
   }
 
   const formatPriceEur = (val: number) => {
-    return new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(val);
+    return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(val);
   };
 
   return (

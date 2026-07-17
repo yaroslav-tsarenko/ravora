@@ -14,7 +14,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
   if (images.length === 0) {
     return (
       <div className="flex flex-col gap-3">
-        <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-[color:var(--color-line)] bg-white p-3 text-[color:var(--color-text-tertiary)] shadow-[0_1px_2px_rgba(28,26,23,0.04)] sm:aspect-[4/3] sm:p-5">
+        <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl border border-[color:var(--color-line)] bg-[#F7F7F7] p-3 text-[color:var(--color-text-tertiary)] shadow-[0_1px_2px_rgba(28,26,23,0.04)] sm:aspect-[4/3] sm:p-5">
           No Image
         </div>
       </div>
@@ -23,7 +23,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="relative aspect-square cursor-zoom-in overflow-hidden rounded-2xl border border-[color:var(--color-line)] bg-white p-3 shadow-[0_1px_2px_rgba(28,26,23,0.04)] sm:aspect-[4/3] sm:p-5">
+      <div className="relative aspect-square cursor-zoom-in overflow-hidden rounded-2xl border border-[color:var(--color-line)] bg-[#F7F7F7] p-3 shadow-[0_1px_2px_rgba(28,26,23,0.04)] sm:aspect-[4/3] sm:p-5">
         <Image
           src={images[selectedIndex].url}
           alt={images[selectedIndex].alt || productName}
@@ -38,7 +38,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
           {images.map((image, index) => (
             <button
               key={image.id}
-              className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 bg-white p-1 transition-all sm:h-[72px] sm:w-[72px] ${
+              className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 bg-[#F7F7F7] p-1 transition-all sm:h-[72px] sm:w-[72px] ${
                 index === selectedIndex
                   ? "border-[color:var(--color-primary)] shadow-[0_0_0_2px_rgba(31,77,63,0.18)]"
                   : "border-[color:var(--color-line)] hover:-translate-y-px hover:border-[color:var(--color-primary)]"

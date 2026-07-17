@@ -206,7 +206,7 @@ function toNum(v: number | { toNumber?: () => number } | undefined | null): numb
 }
 
 function formatEur(amount: number): string {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(amount);
+  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(amount);
 }
 
 function formatDate(d: Date | string | undefined): string {
