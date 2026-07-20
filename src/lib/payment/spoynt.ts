@@ -62,7 +62,7 @@ class SpoyntService {
   }): Promise<SpoyntInvoiceResponse> {
     let siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:9999").replace(/\/+$/, "");
     // Strip trailing locale from siteUrl if configured with one (e.g., /en) to avoid double locale pathing
-    siteUrl = siteUrl.replace(/\/(en|lv|ru)$/i, "");
+    siteUrl = siteUrl.replace(/\/(en|lv)$/i, "");
     
     // Construct return URLs with correct locale
     const localizedSuccessUrl = `${siteUrl}/${params.locale}/order/confirmed?orderId=${params.orderId}`;
