@@ -104,7 +104,7 @@ function ConfirmedContent() {
             </div>
             <div className="flex justify-between">
               <span className="text-[color:var(--color-text-secondary)]">Tax</span>
-              <span className="text-[color:var(--color-text)]">{formatPrice(convert(Number(order.taxAmount)), currency)}</span>
+              <span className="text-[color:var(--color-text-tertiary)]">Included</span>
             </div>
             <div className="mt-1.5 flex justify-between border-t border-[color:var(--color-line)] pt-2.5 text-[17px] font-bold text-[color:var(--color-text)]">
               <span>Total</span>

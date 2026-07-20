@@ -587,7 +587,8 @@ export function Header() {
     <>
       <header
         data-scrolled={scrolled ? "true" : "false"}
-        className={`sticky top-0 z-40 w-full border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]/95 backdrop-blur-md transition-shadow ${
+        style={{ transform: "translateZ(0)", backfaceVisibility: "hidden" }}
+        className={`sticky top-0 z-40 w-full transform-gpu border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]/95 backdrop-blur-md transition-shadow will-change-transform ${
           scrolled ? "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.15)]" : ""
         }`}
       >

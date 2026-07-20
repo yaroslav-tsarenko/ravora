@@ -123,7 +123,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           </div>
           <div className="flex gap-4">
             <span className="text-[color:var(--color-text-secondary)]">Tax</span>
-            <span className="text-[color:var(--color-text)]">{formatPrice(convert(Number(order.taxAmount)), currency)}</span>
+            <span className="text-[color:var(--color-text-tertiary)]">Included</span>
           </div>
           {Number(order.discountAmount) > 0 && (
             <div className="flex gap-4 text-[color:var(--color-success)]">

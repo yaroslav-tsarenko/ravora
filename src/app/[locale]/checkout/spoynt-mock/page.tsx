@@ -201,8 +201,8 @@ function SpoyntMockContent() {
                 <span>{Number(order?.shippingCost || 0) === 0 ? "Free" : formatPriceEur(Number(order?.shippingCost || 0))}</span>
               </div>
               <div className="flex justify-between text-[#6B6560]">
-                <span>Tax (21%)</span>
-                <span>{formatPriceEur(Number(order?.taxAmount || 0))}</span>
+                <span>Tax</span>
+                <span>Included</span>
               </div>
               {Number(order?.discountAmount || 0) > 0 && (
                 <div className="flex justify-between text-[#4E7A63] font-semibold">

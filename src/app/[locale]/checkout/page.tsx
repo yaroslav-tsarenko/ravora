@@ -125,7 +125,6 @@ function CheckoutContent() {
 
   const discountAmount = discount ? +(cart.subtotal * (discount.percent / 100)).toFixed(2) : 0;
   const discountedSubtotal = Math.max(cart.subtotal - discountAmount, 0);
-  const taxOnDiscounted = +(discountedSubtotal * 0.21).toFixed(2);
   const finalShipping = discountedSubtotal >= 100 && selectedMethod === "free" ? 0 : shippingPrice;
 
   useEffect(() => {
@@ -678,12 +677,12 @@ function CheckoutContent() {
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-[color:var(--color-text-secondary)]">Tax (21%)</span>
-              <span className="font-medium text-[color:var(--color-text)]">{formatPrice(convert(taxOnDiscounted), currency)}</span>
+              <span className="text-[color:var(--color-text-secondary)]">Tax</span>
+              <span className="font-medium text-[color:var(--color-text-tertiary)]">Included</span>
             </div>
             <div className="mt-1.5 flex justify-between border-t-2 border-[color:var(--color-line)] pt-3.5 text-lg font-bold text-[color:var(--color-text)]">
               <span>Total</span>
-              <span>{formatPrice(convert(discountedSubtotal + taxOnDiscounted + finalShipping), currency)}</span>
+              <span>{formatPrice(convert(discountedSubtotal + finalShipping), currency)}</span>
             </div>
           </div>
 

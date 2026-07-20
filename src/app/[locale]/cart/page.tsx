@@ -159,8 +159,8 @@ export default function CartPage() {
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-[color:var(--color-text-secondary)]">{t("tax")} (21%)</span>
-                <span className="font-medium text-[color:var(--color-text)]">{formatPrice(convert(cart.taxAmount), currency)}</span>
+                <span className="text-[color:var(--color-text-secondary)]">{t("tax")}</span>
+                <span className="font-medium text-[color:var(--color-text-tertiary)]">Included</span>
               </div>
 
               {subtotalConverted < freeShippingThreshold && (

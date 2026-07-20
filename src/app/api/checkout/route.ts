@@ -57,9 +57,11 @@ export async function POST(request: NextRequest) {
     const discountedSubtotal = subtotal - discountAmount;
 
     const taxRate = 21;
-    const taxAmount = +(discountedSubtotal * (taxRate / 100)).toFixed(2);
+    // Prices are VAT-inclusive: derive the tax already contained in the price
+    // rather than adding it on top of the total.
+    const taxAmount = +(discountedSubtotal - discountedSubtotal / (1 + taxRate / 100)).toFixed(2);
     const shippingCost = discountedSubtotal >= 100 ? 0 : 5.99;
-    const total = +(discountedSubtotal + taxAmount + shippingCost).toFixed(2);
+    const total = +(discountedSubtotal + shippingCost).toFixed(2);
 
     const storeSettings = await prisma.storeSettings.findFirst();
     const currency = storeSettings?.currency || "GBP";
