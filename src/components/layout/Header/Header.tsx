@@ -587,18 +587,10 @@ export function Header() {
     <>
       <header
         data-scrolled={scrolled ? "true" : "false"}
-        style={{ transform: "translateZ(0)", backfaceVisibility: "hidden" }}
-        className={`sticky top-0 z-40 w-full transform-gpu border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]/95 backdrop-blur-md transition-shadow will-change-transform ${
-          scrolled ? "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.15)]" : ""
-        }`}
+        className="relative z-30 w-full"
       >
-        {/* Level 1 — Top utility bar (collapses on scroll) */}
-        <div
-          aria-hidden={scrolled ? "true" : undefined}
-          className={`${topBarBase} overflow-hidden transition-[max-height,opacity] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-            scrolled ? "pointer-events-none max-h-0 opacity-0" : "max-h-12 opacity-100"
-          }`}
-        >
+        {/* Level 1 — Top utility bar (scrolls away naturally) */}
+        <div className={topBarBase}>
           <div className="mx-auto flex h-9 max-w-[var(--container-content)] items-center justify-between px-4 sm:px-6 lg:px-8">
             <nav className="flex items-center gap-4 sm:gap-5">
               <Link href="/" className={`${utilityLink} !text-white`}>
@@ -629,23 +621,15 @@ export function Header() {
           </div>
         </div>
 
-        {/* Level 2 — Branding row (centered wordmark). Collapses on scroll;
-            the wordmark reflows into Level 3 next to the catalog button. */}
-        <div
-          aria-hidden={scrolled ? "true" : undefined}
-          className={`overflow-hidden border-[color:var(--color-line)] bg-[color:var(--color-bg)] transition-[max-height,opacity,border-bottom-width] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-            scrolled
-              ? "max-h-0 border-b-0 opacity-0"
-              : "max-h-[160px] border-b opacity-100"
-          }`}
-        >
+        {/* Level 2 — Branding row (centered wordmark). Scrolls away; a compact
+            wordmark reappears inside the sticky functional bar. */}
+        <div className="border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]">
           <div className="mx-auto flex max-w-[var(--container-content)] items-center justify-center gap-4 px-4 py-4 sm:py-5 lg:py-6">
             <span aria-hidden className="hidden h-px w-8 shrink-0 bg-[color:var(--color-line-strong)] lg:block" />
             <Link
               href="/"
               className="flex flex-col items-center text-[color:var(--color-text)]"
               aria-label="Ravora"
-              tabIndex={scrolled ? -1 : 0}
             >
               <RavoraLogo size={30} />
               <span className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.32em] text-[color:var(--color-text-tertiary)] sm:mt-2 sm:text-[10px]">
@@ -656,8 +640,19 @@ export function Header() {
           </div>
         </div>
 
-        {/* Level 3 — Functional bar: filled catalog + full-width search + actions */}
-        <div className="border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]">
+      </header>
+
+      {/* Level 3 — Sticky functional bar: filled catalog + full-width search +
+          actions. Only this row pins to the top; the decorative rows above and
+          below simply scroll away, so the header shrinks with zero layout
+          jitter (no document-height change, no scroll feedback loop). */}
+      <div
+        data-scrolled={scrolled ? "true" : "false"}
+        style={{ transform: "translateZ(0)", backfaceVisibility: "hidden" }}
+        className={`sticky top-0 z-40 transform-gpu border-b border-[color:var(--color-line)] bg-[color:var(--color-bg)]/95 backdrop-blur-md transition-shadow will-change-transform ${
+          scrolled ? "shadow-[0_4px_20px_-8px_rgba(0,0,0,0.15)]" : ""
+        }`}
+      >
           <div
             className={`mx-auto flex max-w-[var(--container-content)] items-center gap-3 px-4 transition-[height] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] sm:px-6 lg:gap-4 lg:px-8 ${
               scrolled ? "h-11 lg:h-12" : "h-16 lg:h-[68px]"
@@ -827,18 +822,11 @@ export function Header() {
         </div>
 
         {/* Level 4 — Editorial numbered nav with auto-rotating pages (24 curated categories) */}
-        <NumberedNavRotator paused={megaOpen || mobileOpen} scrolled={scrolled} />
+        <NumberedNavRotator paused={megaOpen || mobileOpen} scrolled={false} />
 
         {/* Level 4 — Trending strip (25 leaf subs across whole tree) */}
         {trendingSubs.length > 0 && (
-          <div
-            aria-hidden={scrolled ? "true" : undefined}
-            className={`hidden overflow-hidden border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] transition-[max-height,opacity,border-bottom-width] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] md:block ${
-              scrolled
-                ? "pointer-events-none max-h-0 border-b-0 opacity-0"
-                : "max-h-16 border-b opacity-100"
-            }`}
-          >
+          <div className="hidden border-b border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] md:block">
             <div className="mx-auto max-w-[var(--container-content)] px-4 sm:px-6 lg:px-8">
               <CategoryStrip containerBg="var(--color-bg-secondary)" ariaLabel="Trending categories">
                 <div className="flex items-center gap-2 py-2">
@@ -871,7 +859,6 @@ export function Header() {
             </div>
           </div>
         )}
-      </header>
 
       <CatalogMenu open={megaOpen} onClose={() => setMegaOpen(false)} categories={categories} />
 
