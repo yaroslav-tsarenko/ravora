@@ -26,10 +26,8 @@ export default function TermsPage() {
       <h2>1. Scope of These Terms</h2>
       <p>1.1 These Terms apply to all use of the Website and all purchases of goods made through Ravora.</p>
       <p>
-        1.2 Ravora sells physical electrical products, electrical materials, wiring accessories,
-        lighting-related products, installation components, distribution and circuit protection products,
-        sockets, switches, cables, mounting accessories, and other related goods for domestic, commercial,
-        trade, and professional use.
+        1.2 Ravora sells premium made-to-order apparel, including t-shirts, hoodies, sweatshirts, tank
+        tops, and related garments and accessories, printed on demand for personal, gift, and business use.
       </p>
       <p>
         1.3 These Terms apply together with any other policies published on the Website, including our
@@ -69,19 +67,18 @@ export default function TermsPage() {
         craft, or profession.
       </p>
       <p>
-        3.3 A &ldquo;Business Customer&rdquo; means any person, company, sole trader, contractor, installer,
-        reseller, organisation, public body, or professional purchasing goods for business, commercial,
-        trade, resale, installation, or professional purposes.
+        3.3 A &ldquo;Business Customer&rdquo; means any person, company, sole trader, reseller, wholesale or
+        trade buyer, organisation, public body, or professional purchasing goods for business, commercial,
+        trade, resale, or professional purposes.
       </p>
       <p>
         3.4 Certain rights described in these Terms, including statutory consumer cancellation rights, apply
         only to Consumers and do not apply to Business Customers unless required by law.
       </p>
       <p>
-        3.5 Business Customers are expected to have appropriate technical knowledge or professional advice
-        before purchasing electrical goods. Business Customers are responsible for checking all
-        specifications, ratings, compatibility, suitability, compliance requirements, and installation
-        conditions before placing an order.
+        3.5 Business Customers are responsible for checking all product specifications, sizing, fabric
+        composition, colour, care requirements, and suitability before placing an order, including for any
+        onward resale.
       </p>
 
       <h2>4. Product Information and Availability</h2>
@@ -91,31 +88,30 @@ export default function TermsPage() {
       </p>
       <p>
         4.2 Product images are provided for illustration purposes only. Actual goods may vary slightly from
-        images due to manufacturer updates, packaging changes, lighting, screen settings, colour
-        differences, batch variations, or technical improvements.
+        images due to lighting, screen settings, colour differences, fabric batch variations, or print
+        placement, which is normal for made-to-order printed apparel.
       </p>
       <p>
-        4.3 Product specifications may be based on information provided by manufacturers, suppliers,
-        distributors, or product databases. While we take reasonable care, we do not guarantee that all
+        4.3 Product specifications may be based on information provided by our print partner Printful,
+        suppliers, or product databases. While we take reasonable care, we do not guarantee that all
         product data is free from errors, omissions, or updates.
       </p>
       <p>
         4.4 Before placing an order, you are responsible for checking that the product is suitable for your
-        intended purpose, including but not limited to:
+        needs, including but not limited to:
       </p>
       <ul>
-        <li>voltage and electrical rating;</li>
-        <li>current, load, wattage, and power requirements;</li>
-        <li>dimensions and installation space;</li>
-        <li>cable type, cable size, and connection requirements;</li>
-        <li>IP rating and environmental suitability;</li>
-        <li>indoor or outdoor suitability;</li>
-        <li>compatibility with existing systems, fittings, devices, and installations;</li>
-        <li>regulatory, safety, and installation requirements in the relevant country or region.</li>
+        <li>size, fit, and body measurements against the size guide;</li>
+        <li>garment cut, style, and length;</li>
+        <li>fabric composition and weight;</li>
+        <li>colour and print or design placement;</li>
+        <li>care and washing requirements;</li>
+        <li>suitability for the intended wearer or occasion.</li>
       </ul>
       <p>
-        4.5 If you are unsure whether a product is suitable for your intended use, you should contact us
-        before ordering or seek advice from a qualified electrician or competent professional.
+        4.5 If you are unsure whether a product is suitable for you, you should consult the size guide and
+        product details, or contact us before ordering. Please note that items are made to order and
+        produced specifically for you once your order is placed.
       </p>
       <p>
         4.6 Availability of products is not guaranteed until your order has been accepted and processed. We
@@ -123,35 +119,31 @@ export default function TermsPage() {
         incorrectly, or cannot be supplied for reasons outside our reasonable control.
       </p>
 
-      <h2>5. Electrical Safety, Installation, and Use</h2>
+      <h2>5. Sizing, Product Suitability, and Care</h2>
       <p>
-        5.1 Electrical products can be dangerous if incorrectly selected, installed, connected, modified,
-        overloaded, or used.
+        5.1 Our apparel is made to order in a range of sizes. Choosing the correct size is your
+        responsibility, and you should review the size guide and measurements before placing an order.
       </p>
       <p>
-        5.2 You must use all products only for their intended purpose and in accordance with all manufacturer
-        instructions, safety warnings, installation manuals, voltage ratings, load limits, technical
-        specifications, applicable laws, building regulations, electrical standards, and local requirements.
+        5.2 You should care for all garments in accordance with the care instructions on the product, its
+        label, and any guidance provided by us, including recommended washing, drying, and ironing methods.
       </p>
       <p>
-        5.3 Products that require electrical installation, wiring, connection, testing, commissioning, or
-        integration into an electrical system should be installed only by a qualified electrician or competent
-        professional where required or appropriate.
+        5.3 Because items are made to order and printed on demand specifically for you, please check your
+        size, colour, and design selection carefully before completing your order.
       </p>
       <p>
-        5.4 Ravora does not provide electrical engineering, installation, compliance, inspection,
-        certification, or safety approval services through the Website.
+        5.4 Any guidance, product description, size chart, or customer support response provided by Ravora
+        is general information only and is intended to help you select a suitable garment.
       </p>
       <p>
-        5.5 Any guidance, product description, compatibility note, or customer support response provided by
-        Ravora is general information only and must not be treated as a substitute for professional
-        advice, electrical inspection, or compliance assessment.
+        5.5 Fabric feel, exact colour, print placement, and fit may vary slightly between items and batches,
+        which is normal for made-to-order printed apparel and is not considered a defect.
       </p>
       <p>
-        5.6 We are not responsible for damage, loss, injury, malfunction, non-compliance, failed
-        installation, or safety incidents caused by incorrect installation, incorrect product selection,
-        misuse, overloading, unauthorised modification, third-party work, failure to follow instructions, or
-        use outside the product&rsquo;s intended purpose.
+        5.6 We are not responsible for dissatisfaction, damage, or wear caused by incorrect size selection
+        where the size guide was available, improper washing or care, alterations made by you, or normal
+        wear and tear over time.
       </p>
 
       <h2>6. Accounts, Trade Customers, and Pro Access</h2>
@@ -264,8 +256,8 @@ export default function TermsPage() {
         before any customs duties, import taxes, additional local charges, or special delivery services.
       </p>
       <p>
-        10.4 Free delivery may not apply to certain destinations, oversized goods, heavy goods, restricted
-        goods, special order goods, or products requiring special handling.
+        10.4 Free delivery may not apply to certain destinations, restricted destinations, or orders
+        requiring special handling.
       </p>
       <p>
         10.5 Promotional codes and discounts may be withdrawn, changed, refused, or cancelled at any time
@@ -286,23 +278,23 @@ export default function TermsPage() {
         shown at checkout.
       </p>
       <p>
-        11.4 Delivery times are estimates only and begin from the dispatch date, not from the date the order
-        is placed.
+        11.4 All items are made to order. Delivery times are estimates only and begin once your item has
+        been produced and dispatched, not from the date the order is placed.
       </p>
-      <p>11.5 Estimated delivery times are generally as follows:</p>
+      <p>
+        11.5 As a general guide, made-to-order items are delivered within 5&ndash;8 business days after
+        production is complete:
+      </p>
       <table>
         <thead>
           <tr>
-            <th>Destination</th>
-            <th>Estimated delivery time from dispatch</th>
+            <th>Stage</th>
+            <th>Estimated time</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>United Kingdom</td><td>1&ndash;3 business days</td></tr>
-          <tr><td>Europe</td><td>3&ndash;7 business days</td></tr>
-          <tr><td>North America</td><td>5&ndash;10 business days</td></tr>
-          <tr><td>Asia &amp; Oceania</td><td>7&ndash;14 business days</td></tr>
-          <tr><td>Africa &amp; South America</td><td>8&ndash;15 business days</td></tr>
+          <tr><td>Made-to-order production</td><td>Item printed on demand for you</td></tr>
+          <tr><td>Standard delivery after production</td><td>5&ndash;8 business days</td></tr>
         </tbody>
       </table>
       <p>
@@ -393,8 +385,8 @@ export default function TermsPage() {
         and no later than 14 days from the date you notified us of your cancellation.
       </p>
       <p>
-        14.6 Returned goods must be unused, uninstalled, complete, in their original packaging where
-        possible, with all accessories, manuals, labels, protective materials, and included items.
+        14.6 Returned goods must be unworn, unwashed, in their original condition with all tags attached,
+        and in their original packaging where possible.
       </p>
       <p>
         14.7 You are responsible for return shipping costs unless the goods are faulty, damaged, incorrect,
@@ -419,15 +411,15 @@ export default function TermsPage() {
       </p>
       <p>15.2 Non-returnable or restricted return items may include:</p>
       <ul>
-        <li>goods made to order;</li>
+        <li>personalised or custom-printed items made to your own specification;</li>
         <li>goods specially ordered for you;</li>
-        <li>goods cut to size, including cable or similar materials;</li>
-        <li>customised, modified, assembled, or altered goods;</li>
-        <li>installed, wired, connected, tested, commissioned, or used electrical goods;</li>
+        <li>items that have been worn, washed, or used;</li>
+        <li>customised or altered goods;</li>
+        <li>goods returned without their original tags or labels;</li>
         <li>goods damaged after delivery;</li>
-        <li>goods missing parts, accessories, packaging, manuals, labels, seals, or protective materials;</li>
+        <li>goods missing packaging, tags, or included items;</li>
         <li>goods that are no longer in resaleable condition;</li>
-        <li>goods affected by incorrect storage, moisture, heat, impact, contamination, misuse, or unauthorised handling;</li>
+        <li>goods affected by incorrect storage, moisture, staining, contamination, misuse, or unauthorised handling;</li>
         <li>clearance, final sale, or discontinued items where return restrictions are clearly stated and lawful.</li>
       </ul>
       <p>
@@ -467,10 +459,9 @@ export default function TermsPage() {
         shipping costs or provide return instructions.
       </p>
       <p>
-        16.8 We are not responsible for faults or damage caused by incorrect installation, misuse,
-        overloading, unauthorised modification, external damage, unsuitable environment, incorrect storage,
-        third-party work, failure to follow instructions, power surges, wear and tear, or use outside the
-        product&rsquo;s intended purpose.
+        16.8 We are not responsible for faults or damage caused by improper washing or care, incorrect size
+        selection where the size guide was available, alterations made by you, misuse, external damage,
+        incorrect storage, staining, or normal wear and tear.
       </p>
 
       <h2>17. Legal Guarantee and Statutory Rights</h2>
@@ -531,23 +522,21 @@ export default function TermsPage() {
       </p>
       <p>
         18.7 Additional Warranty covers eligible manufacturing defects and material defects that arise during
-        normal use of the product in accordance with the manufacturer&rsquo;s instructions and applicable
-        technical requirements.
+        normal use of the product when cared for in accordance with the care instructions.
       </p>
       <p>18.8 Additional Warranty does not cover:</p>
       <ul>
-        <li>incorrect installation, wiring, connection, testing, or commissioning;</li>
-        <li>installation by an unqualified or unauthorised person where professional installation is required or appropriate;</li>
-        <li>misuse, negligence, abuse, overloading, or operation outside rated specifications;</li>
-        <li>unauthorised repair, modification, opening, dismantling, or alteration;</li>
-        <li>accidental damage, impact damage, water damage, moisture damage, fire damage, or external damage;</li>
-        <li>damage caused by power surges, unstable power supply, incorrect voltage, lightning, or electrical faults in the wider installation;</li>
+        <li>incorrect size selection where the size guide was available;</li>
+        <li>alterations, tailoring, or modifications made by you or a third party;</li>
+        <li>improper washing, drying, ironing, or care contrary to the care instructions;</li>
+        <li>misuse, negligence, or abuse;</li>
+        <li>accidental damage, tears, snags, staining, or external damage;</li>
+        <li>fading, shrinkage, or print wear caused by improper laundering;</li>
         <li>normal wear and tear;</li>
-        <li>cosmetic damage that does not affect functionality;</li>
-        <li>consumable parts, batteries, bulbs, fuses, seals, connectors, accessories, or parts expected to wear out unless expressly covered;</li>
-        <li>defects caused by unsuitable storage, transport, environment, contamination, corrosion, dust, humidity, chemicals, or temperature conditions;</li>
-        <li>products used for purposes outside the manufacturer&rsquo;s stated intended use;</li>
-        <li>loss of profits, labour costs, electrician costs, removal costs, reinstallation costs, downtime, or indirect losses.</li>
+        <li>minor variations in colour, fit, or print placement that are normal for made-to-order printed apparel;</li>
+        <li>defects caused by unsuitable storage, transport, contamination, moisture, or exposure to chemicals;</li>
+        <li>products used for purposes outside their intended everyday-wear use;</li>
+        <li>loss of profits, cleaning costs, alteration costs, or indirect losses.</li>
       </ul>
       <p>
         18.9 To make an Additional Warranty claim, you must contact us at info@ravora.co.uk with your order
@@ -574,14 +563,13 @@ export default function TermsPage() {
 
       <h2>19. Business Customer Terms</h2>
       <p>
-        19.1 Business Customers are responsible for checking all product specifications, suitability,
-        compatibility, compliance requirements, installation requirements, and local regulatory obligations
-        before ordering.
+        19.1 Business Customers are responsible for checking all product specifications, sizing, fabric
+        composition, care requirements, and suitability before ordering, including for any onward resale.
       </p>
       <p>
         19.2 Business Customers do not have a general right to cancel or return goods due to change of mind,
-        incorrect ordering, surplus stock, unsuitable specification, customer project changes, or non-faulty
-        goods unless we agree otherwise in writing.
+        incorrect ordering, surplus stock, unsuitable size or specification, or non-faulty goods unless we
+        agree otherwise in writing.
       </p>
       <p>
         19.3 Any return accepted from a Business Customer is at our discretion and may be subject to
@@ -597,29 +585,26 @@ export default function TermsPage() {
       </p>
       <p>
         19.6 We will not be liable to Business Customers for loss of profit, loss of revenue, loss of
-        contract, loss of business opportunity, loss of goodwill, loss of data, labour costs, installation
-        costs, removal costs, reinstallation costs, downtime, project delays, or indirect or consequential
-        losses.
+        contract, loss of business opportunity, loss of goodwill, loss of data, cleaning or alteration
+        costs, downtime, or indirect or consequential losses.
       </p>
 
-      <h2>20. Product Compliance and Local Regulations</h2>
+      <h2>20. Product Suitability and Local Requirements</h2>
       <p>
-        20.1 Products sold by Ravora may be designed for specific markets, standards, voltage systems,
-        fittings, or installation environments.
+        20.1 Products sold by Ravora are everyday apparel items produced in standard sizes and fabrics,
+        which may vary by product range.
       </p>
       <p>
-        20.2 You are responsible for checking whether a product is suitable and lawful for installation,
-        resale, import, or use in your country, region, property, project, or electrical system.
+        20.2 You are responsible for checking whether a product is suitable and lawful for import, resale,
+        or use in your country or region.
       </p>
       <p>
-        20.3 We do not guarantee that products purchased from Ravora will meet every local building code,
-        electrical code, certification requirement, insurance requirement, workplace requirement, or project
-        specification outside the information expressly stated on the product page.
+        20.3 We do not guarantee that products purchased from Ravora will meet every local labelling,
+        certification, or resale requirement outside the information expressly stated on the product page.
       </p>
       <p>
-        20.4 Business Customers, installers, contractors, resellers, and professional buyers are responsible
-        for obtaining all permits, approvals, inspections, certifications, and professional sign-offs
-        required for their use, installation, resale, or project.
+        20.4 Business Customers, resellers, and professional buyers are responsible for obtaining any
+        approvals, labelling, or documentation required for their resale or use.
       </p>
 
       <h2>21. Intellectual Property</h2>
@@ -709,15 +694,15 @@ export default function TermsPage() {
         <li>indirect, incidental, special, consequential, or punitive losses;</li>
         <li>loss of profit, revenue, business, opportunity, contract, goodwill, or anticipated savings;</li>
         <li>loss of data or system interruption;</li>
-        <li>labour, installation, removal, reinstallation, testing, inspection, certification, or contractor costs;</li>
-        <li>project delays, operational downtime, or business interruption;</li>
-        <li>losses caused by incorrect product selection, installation, misuse, overloading, unauthorised modification, or failure to follow instructions;</li>
+        <li>cleaning, alteration, or replacement costs;</li>
+        <li>operational downtime or business interruption;</li>
+        <li>losses caused by incorrect size selection where the size guide was available, improper washing or care, alterations by the customer, or failure to follow the care instructions;</li>
         <li>losses caused by events outside our reasonable control.</li>
       </ul>
       <p>
-        25.4 Products must be selected, installed, and used correctly. We are not responsible for
-        consequences arising from incorrect installation, unsafe installation, or use contrary to
-        manufacturer instructions or applicable regulations.
+        25.4 Products must be selected, cared for, and used correctly. We are not responsible for
+        consequences arising from incorrect size selection where the size guide was available, or care
+        contrary to the care instructions.
       </p>
       <p>
         25.5 Where you are a Business Customer, and to the fullest extent permitted by law, our total

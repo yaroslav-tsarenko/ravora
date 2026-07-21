@@ -3,13 +3,11 @@
 import { PromoStrip } from "../PromoStrip/PromoStrip";
 import { HeroCarousel } from "../HeroCarousel/HeroCarousel";
 import { PromoBannerGrid } from "../PromoBannerGrid/PromoBannerGrid";
-import { BrandStrip } from "../BrandStrip/BrandStrip";
 import { ProductSection } from "../ProductSection/ProductSection";
 import { SaleStrip } from "../SaleStrip/SaleStrip";
 import { DealOfTheDay } from "../DealOfTheDay/DealOfTheDay";
 import { NewsletterBanner } from "../NewsletterBanner/NewsletterBanner";
 import { TrustStrip } from "../TrustStrip/TrustStrip";
-import { StatsBand } from "../StatsBand/StatsBand";
 import { ShopByPurpose } from "../ShopByPurpose/ShopByPurpose";
 import { ServicePromise } from "../ServicePromise/ServicePromise";
 import { Testimonials } from "../Testimonials/Testimonials";
@@ -115,7 +113,7 @@ interface Props {
 export function MarketplaceHome({ data }: Props) {
   const {
     heroSlides, dealCards, promoSmall, promoWide,
-    brands, sections, promoStripItems,
+    sections, promoStripItems,
     sectionProducts, saleProducts, newProducts,
     popularProducts, categorySections, categoryShowcase,
   } = data;
@@ -181,8 +179,6 @@ export function MarketplaceHome({ data }: Props) {
 
             {/* === Light supporting blocks between product sections === */}
 
-            <StatsBand />
-
             <PromoBannerGrid smallBanners={promoSmall} wideBanners={promoWide} />
 
             {/* More category product sections */}
@@ -239,9 +235,6 @@ export function MarketplaceHome({ data }: Props) {
 
             {/* Testimonials */}
             <Testimonials />
-
-            {/* Brand Strip */}
-            {brands.length > 0 && <BrandStrip brands={brands} />}
 
             {/* Admin-configured sections */}
             {sections.map((section) => {

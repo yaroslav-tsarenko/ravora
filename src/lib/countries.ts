@@ -1,5 +1,5 @@
 // Sanctioned / restricted destinations — we do not ship here.
-// Based on EU/UK/OFAC sanctions for electrical goods exporters.
+// Based on EU/UK/OFAC sanctions for consumer goods exporters.
 const SANCTIONED = new Set([
   "RU", // Russia
   "BY", // Belarus

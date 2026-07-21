@@ -167,7 +167,7 @@ export default function SizeGuidePage() {
             <p className="text-sm leading-relaxed text-[color:var(--color-text-secondary)]">
               Individual measurements can vary by up to 5 % due to the natural
               stretch and shrinkage of our organic and recycled fabrics. If
-              your order doesn't fit as expected, we offer 14-day free returns
+              your order doesn't fit as expected, we offer 14-day returns
               — see our <Link href="/policies/returns" className="text-[color:var(--color-primary)] underline">returns policy</Link> or
               email <a href="mailto:info@ravora.co.uk" className="text-[color:var(--color-primary)] underline">info@ravora.co.uk</a>.
             </p>

@@ -7,24 +7,24 @@ import { BookOpen, Calculator, FileText, ArrowUpRight } from "lucide-react";
 
 const articles = [
   {
-    icon: BookOpen,
-    eyebrow: "Guide",
-    title: "How to size a cable for a 32 A circuit",
-    desc: "Cross-sections, voltage drop, and what the latest IEC 60364 says about derating in conduit.",
-    href: "/about",
-  },
-  {
     icon: Calculator,
     eyebrow: "Tool",
-    title: "Distribution board planner",
-    desc: "Pick a panel layout, count breakers, and we'll auto-suggest spare slots and DIN-rail width.",
+    title: "Find your perfect size",
+    desc: "Measure once and match your chest, waist and length to our size chart for the ideal fit.",
+    href: "/size-guide",
+  },
+  {
+    icon: BookOpen,
+    eyebrow: "Guide",
+    title: "How to care for your prints",
+    desc: "Wash cold, hang dry, and skip the iron on the design — simple habits that keep colours vivid.",
     href: "/about",
   },
   {
     icon: FileText,
     eyebrow: "Reference",
-    title: "RCD vs RCBO: a 60-second cheat sheet",
-    desc: "Where each one fits in a residential installation — and why we ship more RCBOs every year.",
+    title: "Why we print to order",
+    desc: "Made-to-order means less waste and fresher garments — here's how the Printful process works.",
     href: "/about",
   },
 ];
@@ -39,10 +39,10 @@ export function KnowledgeHub() {
         <div className="flex max-w-2xl flex-col gap-2">
           <span className="eyebrow">Knowledge hub</span>
           <h2 className="font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-[40px]">
-            Resources to help you spec right
+            Resources to help you shop right
           </h2>
           <p className="text-sm text-[color:var(--color-text-secondary)]">
-            Practical guides and tools from our in-house electrical engineers.
+            Practical guides to help you pick the right size, fit and care for your pieces.
           </p>
         </div>
         <Link

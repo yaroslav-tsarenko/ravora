@@ -8,7 +8,7 @@ const items = [
   { icon: Truck, label: "Free shipping", desc: "On orders over £100" },
   { icon: ShieldCheck, label: "Secure payment", desc: "100% protected checkout" },
   { icon: RotateCcw, label: "Easy returns", desc: "14-day return policy" },
-  { icon: Headphones, label: "24/7 support", desc: "We're always here to help" },
+  { icon: Headphones, label: "Friendly support", desc: "Mon–Fri, 09:00–18:00 GMT" },
 ];
 
 export function TrustStrip() {

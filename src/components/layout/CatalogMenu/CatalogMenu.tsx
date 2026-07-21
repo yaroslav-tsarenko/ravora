@@ -343,7 +343,7 @@ export function CatalogMenu({ open, onClose, categories }: Props) {
                               On {active.name} orders over £100
                             </span>
                             <span className="text-xs text-[color:var(--color-text-tertiary)]">
-                              Same-day dispatch · 14-day returns · Genuine warranty
+                              Made to order · 14-day returns · 2-year warranty
                             </span>
                           </div>
                           <Link

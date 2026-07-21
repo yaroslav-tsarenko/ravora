@@ -119,7 +119,6 @@ export function MarketplaceProductCard({ product }: Props) {
               />
             ))}
           </div>
-          <span>(12)</span>
         </div>
 
         <div className="mt-auto flex items-end justify-between gap-2 pt-2">

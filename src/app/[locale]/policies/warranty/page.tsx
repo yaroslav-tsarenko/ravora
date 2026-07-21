@@ -29,14 +29,12 @@ export default function WarrantyPolicyPage() {
       <h2>1. Scope of This Policy</h2>
       <p>1.1 This Policy applies to physical goods purchased through Ravora.</p>
       <p>
-        1.2 Ravora supplies electrical products, electrical materials, wiring accessories,
-        lighting-related products, installation components, distribution and circuit protection products,
-        sockets, switches, cables, mounting accessories, and related goods.
+        1.2 Ravora supplies premium made-to-order apparel, including t-shirts, hoodies, sweatshirts, tanks,
+        and related garments, printed on demand by Printful.
       </p>
       <p>
-        1.3 Because electrical goods can be safety-critical, warranty eligibility may depend on correct
-        product selection, correct installation, proper use, compliance with manufacturer instructions, and
-        suitable operating conditions.
+        1.3 Because garments are made to order, warranty eligibility may depend on correct size selection,
+        proper care, following the washing and care instructions, and normal everyday use.
       </p>
       <p>
         1.4 This Policy applies to both Consumers and Business Customers, but some statutory rights apply
@@ -97,17 +95,17 @@ export default function WarrantyPolicyPage() {
       <p>5.1 Some products may come with a manufacturer warranty.</p>
       <p>5.2 Manufacturer warranty terms are set by the manufacturer, not by Ravora.</p>
       <p>
-        5.3 Manufacturer warranties may vary by product, brand, country, product type, installation
-        requirements, and usage conditions.
+        5.3 Manufacturer warranties may vary by product, brand, country, product type, garment style, and
+        care requirements.
       </p>
       <p>5.4 A manufacturer warranty may require:</p>
       <ul>
         <li>proof of purchase;</li>
-        <li>product serial number;</li>
-        <li>installation evidence;</li>
-        <li>professional installation documentation;</li>
-        <li>correct use;</li>
-        <li>compliance with manufacturer instructions;</li>
+        <li>order number;</li>
+        <li>photos of the defect;</li>
+        <li>the product care label or garment tag;</li>
+        <li>correct care and washing;</li>
+        <li>compliance with the care instructions;</li>
         <li>registration with the manufacturer;</li>
         <li>return or inspection of the product.</li>
       </ul>
@@ -183,13 +181,12 @@ export default function WarrantyPolicyPage() {
       </p>
       <p>8.2 Coverage applies only where the product has been:</p>
       <ul>
-        <li>correctly selected for its intended purpose;</li>
-        <li>installed correctly where installation is required;</li>
-        <li>used in accordance with manufacturer instructions;</li>
-        <li>operated within rated specifications;</li>
+        <li>ordered in the correct size using the size guide;</li>
+        <li>washed and cared for in accordance with the care instructions;</li>
+        <li>used for its intended everyday purpose;</li>
         <li>stored in suitable conditions;</li>
-        <li>maintained where required;</li>
-        <li>not misused, overloaded, modified, or damaged.</li>
+        <li>not altered by the customer;</li>
+        <li>not misused, stained, or damaged after use.</li>
       </ul>
       <p>
         8.3 Where a valid Additional Warranty claim is approved, we may provide one or more of the following
@@ -213,66 +210,59 @@ export default function WarrantyPolicyPage() {
       <p>
         9.1 Unless expressly stated otherwise, statutory warranty support, manufacturer warranties, and paid
         Additional Warranty do not cover problems caused by customer-side factors, external events, misuse,
-        or incorrect installation.
+        or improper care.
       </p>
       <p>9.2 Warranty coverage does not normally include:</p>
       <ul>
-        <li>incorrect product selection;</li>
-        <li>incompatibility with your installation, system, wiring, voltage, environment, or project requirements;</li>
-        <li>incorrect installation, wiring, connection, testing, commissioning, or integration;</li>
-        <li>installation by an unqualified or unauthorised person where professional installation is required or appropriate;</li>
-        <li>failure to follow manufacturer instructions, installation manuals, safety warnings, or technical specifications;</li>
-        <li>misuse, negligence, abuse, careless handling, or unsafe use;</li>
-        <li>overloading, incorrect voltage, incorrect current, excessive load, unsuitable power supply, or operation outside rated specifications;</li>
-        <li>unauthorised repair, modification, opening, dismantling, alteration, or tampering;</li>
-        <li>accidental damage, impact damage, fire damage, water damage, moisture damage, chemical damage, corrosion, contamination, dust, or dirt ingress;</li>
-        <li>damage caused by power surges, lightning, unstable power supply, electrical faults, or wider installation faults;</li>
+        <li>incorrect size selection where the size guide was available at the time of ordering;</li>
+        <li>damage caused by improper washing, drying, ironing, or care contrary to the care instructions;</li>
+        <li>shrinkage, fading, pilling, or bobbling caused by washing or drying contrary to the care instructions;</li>
+        <li>failure to follow the care label, washing instructions, or garment care guidance;</li>
+        <li>misuse, negligence, abuse, or careless handling;</li>
+        <li>customer alterations, tailoring, resizing, embellishment, or other modifications to the garment;</li>
+        <li>stains, marks, spills, or damage occurring after the garment has been worn or used;</li>
+        <li>accidental damage, tears, snags, burns, bleach damage, chemical damage, or contamination;</li>
+        <li>damage caused by exposure to sunlight, heat, moisture, perfumes, deodorants, or other substances;</li>
         <li>normal wear and tear;</li>
-        <li>cosmetic damage that does not affect product functionality;</li>
-        <li>consumable parts, replaceable parts, batteries, bulbs, fuses, lamps, seals, connectors, accessories, filters, or items expected to wear out unless expressly covered;</li>
+        <li>minor cosmetic variations that do not affect the wearability of the garment;</li>
+        <li>the natural characteristics of fabrics, such as slight variations in colour, texture, or finish, or items expected to soften or relax with use;</li>
         <li>damage caused by unsuitable storage, transport, temperature, humidity, or environment;</li>
-        <li>products used for purposes outside the manufacturer&rsquo;s intended use;</li>
-        <li>products used in industrial, commercial, rental, or high-load environments where the product is not designed for such use;</li>
-        <li>software, firmware, configuration, calibration, or compatibility issues unless expressly covered;</li>
-        <li>labour costs, electrician costs, contractor costs, testing costs, inspection costs, removal costs, reinstallation costs, certification costs, project delays, downtime, loss of profit, or indirect losses.</li>
+        <li>garments used for purposes outside their intended everyday use;</li>
+        <li>garments used in commercial, rental, or heavy-duty settings for which they are not designed;</li>
+        <li>return shipping costs, dry-cleaning costs, replacement styling costs, or indirect losses.</li>
       </ul>
       <p>
         9.3 Warranty does not cover defects or damage caused after delivery by events outside
         Ravora&rsquo;s control.
       </p>
 
-      <h2>10. Electrical Installation Responsibility</h2>
+      <h2>10. Garment Care and Product Suitability</h2>
       <p>
-        10.1 Electrical products can be dangerous if incorrectly selected, installed, connected, wired,
-        modified, overloaded, or used.
+        10.1 Garments can be damaged if they are washed, dried, ironed, or cared for incorrectly, or if the
+        care instructions are not followed.
       </p>
       <p>
-        10.2 You are responsible for ensuring that the product is suitable for your intended use before
-        purchase.
+        10.2 You are responsible for checking the size guide and ensuring the garment is suitable for your
+        needs before ordering.
       </p>
-      <p>10.3 You should check all relevant specifications, including:</p>
+      <p>10.3 Before ordering, you should check all relevant details, including:</p>
       <ul>
-        <li>voltage;</li>
-        <li>current;</li>
-        <li>wattage;</li>
-        <li>load rating;</li>
-        <li>IP rating;</li>
-        <li>dimensions;</li>
-        <li>cable type;</li>
-        <li>connector type;</li>
-        <li>installation environment;</li>
-        <li>compatibility;</li>
-        <li>local electrical requirements;</li>
-        <li>product code and technical documentation.</li>
+        <li>the size guide and measurements;</li>
+        <li>the garment style and fit;</li>
+        <li>the fabric composition;</li>
+        <li>the colour;</li>
+        <li>the print or design;</li>
+        <li>the care and washing instructions;</li>
+        <li>any product-specific notes on the product page.</li>
       </ul>
       <p>
-        10.4 Products requiring installation, wiring, connection, testing, commissioning, or integration
-        into an electrical system should be installed only by a qualified electrician or competent
-        professional where required or appropriate.
+        10.4 Because our garments are made to order, each item is produced to the size and specification you
+        select at checkout, so please review your selection carefully before placing your order.
       </p>
       <p>
-        10.5 Warranty may be refused or limited where a defect is caused by incorrect installation, unsafe
-        installation, non-compliant installation, unsuitable use, or failure to follow instructions.
+        10.5 Warranty may be refused or limited where a defect is caused by improper washing or care,
+        incorrect size selection where the size guide was available, customer alterations, or failure to
+        follow the care instructions.
       </p>
 
       <h2>11. How to Make a Warranty Claim</h2>
@@ -285,20 +275,20 @@ export default function WarrantyPolicyPage() {
         <li>date of purchase;</li>
         <li>description of the issue;</li>
         <li>when the issue first appeared;</li>
-        <li>photos or videos showing the product and defect;</li>
-        <li>photos of product labels, serial numbers, model numbers, or manufacturer markings;</li>
-        <li>installation details where relevant;</li>
-        <li>proof of professional installation where reasonably required;</li>
-        <li>any troubleshooting steps already taken.</li>
+        <li>photos or videos showing the garment and defect;</li>
+        <li>photos of the care label, size tag, or garment markings;</li>
+        <li>the size ordered where relevant;</li>
+        <li>details of how the garment has been washed or cared for where relevant;</li>
+        <li>any steps already taken to resolve the issue.</li>
       </ul>
       <p>11.3 We may ask for additional information to assess the claim.</p>
       <p>
-        11.4 You must stop using the product if continued use may be unsafe, may worsen the defect, or may
-        cause damage.
+        11.4 You should stop wearing or washing the garment if continued use may worsen the defect or may
+        cause further damage.
       </p>
       <p>
-        11.5 Do not attempt unauthorised repair, modification, dismantling, or testing where this may affect
-        safety or warranty eligibility.
+        11.5 Do not attempt to alter, repair, or modify the garment where this may affect warranty
+        eligibility.
       </p>
 
       <h2>12. Inspection and Assessment</h2>
@@ -309,14 +299,14 @@ export default function WarrantyPolicyPage() {
       <p>12.2 We may require you to return the product for inspection before approving a remedy.</p>
       <p>12.3 Inspection may consider:</p>
       <ul>
-        <li>product condition;</li>
-        <li>installation evidence;</li>
+        <li>garment condition;</li>
+        <li>proof of purchase and order details;</li>
         <li>signs of misuse or external damage;</li>
-        <li>signs of overloading or incorrect voltage;</li>
-        <li>environmental exposure;</li>
-        <li>modification or tampering;</li>
+        <li>signs of improper washing or care;</li>
+        <li>exposure to stains, chemicals, or environmental factors;</li>
+        <li>customer alteration or modification;</li>
         <li>manufacturer findings;</li>
-        <li>compatibility with claimed fault;</li>
+        <li>consistency with the claimed fault;</li>
         <li>whether the defect is covered by law, manufacturer warranty, or Additional Warranty.</li>
       </ul>
       <p>
@@ -378,8 +368,8 @@ export default function WarrantyPolicyPage() {
       <p>15.3 Refunds will normally be made to the original payment method where possible.</p>
       <p>
         15.4 Delivery charges, customs duties, import VAT, brokerage fees, courier handling charges, local
-        taxes, installation costs, labour costs, and other third-party costs are not normally refundable
-        under warranty unless required by law.
+        taxes, dry-cleaning costs, and other third-party costs are not normally refundable under warranty
+        unless required by law.
       </p>
 
       <h2>16. Additional Warranty Cancellation and Refunds</h2>
@@ -399,12 +389,12 @@ export default function WarrantyPolicyPage() {
 
       <h2>17. Business Customer Warranty Terms</h2>
       <p>
-        17.1 Business Customers are responsible for checking product suitability, specifications,
-        compatibility, installation requirements, and regulatory requirements before purchase.
+        17.1 Business Customers are responsible for checking product suitability, sizing, fabric
+        specifications, and care requirements before purchase.
       </p>
       <p>
-        17.2 Business Customers are expected to have appropriate technical knowledge or professional advice
-        when purchasing electrical goods.
+        17.2 Business Customers are expected to review the size guide and product details carefully when
+        placing bulk or wholesale orders for made-to-order apparel.
       </p>
       <p>
         17.3 Warranty remedies for Business Customers may be more limited than those available to Consumers,
@@ -412,25 +402,24 @@ export default function WarrantyPolicyPage() {
       </p>
       <p>
         17.4 To the fullest extent permitted by law, Ravora will not be liable to Business Customers for
-        labour costs, electrician costs, contractor costs, testing costs, removal costs, reinstallation
-        costs, certification costs, project delays, downtime, loss of profit, loss of contract, loss of
-        revenue, loss of business opportunity, or indirect or consequential losses arising from a warranty
-        issue.
+        printing costs, restyling costs, replacement stock costs, event delays, loss of profit, loss of
+        contract, loss of revenue, loss of business opportunity, or indirect or consequential losses arising
+        from a warranty issue.
       </p>
       <p>
-        17.5 Business Customers should not schedule installation, labour, project deadlines, or site work
-        until goods have been received, inspected, and confirmed as correct and suitable.
+        17.5 Business Customers should not schedule events, launches, resale, or deadlines that depend on the
+        garments until the goods have been received, inspected, and confirmed as correct and suitable.
       </p>
 
-      <h2>18. Manufacturer Instructions and Documentation</h2>
+      <h2>18. Care Instructions and Documentation</h2>
       <p>
-        18.1 You must keep and follow all manufacturer instructions, manuals, labels, safety warnings, and
-        technical documentation supplied with the product or made available by the manufacturer.
+        18.1 You should keep and follow all care labels, washing instructions, and care guidance supplied
+        with the garment or made available on the product page.
       </p>
-      <p>18.2 Failure to follow manufacturer instructions may affect warranty eligibility.</p>
+      <p>18.2 Failure to follow the care instructions may affect warranty eligibility.</p>
       <p>
-        18.3 If you are unsure how to install, connect, test, or use a product safely, you should seek
-        advice from a qualified electrician or competent professional.
+        18.3 If you are unsure how to wash or care for a garment, please contact us before laundering the
+        item.
       </p>
 
       <h2>19. Relationship With Returns Policy</h2>

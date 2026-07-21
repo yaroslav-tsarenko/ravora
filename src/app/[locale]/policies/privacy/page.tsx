@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
         <li>visiting or browsing the Website;</li>
         <li>creating or using a customer account;</li>
         <li>placing, managing, or receiving an order;</li>
-        <li>purchasing electrical goods, electrical materials, wiring accessories, lighting-related products, installation components, and related goods;</li>
+        <li>purchasing apparel, t-shirts, hoodies, sweatshirts, tanks, accessories, and related products;</li>
         <li>applying for or using trade, business, or professional customer access;</li>
         <li>contacting customer support;</li>
         <li>requesting delivery updates, returns, refunds, warranty support, or product assistance;</li>
@@ -169,7 +169,7 @@ export default function PrivacyPolicyPage() {
         <li>complaint details;</li>
         <li>return or refund requests;</li>
         <li>warranty claim information;</li>
-        <li>photos, videos, documents, or other files you provide to evidence product issues, delivery damage, installation concerns, or warranty claims.</li>
+        <li>photos, videos, documents, or other files you provide to evidence product issues, delivery damage, sizing or quality concerns, or warranty claims.</li>
       </ul>
 
       <h3>3.2.8 Technical and Usage Data</h3>
@@ -236,8 +236,8 @@ export default function PrivacyPolicyPage() {
       </p>
       <p>4.3 We do not knowingly collect personal data from children.</p>
       <p>
-        4.4 The Website is intended for users aged 18 or over because our goods include electrical products
-        and materials that may require technical understanding and safe use.
+        4.4 The Website is intended for users aged 18 or over because placing orders, creating an account,
+        and entering into a purchase contract require you to be at least 18.
       </p>
 
       <h2>5. How We Collect Personal Data</h2>

@@ -24,9 +24,9 @@ export default function ShippingPolicyPage() {
       <h2>1. Scope of This Policy</h2>
       <p>1.1 This Policy applies to the delivery of physical goods purchased through Ravora.</p>
       <p>
-        1.2 Ravora supplies electrical products, electrical materials, wiring accessories,
-        lighting-related products, installation components, distribution and circuit protection products,
-        sockets, switches, cables, mounting accessories, and other related goods.
+        1.2 Ravora supplies premium made-to-order apparel, including t-shirts, hoodies, sweatshirts,
+        tanks, long-sleeve tops, and other related garments, each printed on demand by our production
+        partner Printful.
       </p>
       <p>
         1.3 Delivery options, shipping rates, estimated delivery times, and supported destinations may vary
@@ -40,24 +40,27 @@ export default function ShippingPolicyPage() {
 
       <h2>2. Order Processing Time</h2>
       <p>
-        2.1 Orders are typically processed within 1&ndash;2 business days after successful payment
-        confirmation.
+        2.1 All items are made to order and printed on demand after successful payment confirmation, so each
+        order enters production before it can be dispatched.
       </p>
       <p>
-        2.2 Processing time means the time required to review the order, confirm payment, prepare the goods,
-        complete fulfilment checks, and hand the parcel to the carrier.
+        2.2 Processing time means the production lead time required to review the order, confirm payment,
+        print and finish the garment, complete quality checks, and hand the parcel to the carrier. Because
+        items are produced individually, the total time to receive an order equals the production lead time
+        plus the delivery time.
       </p>
       <p>
-        2.3 Processing times may be longer during peak seasons, promotional periods, public holidays,
-        high-volume periods, supplier delays, stock checks, payment reviews, fraud prevention reviews, or
-        where additional order verification is required.
+        2.3 Production and processing times may be longer during peak seasons, promotional periods, public
+        holidays, high-volume periods, production partner delays, payment reviews, fraud prevention reviews,
+        or where additional order verification is required.
       </p>
       <p>
-        2.4 Orders containing multiple products may be dispatched together or in separate parcels depending
-        on stock availability, product type, packaging requirements, and logistics efficiency.
+        2.4 Orders containing multiple products may be produced and dispatched together or in separate
+        parcels depending on production timing, product type, packaging requirements, and logistics
+        efficiency.
       </p>
       <p>
-        2.5 If an item is unavailable, delayed, discontinued, incorrectly listed, or cannot be supplied, we
+        2.5 If an item is unavailable, delayed, discontinued, incorrectly listed, or cannot be produced, we
         may contact you to offer an alternative, delay the order, partially fulfil the order, or cancel and
         refund the unavailable item.
       </p>
@@ -96,22 +99,27 @@ export default function ShippingPolicyPage() {
       </p>
 
       <h2>5. Estimated Delivery Times</h2>
-      <p>5.1 Once dispatched, estimated delivery times are generally as follows:</p>
+      <p>
+        5.1 Because every item is made to order, an order is first produced and then shipped. We offer
+        standard delivery only. Once an item has been produced and dispatched, standard delivery generally
+        takes 5&ndash;8 business days:
+      </p>
       <table>
         <thead>
           <tr>
-            <th>Destination</th>
-            <th>Estimated delivery time from dispatch</th>
+            <th>Stage</th>
+            <th>Estimated time</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>United Kingdom</td><td>1&ndash;3 business days</td></tr>
-          <tr><td>Europe</td><td>3&ndash;7 business days</td></tr>
-          <tr><td>North America</td><td>5&ndash;10 business days</td></tr>
-          <tr><td>Asia &amp; Oceania</td><td>7&ndash;14 business days</td></tr>
-          <tr><td>Africa &amp; South America</td><td>8&ndash;15 business days</td></tr>
+          <tr><td>Production (made to order)</td><td>Item is printed and finished before dispatch</td></tr>
+          <tr><td>Standard delivery after production</td><td>5&ndash;8 business days</td></tr>
         </tbody>
       </table>
+      <p>
+        5.1.1 The total time to receive your order is the production lead time plus the 5&ndash;8 business day
+        delivery window. We do not offer express, same-day, or guaranteed next-day delivery.
+      </p>
       <p>
         5.2 These delivery times are estimates only and may vary depending on courier capacity, customs
         processing, destination country, local courier handling, remote or rural delivery areas, public
@@ -243,28 +251,28 @@ export default function ShippingPolicyPage() {
         used in your destination country.
       </p>
 
-      <h2>10. Product Restrictions and Electrical Goods</h2>
+      <h2>10. International Orders and Product Suitability</h2>
       <p>
-        10.1 Some electrical goods may be subject to destination-specific import, safety, certification,
-        voltage, plug, labelling, or installation requirements.
+        10.1 Orders shipped internationally may be subject to destination-specific import, customs, or
+        labelling requirements, and any resulting duties or taxes are the responsibility of the customer.
       </p>
       <p>
-        10.2 You are responsible for ensuring that any product ordered is suitable for import, installation,
-        use, resale, or professional application in your country or region.
+        10.2 You are responsible for ensuring that any product ordered is suitable for your needs, including
+        selecting the correct size, colour, and style before completing your order.
       </p>
       <p>
-        10.3 Before placing an order, you should check all product specifications, including voltage,
-        current, wattage, IP rating, dimensions, cable type, connector type, product code, installation
-        environment, and compliance requirements.
+        10.3 Before placing an order, you should review all product details and consult our size guide,
+        checking measurements such as chest width, body length, and sleeve length, as well as the fabric,
+        fit, and care information provided on the product page.
       </p>
       <p>
-        10.4 We are not responsible for delays, customs refusal, failed installation, non-compliance, or
-        rejection caused by destination-specific rules or incorrect product selection.
+        10.4 Because items are made to order and printed on demand, we are not responsible for orders that do
+        not fit or meet your expectations where you did not check the size guide and product details before
+        ordering. Any return will be handled in accordance with our Returns and Refunds Policy.
       </p>
       <p>
-        10.5 Products requiring installation, wiring, connection, testing, commissioning, or integration
-        into an electrical system should be installed only by a qualified electrician or competent
-        professional where required or appropriate.
+        10.5 If you are unsure which size or style to choose, please contact us before placing your order and
+        we will be happy to help.
       </p>
 
       <h2>11. Split Shipments</h2>
@@ -398,20 +406,21 @@ export default function ShippingPolicyPage() {
 
       <h2>17. Business and Trade Orders</h2>
       <p>
-        17.1 Business Customers, trade customers, contractors, installers, and professional buyers are
-        responsible for ensuring that delivery dates, product availability, import requirements, and
-        installation schedules are suitable for their projects.
+        17.1 Business Customers, wholesale customers, resellers, and professional buyers are responsible for
+        ensuring that delivery dates, product availability, and import requirements are suitable for their
+        needs, bearing in mind that items are made to order and production plus delivery timelines can vary.
       </p>
-      <p>17.2 Delivery estimates should not be treated as guaranteed project deadlines.</p>
+      <p>17.2 Delivery estimates should not be treated as guaranteed deadlines.</p>
       <p>
-        17.3 Ravora is not responsible for labour costs, electrician costs, contractor costs, installation
-        costs, project delay, missed appointments, downtime, loss of profit, loss of contract, or other
-        indirect losses caused by delivery delay, customs delay, courier issue, or product unavailability,
-        except where liability cannot lawfully be excluded.
+        17.3 Ravora is not responsible for costs of dependent events, resale commitments, event or launch
+        dates, loss of profit, loss of contract, or other indirect losses caused by production delay,
+        delivery delay, customs delay, courier issue, or product unavailability, except where liability
+        cannot lawfully be excluded.
       </p>
       <p>
-        17.4 Business Customers should not schedule installation, labour, site work, or project deadlines
-        until the goods have been received, inspected, and confirmed as correct and suitable.
+        17.4 Business Customers should not schedule dependent events, such as pop-up shops, launches,
+        promotions, resale deadlines, or event dates, assuming a specific delivery date until the goods have
+        been received, inspected, and confirmed as correct and suitable.
       </p>
 
       <h2>18. Restricted Destinations and Compliance</h2>

@@ -5,10 +5,10 @@ import { motion, useInView } from "framer-motion";
 import { CheckCircle2, Sparkles, ShieldCheck, Truck } from "lucide-react";
 
 const bullets = [
-  "Same-day dispatch on orders placed before 14:00 GMT",
-  "Free UK returns within 30 days, no questions asked",
-  "Manufacturer-certified inventory with batch traceability",
-  "Bulk pricing tiers automatically applied at checkout",
+  "Made to order by Printful, then shipped in 5–8 business days",
+  "14-day returns on unworn items in their original condition",
+  "Premium fabrics with a 2-year warranty against defects",
+  "Free UK shipping on every order over £100",
 ];
 
 export function ServicePromise() {
@@ -28,11 +28,11 @@ export function ServicePromise() {
             <Sparkles size={14} /> Our service promise
           </span>
           <h2 className="font-serif text-3xl font-medium leading-tight tracking-tight text-[color:var(--color-text)] sm:text-[40px]">
-            Built for professionals who can&apos;t afford to wait.
+            Thoughtfully made, delivered with care.
           </h2>
           <p className="max-w-lg text-base leading-relaxed text-[color:var(--color-text-secondary)]">
-            Every order at Ravora is handled by a team that knows what an installer
-            needs on a Monday morning. Spec-correct, certified, and out the door fast.
+            Every Ravora piece is printed to order on premium fabric, so nothing
+            sits in a warehouse. Made fresh for you and shipped straight to your door.
           </p>
           <ul className="mt-2 flex flex-col gap-3">
             {bullets.map((b, i) => (
@@ -59,8 +59,8 @@ export function ServicePromise() {
           <div className="col-span-2 flex items-center gap-4 rounded-3xl border border-[color:var(--color-line)] bg-[color:var(--color-primary)] p-6 text-[color:var(--color-primary-fg)]">
             <Truck size={38} strokeWidth={1.5} />
             <div className="flex flex-col leading-tight">
-              <span className="font-serif text-4xl font-medium">24h</span>
-              <span className="text-xs text-white/70">Average UK delivery</span>
+              <span className="font-serif text-4xl font-medium">5–8 days</span>
+              <span className="text-xs text-white/70">Made-to-order delivery</span>
             </div>
           </div>
           <div className="flex flex-col gap-3 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] p-5">
@@ -71,10 +71,10 @@ export function ServicePromise() {
             </div>
           </div>
           <div className="flex flex-col gap-3 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-primary-tint)] p-5">
-            <Sparkles size={26} className="text-[color:var(--color-primary)]" strokeWidth={1.5} />
+            <Truck size={26} className="text-[color:var(--color-primary)]" strokeWidth={1.5} />
             <div className="flex flex-col leading-tight">
-              <span className="font-serif text-2xl font-medium text-[color:var(--color-text)]">4.9</span>
-              <span className="text-xs text-[color:var(--color-text-secondary)]">Out of 5 customer score</span>
+              <span className="font-serif text-2xl font-medium text-[color:var(--color-text)]">£100</span>
+              <span className="text-xs text-[color:var(--color-text-secondary)]">Free UK shipping over</span>
             </div>
           </div>
         </motion.div>

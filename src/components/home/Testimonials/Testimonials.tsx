@@ -6,26 +6,26 @@ import { Star, Quote } from "lucide-react";
 
 const reviews = [
   {
-    name: "Markus W.",
-    role: "Electrician · London",
+    name: "Megan W.",
+    role: "London",
     quote:
-      "Ordered cables and conduits late Friday — delivered Monday morning. Everything bundled cleanly with the spec sheet. This is the only supplier I trust for time-sensitive jobs.",
+      "The fabric is so much softer than I expected and the print hasn't faded after loads of washes. My new go-to hoodie — I've already ordered a second colour.",
     rating: 5,
     initials: "MW",
   },
   {
     name: "Aurélie R.",
-    role: "Site manager · Manchester",
+    role: "Manchester",
     quote:
-      "I run procurement for a 14-person crew. The catalog filters by amp rating and cross-section saved me hours every week. Pricing is transparent, no surprise duties on delivery.",
+      "Ordered a couple of tees and they fit true to the size guide. Knowing each one is made to order rather than mass-produced made the wait completely worth it.",
     rating: 5,
     initials: "AR",
   },
   {
     name: "Tom B.",
-    role: "Industrial installer · Bristol",
+    role: "Bristol",
     quote:
-      "Needed a niche Schneider distribution block on short notice. Support found a compatible OEM equivalent within an hour and shipped it same day. Above and beyond.",
+      "Needed to swap a sweatshirt for a bigger size and the returns were painless. Clear instructions, quick response, no fuss. Genuinely great service.",
     rating: 5,
     initials: "TB",
   },
@@ -40,10 +40,10 @@ export function Testimonials() {
       <div className="mb-8 flex max-w-2xl flex-col gap-2 border-b border-[color:var(--color-line)] pb-6">
         <span className="eyebrow">Customer voices</span>
         <h2 className="font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)] sm:text-[40px]">
-          Trusted by professionals across the UK
+          Loved by customers across the UK
         </h2>
         <p className="text-sm text-[color:var(--color-text-secondary)]">
-          Real feedback from electricians, contractors, and procurement teams who buy from Ravora every week.
+          Real feedback from people who wear Ravora every day.
         </p>
       </div>
 

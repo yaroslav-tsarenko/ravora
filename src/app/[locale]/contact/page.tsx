@@ -21,7 +21,7 @@ const CONTACT_INFO = [
   { icon: Mail, title: "Email Us", detail: "info@ravora.co.uk", sub: "General inquiries — reply within 24h" },
   { icon: Mail, title: "Wholesale (B2B)", detail: "b2b@ravora.co.uk", sub: "Bulk and trade orders" },
   { icon: MapPin, title: "Our Office", detail: "Bridgend, Mid Glamorgan", sub: "JAYHALE LIMITED", tooltip: "Academy House, 11 Dunraven Place, Bridgend, Mid Glamorgan, CF31 1JF, United Kingdom\nCompany No. 16020956" },
-  { icon: Clock, title: "Working Hours", detail: "Mon-Fri 9:00-18:00", sub: "Sat 10:00-14:00" },
+  { icon: Clock, title: "Working Hours", detail: "Mon–Fri 09:00–18:00", sub: "GMT" },
 ];
 
 const TOPICS = [
@@ -264,7 +264,7 @@ export default function ContactPage() {
             </h3>
             <div className="flex flex-col gap-3">
               {[
-                { q: "How long does shipping take?", a: "Standard 5-7 days, Express 2-3 days." },
+                { q: "How long does shipping take?", a: "Made to order, then 5-8 business days." },
                 { q: "What is your return policy?", a: "14-day returns on all unused items." },
                 { q: "Do you ship internationally?", a: "Yes, across the UK and EU." },
                 { q: "How do I track my order?", a: "Check your account or email for tracking." },

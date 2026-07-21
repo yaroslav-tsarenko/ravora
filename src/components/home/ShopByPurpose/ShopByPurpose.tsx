@@ -3,44 +3,44 @@
 import { useRef } from "react";
 import { Link } from "@/i18n/routing";
 import { motion, useInView } from "framer-motion";
-import { Building2, Home, Factory, Lightbulb, ShieldCheck, Wrench, ArrowRight } from "lucide-react";
+import { Shirt, Briefcase, Dumbbell, Snowflake, Sparkles, Baby, ArrowRight } from "lucide-react";
 
 const purposes = [
   {
-    icon: Home,
-    title: "Residential",
-    desc: "Switches, sockets, lighting and household wiring kits.",
-    href: "/catalog?purpose=residential",
+    icon: Shirt,
+    title: "Everyday essentials",
+    desc: "T-shirts, tanks and staple pieces for daily wear.",
+    href: "/catalog?purpose=everyday",
   },
   {
-    icon: Building2,
-    title: "Commercial",
-    desc: "Distribution boards, smart panels and energy meters.",
-    href: "/catalog?purpose=commercial",
+    icon: Briefcase,
+    title: "Work & smart",
+    desc: "Polished shirts, layers and pieces for the office.",
+    href: "/catalog?purpose=work",
   },
   {
-    icon: Factory,
-    title: "Industrial",
-    desc: "High-current cables, motor protection and PLC accessories.",
-    href: "/catalog?purpose=industrial",
+    icon: Dumbbell,
+    title: "Active & sport",
+    desc: "Breathable activewear built for training and movement.",
+    href: "/catalog?purpose=active",
   },
   {
-    icon: Lightbulb,
-    title: "Lighting",
-    desc: "LED fixtures, drivers, dimmers and outdoor luminaires.",
-    href: "/catalog?purpose=lighting",
+    icon: Snowflake,
+    title: "Cold weather",
+    desc: "Hoodies, sweatshirts and cosy layers for winter.",
+    href: "/catalog?purpose=winter",
   },
   {
-    icon: ShieldCheck,
-    title: "Protection",
-    desc: "RCDs, MCBs, fuses, surge protection devices.",
-    href: "/catalog?purpose=protection",
+    icon: Sparkles,
+    title: "Statement pieces",
+    desc: "Bold prints and standout designs to dress up any look.",
+    href: "/catalog?purpose=statement",
   },
   {
-    icon: Wrench,
-    title: "Tools & accessories",
-    desc: "Conduit, mounting, terminals, professional hand tools.",
-    href: "/catalog?purpose=tools",
+    icon: Baby,
+    title: "Kids & youth",
+    desc: "Soft, durable apparel sized for the little ones.",
+    href: "/catalog?purpose=kids",
   },
 ];
 
@@ -58,7 +58,7 @@ export function ShopByPurpose() {
           </h2>
         </div>
         <p className="max-w-lg text-sm text-[color:var(--color-text-secondary)]">
-          Six tailored entry points into the catalog — every product is filtered, spec-matched, and ready to install.
+          Six tailored entry points into the catalog — every piece is hand-picked to match how you want to wear it.
         </p>
       </div>
 

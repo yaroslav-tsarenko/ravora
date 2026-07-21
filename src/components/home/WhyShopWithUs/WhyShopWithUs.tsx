@@ -16,8 +16,8 @@ const reasons = [
   },
   {
     icon: Heart,
-    title: "Certified products",
-    desc: "Every electrical material is sourced from certified manufacturers and meets professional standards.",
+    title: "Premium quality",
+    desc: "Every piece is printed to order on premium fabrics that are built to last wash after wash.",
   },
   {
     icon: RefreshCw,
@@ -31,8 +31,8 @@ const reasons = [
   },
   {
     icon: Headphones,
-    title: "24/7 support",
-    desc: "Our team is available around the clock to help with anything.",
+    title: "Friendly support",
+    desc: "Our team is available Mon–Fri, 09:00–18:00 GMT to help with anything.",
   },
 ];
 
@@ -46,7 +46,7 @@ export function WhyShopWithUs() {
             Why choose Ravora
           </h2>
           <p className="max-w-xl text-sm text-[color:var(--color-text-secondary)]">
-            Professional-grade electrical materials with expert support and fast delivery.
+            Premium made-to-order apparel with friendly support and reliable delivery.
           </p>
         </div>
 

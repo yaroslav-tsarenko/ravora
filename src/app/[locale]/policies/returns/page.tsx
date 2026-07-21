@@ -29,13 +29,12 @@ export default function ReturnsPolicyPage() {
       <h2>1. Scope of This Policy</h2>
       <p>1.1 This Policy applies to physical goods purchased through Ravora.</p>
       <p>
-        1.2 Ravora supplies electrical products, electrical materials, wiring accessories,
-        lighting-related products, installation components, distribution and circuit protection products,
-        sockets, switches, cables, mounting accessories, and related goods.
+        1.2 Ravora supplies premium made-to-order apparel, including t-shirts, hoodies, sweatshirts, tanks,
+        and related clothing, printed on demand by our fulfilment partner Printful.
       </p>
       <p>
-        1.3 Because electrical products may be safety-critical, return eligibility depends on the product
-        type, condition, packaging, whether the product has been installed or used, and whether the order
+        1.3 Because our apparel is made to order and printed on demand, return eligibility depends on the
+        product type, condition, packaging, whether the item has been worn or washed, and whether the order
         was placed by a Consumer or Business Customer.
       </p>
       <p>
@@ -49,9 +48,9 @@ export default function ReturnsPolicyPage() {
         and not for trade, business, craft, or professional purposes.
       </p>
       <p>
-        2.2 A &ldquo;Business Customer&rdquo; means any company, sole trader, contractor, electrician,
-        installer, reseller, organisation, public body, or professional buyer purchasing goods for trade,
-        commercial, installation, resale, professional, or business purposes.
+        2.2 A &ldquo;Business Customer&rdquo; means any company, sole trader, reseller, wholesale buyer,
+        trade buyer, organisation, public body, or professional buyer purchasing goods for trade,
+        commercial, resale, professional, or business purposes.
       </p>
       <p>2.3 Consumer cancellation rights apply only to Consumers.</p>
       <p>
@@ -69,7 +68,7 @@ export default function ReturnsPolicyPage() {
       <p>
         3.3 We will make reasonable efforts to cancel the order before dispatch. However, cancellation is not
         guaranteed if the order has already been processed, packed, handed to the carrier, specially ordered,
-        prepared, cut, customised, or dispatched.
+        put into production, printed, customised, or dispatched.
       </p>
       <p>
         3.4 If cancellation is confirmed before dispatch, we will refund the amount paid for the cancelled
@@ -118,23 +117,23 @@ export default function ReturnsPolicyPage() {
       <p>5.1 Returned goods must be handled with reasonable care.</p>
       <p>5.2 Unless the goods are faulty, damaged, or incorrect, returned goods must be:</p>
       <ul>
-        <li>unused;</li>
-        <li>uninstalled;</li>
-        <li>unwired and unconnected;</li>
-        <li>not tested, commissioned, or integrated into any electrical system;</li>
-        <li>complete with all parts, accessories, manuals, labels, seals, and protective materials;</li>
+        <li>unworn;</li>
+        <li>unwashed;</li>
+        <li>free from any signs of wear, washing, alteration, or odour;</li>
+        <li>with all original tags attached;</li>
+        <li>complete with any accessories, labels, and protective materials;</li>
         <li>in original packaging where possible;</li>
         <li>in resaleable condition.</li>
       </ul>
       <p>
-        5.3 You may inspect the goods as you would reasonably be allowed to do in a shop, but you must not
-        install, wire, connect, use, modify, damage, or handle the goods beyond what is necessary to inspect
-        their nature, characteristics, and functioning.
+        5.3 You may inspect and try on the goods as you would reasonably be allowed to do in a shop, but you
+        must not wear, wash, alter, or handle the goods beyond what is necessary to inspect their nature,
+        characteristics, and fit.
       </p>
       <p>
         5.4 We may reduce your refund to reflect any reduction in value caused by handling beyond what is
-        necessary, including installation, use, missing packaging, missing accessories, damage,
-        contamination, or reduced resale value.
+        necessary, including wear, washing, alteration, missing tags, missing packaging, missing accessories,
+        damage, contamination, or reduced resale value.
       </p>
 
       <h2>6. Non-Returnable and Restricted Return Items</h2>
@@ -144,17 +143,23 @@ export default function ReturnsPolicyPage() {
       </p>
       <p>6.2 Non-returnable or restricted return items may include:</p>
       <ul>
-        <li>goods made to order;</li>
-        <li>goods specially ordered for you;</li>
-        <li>goods cut to size, including cables or similar materials;</li>
-        <li>customised, modified, assembled, or altered goods;</li>
-        <li>installed, wired, connected, tested, commissioned, or used electrical goods;</li>
+        <li>goods made to order or printed on demand to your selected design, size, or specification;</li>
+        <li>personalised or customised goods;</li>
+        <li>altered or modified goods;</li>
+        <li>worn, washed, altered, or used apparel;</li>
         <li>goods damaged after delivery;</li>
-        <li>goods missing parts, accessories, manuals, packaging, labels, seals, or protective materials;</li>
-        <li>goods affected by incorrect storage, moisture, heat, impact, contamination, dust, chemicals, corrosion, misuse, or unauthorised handling;</li>
+        <li>goods missing tags, accessories, packaging, labels, or protective materials;</li>
+        <li>goods affected by incorrect storage, moisture, heat, staining, contamination, odour, misuse, or unauthorised handling;</li>
         <li>goods that are no longer in resaleable condition;</li>
-        <li>clearance, final sale, discontinued, or special order items where return restrictions are clearly stated and lawful.</li>
+        <li>clearance, final sale, or discontinued items where return restrictions are clearly stated and lawful.</li>
       </ul>
+      <p>
+        6.2A As our apparel is made to order and produced to your selected size and specification, such items
+        may be exempt from the standard change-of-mind cancellation right under applicable consumer law.
+        Notwithstanding this, Ravora voluntarily offers a goodwill 14-day return window for unworn, unwashed
+        items in original condition with tags attached, and defective, damaged, or incorrect items are always
+        returnable or replaceable as set out in this Policy.
+      </p>
       <p>
         6.3 This section does not limit your legal rights where goods are faulty, not as described, unsafe,
         or otherwise non-compliant with applicable law.
@@ -171,7 +176,7 @@ export default function ReturnsPolicyPage() {
         <li>a clear description of the issue;</li>
         <li>photos or videos of the goods;</li>
         <li>photos of the packaging and shipping label;</li>
-        <li>any relevant product labels, serial numbers, or manufacturer markings.</li>
+        <li>any relevant product labels, care labels, or manufacturer markings.</li>
       </ul>
       <p>
         7.3 For visible delivery damage, please notify us within 48 hours of delivery where possible. This
@@ -196,35 +201,35 @@ export default function ReturnsPolicyPage() {
         shipping costs or provide return instructions.
       </p>
       <p>
-        7.8 We are not responsible for faults or damage caused by incorrect installation, unsuitable product
-        selection, misuse, overloading, unauthorised modification, external damage, incorrect storage,
-        unsuitable environment, third-party work, power surges, wear and tear, failure to follow
-        manufacturer instructions, or use outside the product&rsquo;s intended purpose.
+        7.8 We are not responsible for faults or damage caused by improper washing or care, unsuitable size
+        selection where a size guide is available, misuse, unauthorised alteration, external damage, incorrect
+        storage, staining, normal wear and tear, failure to follow the care instructions, or use outside the
+        product&rsquo;s intended purpose.
       </p>
 
-      <h2>8. Electrical Goods and Installation Responsibility</h2>
+      <h2>8. Sizing and Product Suitability</h2>
       <p>
-        8.1 Electrical goods can be unsafe if incorrectly selected, installed, wired, connected, modified,
-        overloaded, or used.
+        8.1 Our apparel is made to order and printed on demand to the size and specification you select at
+        checkout, so choosing the correct size is important.
       </p>
       <p>
-        8.2 Before purchasing, you are responsible for checking that the product is suitable for your
-        intended use, including voltage, current, load, wattage, IP rating, dimensions, cable type,
-        compatibility, installation environment, and local regulatory requirements.
+        8.2 Before purchasing, you are responsible for checking that the product is suitable for you,
+        including consulting the size guide and product measurements, and reviewing the fabric, fit, colour,
+        design, and care requirements for the item.
       </p>
       <p>
-        8.3 Products requiring electrical installation, wiring, connection, testing, commissioning, or
-        integration into an electrical system should be installed only by a qualified electrician or
-        competent professional where required or appropriate.
+        8.3 Because each item is produced to your selected size and specification, we are unable to amend a
+        size or specification once production has begun, and made-to-order items ordered in the wrong size
+        where a size guide was available may not be eligible for a change-of-mind return.
       </p>
       <p>
-        8.4 Goods that have been installed, wired, connected, modified, commissioned, or used may not be
-        eligible for return unless they are faulty, incorrect, or otherwise covered by mandatory legal
-        rights.
+        8.4 To keep your apparel in good condition, please follow the care instructions on the garment&rsquo;s
+        care label. Goods that have been worn, washed, altered, or used may not be eligible for return unless
+        they are faulty, incorrect, or otherwise covered by mandatory legal rights.
       </p>
       <p>
         8.5 We may refuse or reduce a refund where the product has been returned in a condition that
-        prevents safe resale or proper inspection.
+        prevents resale or proper inspection.
       </p>
 
       <h2>9. Return Shipping Costs</h2>
@@ -254,7 +259,7 @@ export default function ReturnsPolicyPage() {
         <li>product name or SKU;</li>
         <li>reason for return;</li>
         <li>photos or videos where the item is damaged, faulty, incorrect, or incomplete;</li>
-        <li>confirmation of whether the product has been opened, installed, connected, tested, or used.</li>
+        <li>confirmation of whether the product has been opened, worn, washed, altered, or used.</li>
       </ul>
       <p>
         10.3 If the return is accepted or requires inspection, we will provide return instructions.
@@ -393,7 +398,7 @@ export default function ReturnsPolicyPage() {
       <ul>
         <li>prior written approval;</li>
         <li>return within a specified period;</li>
-        <li>goods unused, uninstalled, complete, and resaleable;</li>
+        <li>goods unworn, unwashed, with tags attached, complete, and resaleable;</li>
         <li>original packaging and accessories included;</li>
         <li>customer payment of return shipping;</li>
         <li>deduction for reduced value;</li>
@@ -435,10 +440,9 @@ export default function ReturnsPolicyPage() {
         inspection, or return of the product.
       </p>
       <p>
-        18.4 Warranty coverage does not normally include incorrect installation, misuse, overloading,
-        unauthorised modification, power surges, external damage, unsuitable environment, wear and tear,
-        consumable parts, labour costs, electrician costs, removal costs, reinstallation costs, or project
-        delays unless expressly stated otherwise.
+        18.4 Warranty coverage does not normally include improper washing or care, normal wear and tear,
+        incorrect size selection where a size guide was available, customer alterations, misuse, unauthorised
+        modification, external damage, staining, or unsuitable storage unless expressly stated otherwise.
       </p>
       <p>
         18.5 Where a warranty claim is approved, the remedy may include repair, replacement, equivalent

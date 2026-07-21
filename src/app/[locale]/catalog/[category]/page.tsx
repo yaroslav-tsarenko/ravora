@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     title: category.name,
     description:
       category.description ||
-      `Shop ${category.name} products at Ravora. Browse electronics, accessories, electrical materials and installation supplies.`,
+      `Shop ${category.name} at Ravora. Browse premium made-to-order apparel — tees, hoodies, sweatshirts and more.`,
     alternates: { canonical: `/${locale}/catalog/${category.slug}` },
     openGraph: {
       title: `${category.name} | Ravora`,

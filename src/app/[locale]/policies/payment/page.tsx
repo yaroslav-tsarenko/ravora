@@ -27,9 +27,8 @@ export default function PaymentPolicyPage() {
         charges, additional warranty options, and any other paid services or charges displayed at checkout.
       </p>
       <p>
-        1.2 Ravora sells electrical products, electrical materials, wiring accessories, lighting-related
-        products, installation components, distribution and circuit protection products, sockets, switches,
-        cables, mounting accessories, and related goods.
+        1.2 Ravora sells premium made-to-order apparel, including t-shirts, hoodies, sweatshirts, tanks,
+        accessories, and related products.
       </p>
       <p>
         1.3 By placing an order and submitting payment details, you agree to this Payment Policy.
