@@ -6,7 +6,6 @@ import { useCurrency, type Currency } from "@/providers/CurrencyProvider";
 const CURRENCIES: { code: Currency; symbol: string; label: string }[] = [
   { code: "GBP", symbol: "£", label: "GBP (£)" },
   { code: "EUR", symbol: "€", label: "EUR (€)" },
-  { code: "USD", symbol: "$", label: "USD ($)" },
 ];
 
 export function CurrencySwitcher() {
