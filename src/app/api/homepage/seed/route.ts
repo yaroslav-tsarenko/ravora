@@ -115,7 +115,7 @@ export async function POST() {
     const dealCards = [
       {
         type: "DEAL_CARD" as const,
-        title: "HAFWEAR Performance Leggings",
+        title: "RAVORA Performance Leggings",
         subtitle: "Compression fit",
         description: "Quick-dry technical leggings with a supportive high waist — built for the studio, the run, the day.",
         linkUrl: "/catalog/women-bottoms",

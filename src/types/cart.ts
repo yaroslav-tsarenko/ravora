@@ -9,8 +9,6 @@ export interface CartItem {
   imageUrl: string | null;
   variantId?: string;
   variantName?: string;
-  /** Paid add-on chosen on the product page (see PRODUCT_EXTRAS); absent means none. */
-  extraKey?: string;
   maxQuantity: number;
 }
 

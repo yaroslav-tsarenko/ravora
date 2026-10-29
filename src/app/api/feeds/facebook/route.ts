@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { absoluteImageUrl } from "@/lib/media";
 
 export async function GET() {
   try {
@@ -9,7 +8,7 @@ export async function GET() {
       include: { images: { orderBy: { sortOrder: "asc" }, take: 1 } },
     });
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://hafwear.co.uk";
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ravora.co.uk";
 
     const headers = [
       "id", "title", "description", "availability", "condition",
@@ -24,7 +23,7 @@ export async function GET() {
       product.condition,
       `${Number(product.price).toFixed(2)} EUR`,
       `${siteUrl}/en/product/${product.slug}`,
-      absoluteImageUrl(product.images[0]?.url, siteUrl),
+      product.images[0]?.url || "",
       product.brand || "",
       product.gtin || "",
     ]);

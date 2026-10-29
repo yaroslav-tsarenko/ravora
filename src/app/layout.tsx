@@ -1,55 +1,41 @@
-import type { Metadata, Viewport } from "next";
-import { Inter_Tight, Instrument_Serif } from "next/font/google";
-import { brand } from "@/lib/brand";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 
-const interTight = Inter_Tight({
-  variable: "--font-inter-tight",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
-  display: "swap",
 });
 
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  display: "swap",
 });
-
-const title = `${brand.displayName} — ${brand.tagline}`;
 
 export const metadata: Metadata = {
   title: {
-    default: title,
-    template: `%s | ${brand.displayName}`,
+    default: "Ravora — Refined athletic apparel",
+    template: "%s | Ravora",
   },
-  description: brand.description,
-  applicationName: brand.applicationName,
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || brand.url),
+  description:
+    "Ravora — a curated apparel edit for men, women and kids. Sustainably sourced tees, hoodies, bottoms and swimwear. Shipped from the United Kingdom.",
+  applicationName: "Ravora",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://ravora.co.uk"),
   openGraph: {
     type: "website",
-    siteName: brand.displayName,
-    url: brand.url,
-    title,
-    description: brand.description,
+    siteName: "Ravora",
+    url: "https://ravora.co.uk",
+    title: "Ravora — Refined athletic apparel",
+    description:
+      "Curated apparel from Ravora — sustainably sourced tees, hoodies and swimwear for men, women and kids. Shipped from the United Kingdom.",
   },
   twitter: {
     card: "summary_large_image",
-    site: brand.social.twitter,
-    title: brand.displayName,
+    site: "@ravora",
+    title: "Ravora",
   },
+  icons: { icon: "/icon.svg", apple: "/icon.svg" },
 };
-
-export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#F2F1EE" },
-    { media: "(prefers-color-scheme: dark)", color: "#131312" },
-  ],
-};
-
-// Applies the saved theme before first paint so dark-mode visitors never see a light flash.
-const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");if(!t){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}var d=document.documentElement;d.setAttribute("data-theme",t);if(t==="dark")d.classList.add("dark")}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -60,11 +46,8 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${interTight.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

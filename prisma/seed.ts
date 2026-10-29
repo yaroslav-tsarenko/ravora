@@ -17,9 +17,9 @@ async function main() {
     update: {},
     create: {
       id: "default",
-      name: "Hafwear",
+      name: "Ravora",
       description: "Refined athletic apparel for men, women and kids. Shipped from the United Kingdom.",
-      email: "info@hafwear.co.uk",
+      email: "info@ravora.co.uk",
       currency: "GBP",
       taxRate: 20,
       freeShippingMin: 100,
@@ -67,7 +67,7 @@ async function main() {
       title: "About Us",
       slug: "about-us",
       content:
-        "<p>Haf is Welsh for summer. Hafwear makes easy everyday clothes for the whole family, from a small team in Bridgend, Wales.</p><p>Every piece is made to order and dispatched from the United Kingdom, with free delivery over £100.</p>",
+        "<p>Welcome to Ravora — a curated apparel edit for men, women and kids.</p><p>We design and source athletic and everyday apparel with sustainable materials — organic cottons, recycled polyesters, and honest fits. Shipped from the United Kingdom with free delivery over £100.</p>",
       isActive: true,
     },
   });
