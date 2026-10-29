@@ -48,7 +48,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                 fill
                 sizes="100vw"
                 priority={index === 0}
-                className="object-contain p-[8%] mix-blend-multiply dark:mix-blend-normal"
+                className="object-contain p-[5%] mix-blend-multiply dark:mix-blend-normal"
               />
             </div>
           ))}
@@ -75,7 +75,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               fill
               sizes={index === 0 ? "(max-width: 1280px) 55vw, 760px" : "(max-width: 1280px) 28vw, 380px"}
               priority={index === 0}
-              className="object-contain p-[8%] mix-blend-multiply dark:mix-blend-normal"
+              className="object-contain p-[5%] mix-blend-multiply dark:mix-blend-normal"
             />
           </div>
         ))}

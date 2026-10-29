@@ -55,7 +55,7 @@ export function HomeHero({ product }: HomeHeroProps) {
                 fill
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain p-[9%] mix-blend-multiply transition-transform duration-700 group-hover:scale-[1.02] dark:mix-blend-normal"
+                className="object-contain p-[6%] mix-blend-multiply transition-transform duration-700 group-hover:scale-[1.02] dark:mix-blend-normal"
               />
             </div>
             <p className="mt-3 flex items-center justify-between text-[13px] text-[color:var(--color-text-secondary)]">

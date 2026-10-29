@@ -43,7 +43,7 @@
   --color-bg-tertiary: #E1E0DB;      /* muted */
   --color-bg-warm: #EFEBE3;
   --color-bg-cool: #ECEDEB;
-  --color-image-bg: #E9E8E4;         /* product photo backdrop */
+  --color-image-bg: #FFFFFF;         /* product photo backdrop — matches the photos' white studio background */
 
   /* ── Text ───────────────────────────────────────────────────────────── */
   --color-text: #111111;
@@ -155,7 +155,7 @@
   --color-bg-tertiary: #2A2A28;
   --color-bg-warm: #1F1D19;
   --color-bg-cool: #1A1B1A;
-  --color-image-bg: #1E1E1C;
+  --color-image-bg: #FFFFFF;         /* stays white so photos blend into the tile */
 
   /* ── Text ───────────────────────────────────────────────────────────── */
   --color-text: #EDEBE6;
@@ -225,17 +225,4 @@
   --color-success-tint: rgba(143, 191, 156, 0.14);
   --color-warning-tint: rgba(232, 178, 58, 0.14);
   --color-danger-tint: rgba(240, 138, 128, 0.14);
-}
-
-/* Photos of white apparel on a white bg look garish on dark surfaces —
-   nudge the whites so they read as off-white. */
-[data-theme="dark"] img[src*=".jpg"],
-[data-theme="dark"] img[src*=".jpeg"],
-[data-theme="dark"] img[src*=".png"],
-[data-theme="dark"] img[src*=".webp"],
-.dark img[src*=".jpg"],
-.dark img[src*=".jpeg"],
-.dark img[src*=".png"],
-.dark img[src*=".webp"] {
-  filter: brightness(0.92) contrast(0.98);
 }

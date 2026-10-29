@@ -24,7 +24,7 @@ export function DepartmentTiles({ tiles }: { tiles: DepartmentTile[] }) {
                   alt=""
                   fill
                   sizes="(max-width: 1024px) 50vw, 25vw"
-                  className="object-contain p-[10%] mix-blend-multiply transition-transform duration-700 group-hover:scale-[1.03] dark:mix-blend-normal"
+                  className="object-contain p-[6%] mix-blend-multiply transition-transform duration-700 group-hover:scale-[1.03] dark:mix-blend-normal"
                 />
               )}
             </div>

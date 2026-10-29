@@ -54,7 +54,7 @@ export function ProductCard({
               fill
               sizes={sizes}
               priority={priority}
-              className={`object-contain p-[8%] mix-blend-multiply transition-opacity duration-500 dark:mix-blend-normal ${
+              className={`object-contain p-[4%] mix-blend-multiply transition-opacity duration-500 dark:mix-blend-normal ${
                 secondary ? "group-hover:opacity-0" : ""
               }`}
             />
@@ -65,7 +65,7 @@ export function ProductCard({
                 aria-hidden
                 fill
                 sizes={sizes}
-                className="object-contain p-[8%] opacity-0 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-100 dark:mix-blend-normal"
+                className="object-contain p-[4%] opacity-0 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-100 dark:mix-blend-normal"
               />
             )}
           </>
