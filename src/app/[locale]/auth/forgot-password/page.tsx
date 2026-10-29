@@ -1,11 +1,10 @@
 "use client";
 
-import { HafwearMark } from "@/components/layout/HafwearLogo";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/Button";
-import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
+import { Mail, ShoppingBag, ArrowLeft, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
@@ -54,8 +53,10 @@ export default function ForgotPasswordPage() {
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <motion.div className="mb-8 text-center" custom={0} variants={fadeUp} initial="hidden" animate="visible">
-          <HafwearMark size={44} className="mx-auto mb-6 text-[color:var(--color-text)]" />
-          <h1 className="mb-2 font-serif text-[40px] leading-none text-[color:var(--color-text)]">{t("forgotPasswordTitle")}</h1>
+          <div className="mx-auto mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--color-primary)] text-white">
+            <ShoppingBag size={24} strokeWidth={1.5} />
+          </div>
+          <h1 className="mb-2 font-serif text-3xl font-medium tracking-tight text-[color:var(--color-text)]">{t("forgotPasswordTitle")}</h1>
           <p className="text-[15px] leading-relaxed text-[color:var(--color-text-secondary)]">{t("forgotPasswordSubtitle")}</p>
         </motion.div>
 

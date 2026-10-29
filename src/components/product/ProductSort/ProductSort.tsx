@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { ChevronDown } from "lucide-react";
 
 interface ProductSortProps {
   value: string;
@@ -20,18 +19,19 @@ export function ProductSort({ value, onChange }: ProductSortProps) {
   ];
 
   return (
-    <label className="relative inline-flex h-9 items-center gap-1 text-[14px]">
-      <span className="text-[color:var(--color-text-secondary)]">{t("sortBy")}:</span>
+    <div style={{ maxWidth: "200px" }}>
+      <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 500, marginBottom: "0.25rem" }}>
+        {t("sortBy")}
+      </label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="cursor-pointer appearance-none bg-transparent pr-5 font-medium text-[color:var(--color-text)] focus:outline-none"
+        style={{ width: "100%", padding: "0.5rem 0.75rem", borderRadius: "var(--radius-md)", border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", fontSize: "0.875rem" }}
       >
         {options.map((option) => (
           <option key={option.key} value={option.key}>{option.label}</option>
         ))}
       </select>
-      <ChevronDown size={14} strokeWidth={1.5} className="pointer-events-none absolute right-0" />
-    </label>
+    </div>
   );
 }
