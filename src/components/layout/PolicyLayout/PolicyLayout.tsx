@@ -35,7 +35,7 @@ export function ContactBlock() {
   return (
     <div className="mt-2 rounded-md border border-[color:var(--color-line)] bg-[color:var(--color-bg-secondary)] px-4 py-3.5 text-sm leading-relaxed">
       <p>
-        <strong>JAYHALE LIMITED</strong>
+        <strong>ELVARDO LTD</strong>
         <br />
         Registration number: 16020956
         <br />

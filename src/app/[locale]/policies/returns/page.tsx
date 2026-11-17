@@ -14,7 +14,7 @@ export default function ReturnsPolicyPage() {
       <ContactBlock />
       <p>
         In this Policy, &ldquo;Ravora&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo; or &ldquo;our&rdquo;
-        means JAYHALE LIMITED. &ldquo;Customer&rdquo;, &ldquo;you&rdquo; or &ldquo;your&rdquo; means any
+        means ELVARDO LTD. &ldquo;Customer&rdquo;, &ldquo;you&rdquo; or &ldquo;your&rdquo; means any
         person or business placing an order through the Website.
       </p>
       <p>

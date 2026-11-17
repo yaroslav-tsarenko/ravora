@@ -58,6 +58,12 @@
   },
   "product": {
     "addToCart": "Add to Cart",
+    "size": "Size",
+    "color": "Colour",
+    "selectSize": "Please select a size",
+    "selectOption": "Please choose {option}",
+    "sizeGuide": "Size guide",
+    "fromPrice": "From",
     "addToCartWithWarranty": "Add to Cart with extras",
     "buyNow": "Buy Now",
     "outOfStock": "Out of Stock",

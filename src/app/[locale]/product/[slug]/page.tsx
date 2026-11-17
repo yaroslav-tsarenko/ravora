@@ -91,7 +91,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
       characteristics: true,
       images: { select: { id: true, url: true, alt: true, sortOrder: true }, orderBy: { sortOrder: "asc" } },
       categories: { select: { category: { select: { id: true, name: true, slug: true } } } },
-      variants: true,
+      variants: {
+        select: { id: true, name: true, sku: true, price: true, quantity: true, options: true },
+        orderBy: { name: "asc" },
+      },
       reviews: {
         where: { isApproved: true },
         select: {
@@ -188,6 +191,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
           reviewCount={reviewCount}
           avgRating={avgRating}
           categoryPath={categoryChain}
+          variants={product.variants.map((v) => ({
+            id: v.id,
+            name: v.name,
+            sku: v.sku,
+            price: v.price != null ? Number(v.price) : null,
+            quantity: v.quantity,
+            options: (v.options ?? {}) as Record<string, string>,
+          }))}
         />
       </div>
 

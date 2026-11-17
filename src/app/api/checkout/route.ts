@@ -28,21 +28,36 @@ export async function POST(request: NextRequest) {
 
     const productMap = new Map(products.map((p) => [p.id, p]));
 
+    const variantIds = items
+      .map((item: { variantId?: string }) => item.variantId)
+      .filter((v: unknown): v is string => typeof v === "string" && v.length > 0);
+    const variants = variantIds.length
+      ? await prisma.productVariant.findMany({ where: { id: { in: variantIds } } })
+      : [];
+    const variantMap = new Map(variants.map((v) => [v.id, v]));
+
     let subtotal = 0;
-    const orderItems = items.map((item: { productId: string; quantity: number; variantName?: string }) => {
+    const orderItems = items.map((item: { productId: string; quantity: number; variantId?: string; variantName?: string }) => {
       const product = productMap.get(item.productId);
       if (!product) throw new Error(`Product ${item.productId} not found`);
 
-      const itemTotal = Number(product.price) * item.quantity;
+      // A chosen size/colour is charged at its own price; it must belong to the product.
+      const variant = item.variantId ? variantMap.get(item.variantId) : undefined;
+      if (item.variantId && (!variant || variant.productId !== product.id)) {
+        throw new Error(`Variant ${item.variantId} does not belong to product ${product.id}`);
+      }
+      const unitPrice = variant?.price ?? product.price;
+
+      const itemTotal = Number(unitPrice) * item.quantity;
       subtotal += itemTotal;
 
       return {
         productId: product.id,
         productName: product.name,
-        productSku: product.sku,
-        variantName: item.variantName || null,
+        productSku: variant?.sku ?? product.sku,
+        variantName: item.variantName || variant?.name || null,
         quantity: item.quantity,
-        price: product.price,
+        price: unitPrice,
         total: itemTotal,
       };
     });

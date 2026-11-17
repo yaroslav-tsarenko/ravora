@@ -1,5 +1,5 @@
 /**
- * Central brand identity for ravora / JAYHALE LIMITED.
+ * Central brand identity for ravora / ELVARDO LTD.
  * Import from here instead of hardcoding company details in components.
  */
 
@@ -10,11 +10,11 @@ export const brand = {
   url: "https://ravora.co.uk",
   tagline: "Refined athletic apparel.",
   description:
-    "Ravora — a curated apparel edit from JAYHALE LIMITED. Sustainably sourced tees, hoodies, bottoms and swimwear for men, women and kids. Shipped from the United Kingdom.",
+    "Ravora — a curated apparel edit from ELVARDO LTD. Sustainably sourced tees, hoodies, bottoms and swimwear for men, women and kids. Shipped from the United Kingdom.",
   applicationName: "Ravora",
 
   company: {
-    legalName: "JAYHALE LIMITED",
+    legalName: "ELVARDO LTD",
     number: "16020956",
     address: {
       line1: "Academy House",

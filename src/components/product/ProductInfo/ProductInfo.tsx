@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Heart, ShoppingCart, Gift, Truck, RotateCcw, Lock } from "lucide-react";
@@ -9,7 +9,7 @@ import { QuantitySelector } from "@/components/shared/QuantitySelector/QuantityS
 import { useCart } from "@/providers/CartProvider";
 import { useCurrency } from "@/providers/CurrencyProvider";
 import { formatPrice } from "@/lib/utils/format-price";
-import { useRouter } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import { toast } from "sonner";
 
 /**
@@ -24,6 +24,35 @@ const EXTRAS_OPTIONS = [
   { key: "care", labelKey: "warrantyOption2year" as const, nameSuffix: "+ care kit",              price: 6.99 },
   { key: "prio", labelKey: "warrantyOption3year" as const, nameSuffix: "+ priority dispatch",     price: 4.99 },
 ];
+
+export interface ProductInfoVariant {
+  id: string;
+  name: string;
+  sku: string;
+  price: number | null;
+  quantity: number;
+  options: Record<string, string>;
+}
+
+/** Apparel sizes in wearing order; anything unknown keeps its catalogue order. */
+const SIZE_ORDER = [
+  "0-3M", "3-6M", "6M", "6-12M", "12M", "12-18M", "18M", "18-24M", "24M",
+  "2T", "3T", "4T", "5T", "2", "3", "4", "5", "5/6", "6", "6X", "7", "8",
+  "2Y", "4Y", "6Y", "8Y", "10Y", "12Y", "14Y",
+  "3XS", "2XS", "XXS", "XS", "S", "M", "L", "XL", "2XL", "XXL", "3XL", "XXXL", "4XL", "5XL", "6XL",
+];
+
+function sortOptionValues(option: string, values: string[]): string[] {
+  if (option.toLowerCase() !== "size") return values;
+  const rank = (v: string) => {
+    const i = SIZE_ORDER.indexOf(v.toUpperCase());
+    return i === -1 ? SIZE_ORDER.length : i;
+  };
+  return values
+    .map((v, i) => ({ v, i }))
+    .sort((a, b) => rank(a.v) - rank(b.v) || a.i - b.i)
+    .map((x) => x.v);
+}
 
 function calcExtraPrice(option: typeof EXTRAS_OPTIONS[number]): number {
   return option.price;
@@ -47,6 +76,7 @@ interface ProductInfoProps {
   reviewCount?: number;
   avgRating?: number;
   categoryPath?: { name: string; slug: string }[];
+  variants?: ProductInfoVariant[];
 }
 
 export function ProductInfo({
@@ -65,6 +95,7 @@ export function ProductInfo({
   ean,
   reviewCount = 0,
   avgRating = 0,
+  variants = [],
 }: ProductInfoProps) {
   const t = useTranslations("product");
   const [qty, setQty] = useState(1);
@@ -73,40 +104,107 @@ export function ProductInfo({
   const { currency, convert } = useCurrency();
   const router = useRouter();
 
-  const outOfStock = stockQuantity <= 0;
+  // Option groups (e.g. Colour, Size) in catalogue order, values de-duplicated.
+  const optionGroups = useMemo(() => {
+    const groups = new Map<string, string[]>();
+    for (const v of variants) {
+      for (const [key, value] of Object.entries(v.options ?? {})) {
+        if (!value) continue;
+        const list = groups.get(key) ?? [];
+        if (!list.includes(value)) list.push(value);
+        groups.set(key, list);
+      }
+    }
+    // Colour first, then size, so the size list can narrow to what exists in that colour.
+    return [...groups.entries()]
+      .sort(([a], [b]) => Number(a.toLowerCase() === "size") - Number(b.toLowerCase() === "size"))
+      .map(([key, values]) => ({ key, values: sortOptionValues(key, values) }));
+  }, [variants]);
+
+  const [selected, setSelected] = useState<Record<string, string>>(() => {
+    const initial: Record<string, string> = {};
+    for (const g of optionGroups) {
+      // Pre-pick a lone value and the first colour; sizes are always the shopper's choice.
+      if (g.values.length === 1 || g.key.toLowerCase() !== "size") initial[g.key] = g.values[0];
+    }
+    return initial;
+  });
+
+  const hasVariants = variants.length > 0;
+  const isAvailable = (key: string, value: string) =>
+    variants.some(
+      (v) =>
+        v.options?.[key] === value &&
+        Object.entries(selected).every(([k, val]) => k === key || v.options?.[k] === val),
+    );
+  const selectedVariant = hasVariants
+    ? variants.find((v) => optionGroups.every((g) => v.options?.[g.key] === selected[g.key])) ?? null
+    : null;
+  const missingOption = hasVariants ? optionGroups.find((g) => !selected[g.key]) : undefined;
+
+  const selectOption = (key: string, value: string) => {
+    setSelected((prev) => {
+      const next = { ...prev, [key]: value };
+      // Drop later choices that no longer exist in combination with this one.
+      for (const g of optionGroups) {
+        if (g.key === key || !next[g.key]) continue;
+        const exists = variants.some((v) =>
+          Object.entries(next).every(([k, val]) => v.options?.[k] === val),
+        );
+        if (!exists) delete next[g.key];
+      }
+      return next;
+    });
+  };
+
+  const variantPrices = variants.map((v) => v.price ?? price);
+  const minVariantPrice = variantPrices.length ? Math.min(...variantPrices) : price;
+  const hasPriceRange = variantPrices.some((p) => p !== minVariantPrice);
+  const unitPrice = selectedVariant ? selectedVariant.price ?? price : hasVariants ? minVariantPrice : price;
+  const stockQuantityForSelection = selectedVariant ? selectedVariant.quantity : stockQuantity;
+
+  const outOfStock = stockQuantity <= 0 || (!!selectedVariant && selectedVariant.quantity <= 0);
   const lowStock = stockQuantity > 0 && stockQuantity <= lowStockAlert;
 
   const extrasAvailable = true;
   const extraOption = EXTRAS_OPTIONS[selectedWarranty] ?? EXTRAS_OPTIONS[0];
   const extraPrice = calcExtraPrice(extraOption);
-  const totalPrice = price + extraPrice;
+  const totalPrice = unitPrice + extraPrice;
   const cartName = extraOption.nameSuffix ? `${name} ${extraOption.nameSuffix}` : name;
+  const variantLabel = selectedVariant
+    ? optionGroups.map((g) => selectedVariant.options[g.key]).filter(Boolean).join(" / ")
+    : undefined;
 
-  const handleAddToCart = () => {
+  const addSelectionToCart = (): boolean => {
+    if (missingOption) {
+      toast.error(
+        missingOption.key.toLowerCase() === "size"
+          ? t("selectSize")
+          : t("selectOption", { option: missingOption.key.toLowerCase() }),
+      );
+      return false;
+    }
     addItem({
       productId: id,
       name: cartName,
       slug,
-      sku,
+      sku: selectedVariant?.sku ?? sku,
       price: totalPrice,
       quantity: qty,
       imageUrl: imageUrl || null,
-      maxQuantity: stockQuantity,
+      variantId: selectedVariant?.id,
+      variantName: variantLabel,
+      maxQuantity: stockQuantityForSelection,
     });
+    return true;
+  };
+
+  const handleAddToCart = () => {
+    addSelectionToCart();
   };
 
   const handleBuyNow = () => {
-    addItem({
-      productId: id,
-      name: cartName,
-      slug,
-      sku,
-      price: totalPrice,
-      quantity: qty,
-      imageUrl: imageUrl || null,
-      maxQuantity: stockQuantity,
-    });
-    router.push("/checkout");
+    if (addSelectionToCart()) router.push("/checkout");
   };
 
   const handleWishlist = async () => {
@@ -156,7 +254,10 @@ export function ProductInfo({
       <hr className="h-px border-0 bg-[color:var(--color-line)]" />
 
       <div className="flex items-center gap-4">
-        <PriceDisplay price={price} comparePrice={comparePrice} size="lg" />
+        {hasVariants && !selectedVariant && hasPriceRange && (
+          <span className="text-sm text-[color:var(--color-text-secondary)]">{t("fromPrice")}</span>
+        )}
+        <PriceDisplay price={unitPrice} comparePrice={comparePrice} size="lg" />
         {isOnSale && (
           <span className="inline-flex h-6 items-center rounded-full bg-[color:var(--color-accent)] px-2.5 text-[10px] font-semibold uppercase tracking-wider text-white">
             −{savingsPercent}%
@@ -181,6 +282,52 @@ export function ProductInfo({
       </p>
 
       <hr className="h-px border-0 bg-[color:var(--color-line)]" />
+
+      {optionGroups.map((group) => {
+        const isSize = group.key.toLowerCase() === "size";
+        return (
+          <div key={group.key} className="flex flex-col gap-2" role="radiogroup" aria-label={group.key}>
+            <div className="flex items-center justify-between">
+              <span className="text-[13px] font-bold text-[color:var(--color-text)]">
+                {isSize ? t("size") : group.key.toLowerCase() === "color" ? t("color") : group.key}
+                {selected[group.key] && (
+                  <span className="ml-1.5 font-normal text-[color:var(--color-text-secondary)]">{selected[group.key]}</span>
+                )}
+              </span>
+              {isSize && (
+                <Link href="/size-guide" className="text-xs text-[color:var(--color-primary)] underline underline-offset-2">
+                  {t("sizeGuide")}
+                </Link>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {group.values.map((value) => {
+                const active = selected[group.key] === value;
+                const available = isAvailable(group.key, value);
+                return (
+                  <button
+                    key={value}
+                    type="button"
+                    role="radio"
+                    aria-checked={active}
+                    disabled={!available}
+                    onClick={() => selectOption(group.key, value)}
+                    className={`min-w-11 rounded-lg border-2 px-3 py-2 text-[13px] font-semibold transition-all ${
+                      active
+                        ? "border-[color:var(--color-primary)] bg-[color:var(--color-primary-tint)] text-[color:var(--color-primary)]"
+                        : available
+                          ? "border-[color:var(--color-line)] bg-[color:var(--color-bg-elevated)] text-[color:var(--color-text)] hover:border-[color:var(--color-primary)]"
+                          : "cursor-not-allowed border-[color:var(--color-line)] text-[color:var(--color-text-tertiary)] line-through opacity-50"
+                    }`}
+                  >
+                    {value}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
 
       <div className="flex flex-col gap-2">
         <span className="flex items-center gap-1.5 text-[13px] font-bold text-[color:var(--color-text)]">
@@ -214,7 +361,7 @@ export function ProductInfo({
       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         <QuantitySelector
           quantity={qty}
-          maxQuantity={stockQuantity}
+          maxQuantity={stockQuantityForSelection}
           onChange={setQty}
         />
         <Button

@@ -191,6 +191,7 @@ function CheckoutContent() {
           items: cart.items.map((item) => ({
             productId: item.productId,
             quantity: item.quantity,
+            variantId: item.variantId,
             variantName: item.variantName,
           })),
         }),

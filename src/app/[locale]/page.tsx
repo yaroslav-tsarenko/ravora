@@ -415,7 +415,7 @@ export default async function HomePage() {
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Ravora",
-          legalName: "JAYHALE LIMITED",
+          legalName: "ELVARDO LTD",
           alternateName: ["ravora.co.uk"],
           url: "https://ravora.co.uk",
           sameAs: ["https://ravora.co.uk"],
