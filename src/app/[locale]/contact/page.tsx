@@ -19,7 +19,7 @@ const INPUT_CLASS =
 
 const CONTACT_INFO = [
   { icon: Mail, title: "Email Us", detail: "info@ravora.co.uk", sub: "General inquiries — reply within 24h" },
-  { icon: Mail, title: "Wholesale (B2B)", detail: "b2b@ravora.co.uk", sub: "Bulk and trade orders" },
+  { icon: Mail, title: "Wholesale (B2B)", detail: "info@ravora.co.uk", sub: "Bulk and trade orders" },
   { icon: MapPin, title: "Our Office", detail: "Bridgend, Mid Glamorgan", sub: "ELVARDO LTD", tooltip: "Academy House, 11 Dunraven Place, Bridgend, Mid Glamorgan, CF31 1JF, United Kingdom\nCompany No. 16020956" },
   { icon: Clock, title: "Working Hours", detail: "Mon–Fri 09:00–18:00", sub: "GMT" },
 ];

@@ -28,7 +28,7 @@ export const brand = {
 
   contact: {
     email: "info@ravora.co.uk",
-    emailB2B: "b2b@ravora.co.uk",
+    emailB2B: "info@ravora.co.uk",
     phone: "+44 7915 921997",
     phoneHref: "tel:+447915921997",
   },

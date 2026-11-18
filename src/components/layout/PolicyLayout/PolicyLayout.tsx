@@ -43,7 +43,7 @@ export function ContactBlock() {
         <br />
         General email: info@ravora.co.uk
         <br />
-        Wholesale (B2B): b2b@ravora.co.uk
+        Wholesale (B2B): info@ravora.co.uk
       </p>
     </div>
   );
