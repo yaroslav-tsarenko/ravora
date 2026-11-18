@@ -103,7 +103,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   }));
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  const basePath = `/${locale}/catalog/${category.slug}`;
+  // The locale-aware Link adds the /{locale} prefix itself.
+  const basePath = `/catalog/${category.slug}`;
 
   return (
     <div className="mx-auto w-full max-w-[var(--max-width)] px-4 pb-12 [overflow-wrap:anywhere]">
